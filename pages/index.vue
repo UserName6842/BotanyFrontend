@@ -5,6 +5,18 @@
 <template>
   <div class="wrapper">
     <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
+    <span class="title"> Привет это гланая </span>
   </div>
 </template>
 
