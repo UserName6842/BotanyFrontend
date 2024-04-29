@@ -1,39 +1,52 @@
-
 <template>
-  <div>
-    <h1>Color mode: {{ $colorMode.value }}</h1>
-    <select v-model="$colorMode.preference">
-      <option value="system">System</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="sepia">Sepia</option>
-      <option value="green">Green</option>
-    </select>
+  <div class="wrapper-header">
+    <div>
+      <NuxtLink to="/">
+      <logo class="h-16"/>
+      </NuxtLink>
+    </div>
+
+    <div class="wrapper-header-auth" v-if="!auth.getIsLogin" >
+      <NuxtLink to="/login">
+        <UButton>
+          Авторизация
+        </UButton>
+      </NuxtLink>
+      <NuxtLink to="/logup">
+        <UButton>
+          Регистрация
+        </UButton>
+      </NuxtLink>
+    </div>
+    <div v-else>
+      <defaults-menu/>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts">
-const colorMode = useColorMode()
+<script lang="ts" setup>
+import logo from "assets/icons/logo.svg"
+import OpenIcon from "../../assets/icons/menu/open-icon.svg"
+import {useAuth} from "~/stores/auth";
+const { getToken, onLogout } = useApollo()
+
+const auth = useAuth()
+
+auth.checkLogin()
 
 </script>
 
+<style lang="scss" scoped>
+.wrapper-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-<style lang="scss">
-body {
-  background-color: #fff;
-  color: rgba(0,0,0,0.8);
-}
-.dark-mode body {
-  background-color: #091a28;
-  color: #ebf4f1;
-}
-.sepia-mode body {
-  background-color: #f1e7d0;
-  color: #433422;
-}
-
-.green body {
-  background-color: #adeea7;
-  color: #284322;
+  .wrapper-header-auth{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: space-between;
+  }
 }
 </style>

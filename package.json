@@ -11,12 +11,17 @@
   },
   "dependencies": {
     "@nuxt/ui": "^2.15.2",
+    "@nuxtjs/auth-next": "^5.0.0-1667386184.dfbbb54",
     "nuxt": "^3.11.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@iconify-json/ph": "^1.1.12",
+    "@nuxtjs/apollo": "^5.0.0-alpha.14",
     "@pinia/nuxt": "^0.5.1",
+    "nuxt-icon": "^0.6.10",
+    "nuxt-svgo": "^4.0.0",
     "sass": "^1.75.0",
     "tailwindcss": "^3.4.3"
   }
