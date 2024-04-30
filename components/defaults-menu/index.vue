@@ -52,13 +52,13 @@ const links = [
     to: '/type-plant'
   },
   {
-    label: 'Экоморфы',
+    label: 'Группы Экоморфов',
     icon: 'i-ph-plant-light',
     to: '/ecomorph'
   }
   ,
   {
-    label: 'Типы Экоморфов',
+    label: 'Экоморфы',
     icon: 'i-ph-plant-light',
     to: '/type-ecomorphs'
   }]

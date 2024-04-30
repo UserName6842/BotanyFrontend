@@ -1,45 +1,49 @@
 <template>
 
-  <UTable :rows="ecomorh" :columns="columns" >
+  <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs">
+    <template #id-data="{ row, index}">
+      {{ index + 1 }}
+    </template>
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
-        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+        <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
       </UDropdown>
     </template>
   </UTable>
   <div class="wrapper-add-button">
-  <UButton icon="i-ph-list-plus" class="add-button" @click="isOpen = true"/>
+    <UButton class="add-button" icon="i-ph-list-plus" @click="() => {
+      isOpen = true
+      typeModal = 'create'
+      ecoporph = {id:{resourceId: ''}, description: '',title: ''}
+    }"/>
   </div>
   <UModal v-model="isOpen">
-    <div class="p-4">
-      <div class="wrapper-home">
-        <span class="subtitle-page"> Создание Екоморфа </span>
-        <UInput v-model:model-value="title" placeholder="Название"></UInput>
-        <UInput  v-model:model-value="description" placeholder="Описание"></UInput>
-        <UButton @click="login">Создать</UButton>
-      </div>
-    </div>
+    <ecomorph-form
+        v-model:model-value="ecoporph"
+        :type="typeModal"
+        @on-create="onCreate"
+        @on-updated="onUpdate"/>
   </UModal>
 
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useEcomorph} from "~/stores/ecomorph/ecomorph";
-import {ecomorphsToTable} from "~/pages/ecomorph/hepers";
+import type {Ecomorph} from "~/stores/ecomorph/types";
 
-const ecomorh = computed(() => ecomorphsToTable(ecomorhStores.getEcomorphs))
+
 const ecomorhStores = useEcomorph()
 const isOpen = ref(false)
 const columns = [{
   key: 'id',
-  label: 'ID'
+  label: '№'
 }, {
   key: 'title',
   label: 'Название'
 }, {
   key: 'description',
   label: 'Описание'
-},  {
+}, {
   key: 'actions'
 }]
 
@@ -47,33 +51,46 @@ const items = (row) => [
   [{
     label: 'Edit',
     icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', row.id)
-  }, ], [{
+    click: () => {
+      typeModal.value = "update"
+      isOpen.value = true
+      ecoporph = {...row}
+    }
+  },], [{
     label: 'Delete',
     icon: 'i-heroicons-trash-20-solid',
     click: () => ecomorhStores.DeleteEcomorhs(row.id)
   }]
 ]
 
- ecomorhStores.fetchEcomorhs()
+ecomorhStores.fetchEcomorhs()
 
-
-const title = ref('')
-const description = ref('')
-const login = async () =>{
+let ecoporph = reactive<Ecomorph>({
+  title: "",
+  description: ""
+})
+const typeModal = ref<"create" | "update">("create")
+const onCreate = async () => {
   isOpen.value = false
-  await ecomorhStores.CrateEcomorhs({title: title.value, description:description.value})
+  await ecomorhStores.CrateEcomorhs(ecoporph)
+}
+
+const onUpdate = async () => {
+  isOpen.value = false
+  await ecomorhStores.UpdateEcomorhs(ecoporph)
 }
 </script>
 
 
-<style  lang="scss">
-.wrapper-add-button{
+<style lang="scss">
+.wrapper-add-button {
   display: flex;
   flex-direction: row-reverse;
-  .add-button{
+
+  .add-button {
     border-radius: 30px;
-    .i-ph-list-plus{
+
+    .i-ph-list-plus {
       width: 32px;
       height: 32px;
     }
@@ -81,18 +98,19 @@ const login = async () =>{
   }
 }
 
-.wrapper-home{
+.wrapper-home {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
 }
-.title-page{
+
+.title-page {
   font-size: 24px;
   color: var(--ling-root);
 }
 
-.subtitle-page{
+.subtitle-page {
   font-size: 20px;
   color: var(--ling-root);
 }

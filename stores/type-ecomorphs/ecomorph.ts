@@ -68,7 +68,7 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                       }
                     }
                             `
-                    debugger
+
                     const variables = {
                         data: {
                             title: input.title,
@@ -100,8 +100,57 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                 }
             },
 
+            async UpdateEcomorhs(input: TypeEcomorph) {
+                try {
+                    const mutation = gql`
+                    mutation uddateEcomorphsEntity($data: InputEcomorphsEntity){
+                      ecomorphsEntity{
+                        updateEcomorphEntity(input:$data){
+                          id{
+                            resourceId
+                          }
+                          title
+                        }
+                      }
+                    }
+                            `
+
+                    const variables = {
+                        data: {
+                            id: input.id,
+                            input:{
+                                title: input.title,
+                                description: input.description,
+                                displayTable: input.displayTable,
+                                score: input.score,
+                                ecomorphs: {id: input.ecomorphs.id }
+                            }
+                        }
+                    }
+
+                    const {mutate, onDone, onError} = useMutation(mutation)
+
+                    onDone((data) => {
+                        console.log('Успешное обновление:', data.data)
+
+                        this.fetchEcomorhs()
+                    })
+
+                    onError((error) => {
+                        console.error('Ошибка обновление:', error.message)
+                    })
+
+                    await mutate(variables)
+
+
+                } catch (error) {
+                    console.error('Ошибка при выполнении запроса:', error)
+                }
+            },
+
             async DeleteEcomorhs(input: Identifier) {
                 try {
+
                     const mutation = gql`
                         mutation DeleteEcomorphsEntity($id: ID!){
                           ecomorphsEntity{
@@ -111,6 +160,7 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                           }
                         }
                             `
+
                     const variables = {
                         id: input.resourceId
                     }

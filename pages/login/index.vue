@@ -33,7 +33,6 @@
       onDone( async (data) => {
         const { onLogin, getToken} = useApollo()
         const token = data.data.auth.signInUser.access_token
-        debugger
         onLogin(token)
 
         const auth = useAuth()

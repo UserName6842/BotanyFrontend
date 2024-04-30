@@ -8,8 +8,10 @@ export default defineNuxtConfig({
         'nuxt-svgo',
         'nuxt-icon',
         '@nuxtjs/apollo',
-
     ],
+
+
+
     svgo: {
         autoImportPath: false,
         defaultImport: "component",

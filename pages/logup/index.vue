@@ -11,7 +11,7 @@ const logup = async (value) => {
   try {
     const mutation = gql`
       mutation reg($data: SignUpUserInput) {
-        auth {
+        auth{
           signUpUser(data: $data) {
             access_token
           }
