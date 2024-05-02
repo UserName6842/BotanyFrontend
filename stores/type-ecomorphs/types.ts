@@ -14,3 +14,4 @@ export type TypeEcomorph = {
     score: number
     ecomorphs?: Ecomorph
 }
+

@@ -6,7 +6,7 @@
       :option="item"
       @on-click="$emit('onClick', item)"
       />
-  </div>
+    </div>
 </template>
 
 <script setup lang="ts">

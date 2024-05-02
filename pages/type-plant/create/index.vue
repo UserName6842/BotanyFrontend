@@ -1,5 +1,6 @@
 <template>
-  <type-plant-form type="create" v-model:model-value="typePlant" />
+  <defaults-loader v-if="ecomorhStores.loading || typeEcomorhStores.loading" />
+  <type-plant-form v-else type="create" v-model:model-value="typePlant" />
 </template>
 
 <script lang="ts" setup>

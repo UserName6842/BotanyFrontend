@@ -33,7 +33,7 @@ export default defineNuxtConfig({
         proxyCookies: true,
         clients: {
             default: {
-                httpEndpoint: 'http://193.176.79.195/api'
+                httpEndpoint: 'http://localhost/api'
             }
         },
     },

@@ -5,11 +5,14 @@
       <span v-else>Обновление</span>
       типа растения
     </div>
+    <defaults-loader v-if="loadingForm"/>
+    <div v-else class="wrapper-type-plant-form" >
     <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ modelValue.id.resourceId }}</UBadge>
     <div class="type-plant-form-wrapper-title">
       <UInput v-model:model-value="modelValue.title" placeholder="Название"/>
       <UInput v-model:model-value="modelValue.subtitle" placeholder="Название на латыни"/>
     </div>
+
     <div class="wrapper-type-plant-form-select">
       <div v-for="(item, index) of ecomorhStores.getEcomorphs" :key="item.id.resourceId" class="type-plant-form-select">
         <span class="type-plant-form-select-title">{{ item.title }} </span>
@@ -31,7 +34,7 @@
       <UButton :loading="loading" @click="onUpdateType">Обновить</UButton>
       <UButton :loading="loading" color="red" @click="onDelete"> Удалить</UButton>
     </div>
-
+    </div>
   </div>
 </template>
 
@@ -83,7 +86,7 @@ const selectValue = () => {
 
 const selectFile = async () => {
   if (modelValue.value.img) {
-    const blob = await downloadImageAsBlob("http://193.176.79.195:8080" + modelValue.value.img.path)
+    const blob = await downloadImageAsBlob("http://localhost:8080" + modelValue.value.img.path)
     if (blob) {
       file.value = new File([blob], modelValue.value.img.name)
     }
@@ -104,10 +107,20 @@ async function downloadImageAsBlob(url: string) {
     return null;
   }
 }
+let loadingForm = ref(false)
+const initForm = async () => {
+  try{
+    loadingForm.value = true
+    selectValue()
+    await selectFile()
+  } catch (e) {
+    console.log(e)
+  } finally {
+    loadingForm.value = false
+  }
 
-
-selectValue()
-selectFile()
+}
+initForm()
 
 interface PlantCartProps {
   type: "create" | "update"
@@ -126,7 +139,6 @@ const formingModal = async (value: TypePlant) => {
   for (const key in typeEcomorh.value) {
     value.ecomorphsEntity.push(typeEcomorh.value[key])
   }
-  debugger
   if (isEdit.value) {
     const img = await onCreateImg()
     value.img.id!.resourceId = img.id.resourceId
@@ -190,7 +202,7 @@ const onCreateImg = async () => {
       const blob = new Blob([file.value!]);
       const formData = new FormData();
       formData.append("image", blob);
-      const response = await axios.post("http://193.176.79.195:8080/save", formData, {
+      const response = await axios.post("http://localhost:8080/save", formData, {
         headers: {
           "Authorization": "Bearer " + token,
           "Content-Type": "multipart/form-data",
@@ -238,7 +250,7 @@ const onCreateImg = async () => {
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     gap: 15px;
 
     .type-plant-form-select {

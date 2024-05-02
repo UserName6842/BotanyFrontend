@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper-plant-cart" @click="$emit('onClick', option)">
     <div class="wrapper-plant-cart-image">
-      <img v-if="option.img && option.img.path" :src=" 'http://193.176.79.195:8080' + option.img.path" :alt="option.title" class="plant-cart-image">
+      <img v-if="option.img && option.img.path" :src=" 'http://localhost:8080' + option.img.path" :alt="option.title" class="plant-cart-image">
     </div>
     <div>
       <div class="plant-cart-title">
@@ -56,8 +56,8 @@ defineProps<PlantCartProps>()
 
     .plant-cart-image {
       border-radius: 6px;
-      width: 300px;
-      height: 200px;
+      width: 200px;
+      height: 150px;
       object-fit: cover;
       transition: transform 0.3s ease;
     }

@@ -30,6 +30,7 @@
 <script lang="ts" setup>
 import {useEcomorph} from "~/stores/ecomorph/ecomorph";
 import type {Ecomorph} from "~/stores/ecomorph/types";
+import type {TypeForm} from "~/stores/types";
 
 
 const ecomorhStores = useEcomorph()
@@ -69,7 +70,7 @@ let ecoporph = reactive<Ecomorph>({
   title: "",
   description: ""
 })
-const typeModal = ref<"create" | "update">("create")
+const typeModal = ref<TypeForm>("create")
 const onCreate = async () => {
   isOpen.value = false
   await ecomorhStores.CrateEcomorhs(ecoporph)

@@ -1,5 +1,6 @@
 <template>
-  <type-plant-form type="update"  :model-value="modelValue" />
+  <defaults-loader v-if="ecomorhStores.loading || typeEcomorhStores.loading || typePlantStores.loading" />
+  <type-plant-form v-else type="update"  :model-value="modelValue" />
 </template>
 
 <script setup lang="ts">

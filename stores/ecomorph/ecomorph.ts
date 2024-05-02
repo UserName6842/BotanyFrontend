@@ -34,6 +34,7 @@ export const useEcomorph = defineStore('Ecomorph', {
                       }
                     }
                `
+
                 const variables = {
                     dataPage: {
 
@@ -41,6 +42,7 @@ export const useEcomorph = defineStore('Ecomorph', {
                 }
 
                 try {
+                    this.loading = true
                     const {  onResult} = useQuery(query,  variables , {fetchPolicy: "network-only"});
                     // Проверяем, есть ли уже данные в результате запроса
 
@@ -52,6 +54,8 @@ export const useEcomorph = defineStore('Ecomorph', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error);
+                } finally {
+                    this.loading = false
                 }
             },
 
@@ -76,7 +80,7 @@ export const useEcomorph = defineStore('Ecomorph', {
                             description: input.description
                         }
                     }
-
+                    this.loading = true
                     const { mutate, onDone, onError } = useMutation(mutation)
 
                     onDone((data) => {
@@ -94,6 +98,8 @@ export const useEcomorph = defineStore('Ecomorph', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
+                }   finally {
+                    this.loading = false
                 }
             },
 
@@ -121,7 +127,7 @@ export const useEcomorph = defineStore('Ecomorph', {
                             }
                         }
                     }
-
+                    this.loading = true
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
@@ -139,6 +145,8 @@ export const useEcomorph = defineStore('Ecomorph', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
+                }finally {
+                    this.loading = false
                 }
             },
 
@@ -157,7 +165,7 @@ export const useEcomorph = defineStore('Ecomorph', {
                     const variables = {
                         id: input.resourceId
                     }
-
+                    this.loading = true
                     const { mutate, onDone, onError } = useMutation(mutation)
 
                     onDone((data) => {
@@ -173,6 +181,8 @@ export const useEcomorph = defineStore('Ecomorph', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
+                } finally {
+                    this.loading = false
                 }
             }
         }

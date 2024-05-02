@@ -1,53 +1,112 @@
-import type {EcomorphsEntityListRequest, TypeEcomorph, TypeEcomorphStore} from "~/stores/type-ecomorphs/types";
-import {Identifier} from "~/stores/types";
+import type {Identifier} from "~/stores/types";
+import type {TrialSite, TrialSiteListRequest, TrialSiteStore} from "./types"
 
-export const useTypeEcomorph = defineStore('TypeEcomorph', {
-        state: (): TypeEcomorphStore => ({
-            typeEcomorphs: [],
+export const useTrialSite = defineStore('TrialSite', {
+        state: (): TrialSiteStore => ({
+            totalCount: 0,
+            trialSites: [],
+            plants:[],
+            plant: {
+                id: {
+                    resourceId: ""
+                },
+                typePlant: {
+                    id: {
+                        resourceId: ""
+                    },
+                    title: '',
+                    subtitle: "",
+                    ecomorphsEntity:[],
+                    img: {
+                        id: {
+                            resourceId: ""
+                        },
+                        path: "",
+                        name: ""
+                    }
+                },
+                count: 0,
+                coverage: 0
+            },
+            trialSite: {
+                id: {
+                    resourceId: ""
+                },
+                title: "",
+                covered: 0,
+                rating: 0,
+                plant: [],
+                img: {
+                    id: {
+                        resourceId: ""
+                    },
+                    path: "",
+                    name: ""
+                }
+            },
             loading: false
         }),
         getters: {
-            getTypeEcomorphs: (state) => state.typeEcomorphs,
+            getTrialSites: (state) => state.trialSites,
+            getTotalCountTrialSites: (state) => state.totalCount,
+            getTrialSite: (state) => state.trialSite,
             getIsLoading: (state) => state.loading,
         },
         actions: {
-            async fetchEcomorhs() {
+            async fetchTrialSiteById(id: string) {
+                this.loading = true
                 const query = gql`
-                  query getListEcomorphsEntity($data: EcomorphsEntityListRequest){
-                      ecomorphsEntity{
-                        getAllEcomorphEntity(pages:$data){
-                          list{
-                            id{
-                              resourceId
-                            }
-                            title
-                            description
-                            displayTable
-                            score
-                            ecomorphs{
+                  query getTrialSite($data: ID!){
+                      trialSite{
+                        getTrialSite(id:$data){
+                          id{
+                            resourceId
+                          }
+                          title
+                          covered
+                          rating
+                          countTypes
+                          dominant{
+                          \tid\t{
+                            \tresourceId
+                          \t}
+                        \t}
+                          subDominant{
+                          \tid\t{
+                            \tresourceId
+                          \t}
+                          }
+                          img{
+                            \tid {
+                              \tresourceId
+                          \t}
+                          }
+                          plant{
+                          count
+                          coverage
+                          typePlant{
                               id{
                                 resourceId
                               }
                               title
                             }
-                          }
+                        }
                         }
                       }
                     }
                `
                 const variables = {
-                    data: {
-                    }
+                    data: id
                 }
 
                 try {
-                    this.loading = true
+
                     const {onResult} = useQuery(query, variables, {fetchPolicy: "network-only"});
                     // Проверяем, есть ли уже данные в результате запроса
 
                     onResult((param) => {
-                        this.typeEcomorphs = param.data.ecomorphsEntity.getAllEcomorphEntity.list;
-                        console.log('Данные успешно получены:', param.data.ecomorphsEntity.getAllEcomorphEntity.list)
+                        this.trialSites = param.data.typePlant.getTrialSite;
+                        console.log(`Данные об типе растения ${id} успешно получены:`, param.data.typePlant.getTrialSite)
 
                     })
 
@@ -58,38 +117,34 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                 }
             },
 
-            async CrateEcomorhs(input: TypeEcomorph) {
+
+            async CrateTrialSite(input: TrialSite) {
                 try {
+                    this.loading = true
                     const mutation = gql`
-                     mutation insertecomorphsEntity($data: InputFormEcomorphsEntity){
-                      ecomorphsEntity{
-                        insertEcomorphEntity(input:$data){
-                          id{
-                            resourceId
+                        mutation createTrialSite($data: InputFormTrialSiteRequest){
+                          trialSite{
+                            createTrialSite(input:$data){
+                              id{
+                                resourceId
+                              }
+                              title
+                            }
                           }
-                          title
                         }
-                      }
-                    }
                             `
 
                     const variables = {
                         data: {
-                            title: input.title,
-                            description: input.description,
-                            displayTable: input.displayTable,
-                            score: input.score,
-                            ecomorphs: {id: input.ecomorphs.id}
-
+                            ...input
                         }
                     }
-                    this.loading = true
+
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
                         console.log('Успешное создание:', data.data)
 
-                        this.fetchEcomorhs()
                     })
 
                     onError((error) => {
@@ -106,12 +161,13 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                 }
             },
 
-            async UpdateEcomorhs(input: TypeEcomorph) {
+            async UpdateTrialSite(input: TrialSite) {
                 try {
+                    this.loading = true
                     const mutation = gql`
-                    mutation uddateEcomorphsEntity($data: InputEcomorphsEntity){
-                      ecomorphsEntity{
-                        updateEcomorphEntity(input:$data){
+                   mutation upTrialSite( $data: InputTrialSiteRequest ){
+                      trialSite{
+                        upTrialSite(input:$data){
                           id{
                             resourceId
                           }
@@ -125,21 +181,16 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                         data: {
                             id: input.id,
                             input: {
-                                title: input.title,
-                                description: input.description,
-                                displayTable: input.displayTable,
-                                score: input.score,
-                                ecomorphs: {id: input.ecomorphs.id}
+                                ...input
                             }
                         }
                     }
-                    this.loading = true
+
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
                         console.log('Успешное обновление:', data.data)
 
-                        this.fetchEcomorhs()
                     })
 
                     onError((error) => {
@@ -156,28 +207,27 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                 }
             },
 
-            async DeleteEcomorhs(input: Identifier) {
+            async DeleteTrialSite(input: Identifier) {
                 try {
-
+                    this.loading = true
                     const mutation = gql`
-                        mutation DeleteEcomorphsEntity($id: ID!){
-                          ecomorphsEntity{
-                            deleteEcomorphEntityByID(id:$id){
-                              result
-                            }
-                          }
+                     mutation deleteTrialSite($data: ID!){
+                      transect{
+                        deleteTransect(id:$data){
+                          result
                         }
+                      }
+                    }
                             `
 
                     const variables = {
                         id: input.resourceId
                     }
-                    this.loading = true
+
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
                         console.log('Успешное удаление:', data.data)
-                        this.fetchEcomorhs()
                     })
 
                     onError((error) => {

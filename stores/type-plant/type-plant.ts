@@ -1,8 +1,9 @@
 import type {Identifier} from "~/stores/types";
-import type {TypePlant, TypePlantStore} from "~/stores/type-plant/types";
+import type {TypePlant, TypePlantListRequest, TypePlantStore} from "~/stores/type-plant/types";
 
 export const useTypePlant = defineStore('TypePlant', {
         state: (): TypePlantStore => ({
+            totalCount: 0,
             typePlants: [],
             typePlant: {
                 id: {
@@ -23,15 +24,21 @@ export const useTypePlant = defineStore('TypePlant', {
         }),
         getters: {
             getTypePlants: (state) => state.typePlants,
+            getTotalCountTypePlants: (state) => state.totalCount,
             getTypePlant: (state) => state.typePlant,
             getIsLoading: (state) => state.loading,
         },
         actions: {
-            async fetchTypePlant() {
+            async fetchTypePlant(request?: TypePlantListRequest) {
+                this.loading = true
                 const query = gql`
                 query getTypePlant($data: TypePlantListRequest){
                   typePlant{
                     getAllTypePlant(pages:$data){
+                      page{
+                        total
+                        page
+                      }
                       list{
                         id{
                           resourceId
@@ -57,7 +64,9 @@ export const useTypePlant = defineStore('TypePlant', {
                 }
                `
                 const variables = {
-                    data: {}
+                    data: {
+                        ...request
+                    }
                 }
 
                 try {
@@ -66,16 +75,20 @@ export const useTypePlant = defineStore('TypePlant', {
 
                     onResult((param) => {
                         this.typePlants = param.data.typePlant.getAllTypePlant.list;
+                        this.totalCount = param.data.typePlant.getAllTypePlant.page.total;
                         console.log('Данные об типах растения успешно получены:', param.data.typePlant.getAllTypePlant.list)
 
                     })
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error);
+                } finally {
+                    this.loading = false
                 }
             },
 
             async fetchTypePlantById(id: string) {
+                this.loading = true
                 const query = gql`
            query getByIdTypePlant($data: ID!){
               typePlant{
@@ -112,6 +125,7 @@ export const useTypePlant = defineStore('TypePlant', {
                 }
 
                 try {
+
                     const {onResult} = useQuery(query, variables, {fetchPolicy: "network-only"});
                     // Проверяем, есть ли уже данные в результате запроса
 
@@ -123,12 +137,15 @@ export const useTypePlant = defineStore('TypePlant', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error);
+                } finally {
+                    this.loading = false
                 }
             },
 
 
             async CrateTypePlant(input: TypePlant) {
                 try {
+                    this.loading = true
                     const mutation = gql`
                    mutation createTypePlant($data: InputFormTypePlantRequest){
                      typePlant{
@@ -168,11 +185,14 @@ export const useTypePlant = defineStore('TypePlant', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
+                } finally {
+                    this.loading = false
                 }
             },
 
             async UpdateTypePlant(input: TypePlant) {
                 try {
+                    this.loading = true
                     const mutation = gql`
                     mutation updateTypePlant($data: InputTypePlantRequest){
                       typePlant{
@@ -215,12 +235,14 @@ export const useTypePlant = defineStore('TypePlant', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
+                } finally {
+                    this.loading = false
                 }
             },
 
             async DeleteTypePlant(input: Identifier) {
                 try {
-
+                    this.loading = true
                     const mutation = gql`
                       mutation deleteTypePlant($id: ID!){
                           typePlant{
@@ -250,6 +272,8 @@ export const useTypePlant = defineStore('TypePlant', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
+                } finally {
+                    this.loading = false
                 }
             }
         }

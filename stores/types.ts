@@ -13,3 +13,10 @@ export type Img = {
     name:string
     path:string
 }
+
+export type TypeForm = "create" | "update"
+
+export type PagesRequest = {
+    page: number
+    limit: number
+}

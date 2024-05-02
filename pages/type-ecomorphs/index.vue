@@ -35,6 +35,7 @@
 import {useTypeEcomorph} from "~/stores/type-ecomorphs/ecomorph";
 import type {TypeEcomorph} from "~/stores/type-ecomorphs/types";
 import {useEcomorph} from "~/stores/ecomorph/ecomorph";
+import type {TypeForm} from "~/stores/types";
 
 
 const typeEomorhStores = useTypeEcomorph()
@@ -83,7 +84,7 @@ typeEomorhStores.fetchEcomorhs()
 
 ecomorhStores.fetchEcomorhs()
 
-const typeModal = ref<"create" | "update">("create")
+const typeModal = ref<TypeForm>("create")
 
 let typeEomorhFormData = reactive<TypeEcomorph>({
   title: '',

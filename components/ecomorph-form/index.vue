@@ -15,6 +15,7 @@
 
 
 import type {Ecomorph} from "~/stores/ecomorph/types";
+import type {TypeForm} from "~/stores/types";
 
 interface EcomorphFormEmit {
   (event: 'onCreate', value: Ecomorph | undefined): void
@@ -23,7 +24,7 @@ interface EcomorphFormEmit {
 }
 
 interface EcomorphFormProps {
-  type: "create" | "update"
+  type: TypeForm
 }
 
 defineProps<EcomorphFormProps>()
