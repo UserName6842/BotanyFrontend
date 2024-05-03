@@ -100,7 +100,6 @@ const createTypeEcomorph = async (value: TypeEcomorph) => {
 }
 const updateTypeEcomorph = async (value: TypeEcomorph) => {
   isOpen.value = false
-  debugger
   await typeEomorhStores.UpdateEcomorhs(value)
 }
 </script>

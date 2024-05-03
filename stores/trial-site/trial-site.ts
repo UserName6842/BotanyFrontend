@@ -1,5 +1,5 @@
 import type {Identifier} from "~/stores/types";
-import type {TrialSite, TrialSiteListRequest, TrialSiteStore} from "./types"
+import type {Plant, TrialSite, TrialSiteListRequest, TrialSiteStore} from "./types"
 
 export const useTrialSite = defineStore('TrialSite', {
         state: (): TrialSiteStore => ({
@@ -48,6 +48,7 @@ export const useTrialSite = defineStore('TrialSite', {
         }),
         getters: {
             getTrialSites: (state) => state.trialSites,
+            getPlant: (state) => state.plant,
             getTotalCountTrialSites: (state) => state.totalCount,
             getTrialSite: (state) => state.trialSite,
             getIsLoading: (state) => state.loading,
@@ -82,6 +83,9 @@ export const useTrialSite = defineStore('TrialSite', {
                           \t}
                           }
                           plant{
+                           id{
+                                resourceId
+                              }
                           count
                           coverage
                           typePlant{
@@ -105,9 +109,8 @@ export const useTrialSite = defineStore('TrialSite', {
                     // Проверяем, есть ли уже данные в результате запроса
 
                     onResult((param) => {
-                        this.trialSites = param.data.typePlant.getTrialSite;
-                        console.log(`Данные об типе растения ${id} успешно получены:`, param.data.typePlant.getTrialSite)
-
+                        this.trialSite = param.data.trialSite.getTrialSite;
+                        console.log(`Данные об ПП ${id} успешно получены:`, param.data.trialSite.getTrialSite)
                     })
 
                 } catch (error) {
@@ -133,18 +136,18 @@ export const useTrialSite = defineStore('TrialSite', {
                           }
                         }
                             `
-
+                    const {id,plant, ...rew} =  input
                     const variables = {
                         data: {
-                            ...input
+                            ...rew
                         }
                     }
 
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
+                        this.trialSite = data.data.trialSite.createTrialSite
                         console.log('Успешное создание:', data.data)
-
                     })
 
                     onError((error) => {
@@ -176,12 +179,12 @@ export const useTrialSite = defineStore('TrialSite', {
                       }
                     }
                             `
-
+                    const { id,   ...rest } = input;
                     const variables = {
                         data: {
-                            id: input.id,
+                            id: id,
                             input: {
-                                ...input
+                                ...rest
                             }
                         }
                     }
@@ -218,6 +221,132 @@ export const useTrialSite = defineStore('TrialSite', {
                         }
                       }
                     }
+                            `
+
+                    const variables = {
+                        id: input.resourceId
+                    }
+
+                    const {mutate, onDone, onError} = useMutation(mutation)
+
+                    onDone((data) => {
+                        console.log('Успешное удаление:', data.data)
+                    })
+
+                    onError((error) => {
+                        console.error('Ошибка удаления:', error.message)
+                    })
+
+                    await mutate(variables)
+
+                } catch (error) {
+                    console.error('Ошибка при выполнении запроса:', error)
+                } finally {
+                    this.loading = false
+                }
+            },
+
+            async CratePlant(input: Plant) {
+                try {
+                    this.loading = true
+                    const mutation = gql`
+                    mutation insertPlant($data: InputFormPlant){
+                        trialSite{
+                            createPlant(input:$data){
+                              id{
+                                resourceId
+                              }
+                              coverage
+                            }
+                          }
+                         }
+                            `
+
+                    const {id, ...rew} =  input
+                    const variables = {
+                        data: {
+                            ...rew
+                        }
+                    }
+
+                    const {mutate, onDone, onError} = useMutation(mutation)
+
+                    onDone((data) => {
+                        this.plant = data.data.trialSite.createPlant
+                        console.log('Успешное создание:', data.data)
+                    })
+
+                    onError((error) => {
+                        console.error('Ошибка создании:', error.message)
+                    })
+
+                    await mutate(variables)
+
+
+                } catch (error) {
+                    console.error('Ошибка при выполнении запроса:', error)
+                } finally {
+                    this.loading = false
+                }
+            },
+
+            async UpdatePlant(input: Plant) {
+                try {
+                    this.loading = true
+                    const mutation = gql`
+                            mutation updatePlant( $data: InputPlantRequest ){
+                              trialSite{
+                                updatePlant(input:$data){
+                                  id{
+                                    resourceId
+                                  }
+                                  count
+                                }
+                              }
+                            }
+                            `
+                    const { id,   ...rest } = input;
+                    const variables = {
+                        data: {
+                            id: id,
+                            input: {
+                                ...rest
+                            }
+                        }
+                    }
+
+                    const {mutate, onDone, onError} = useMutation(mutation)
+
+                    onDone((data) => {
+                        console.log('Успешное обновление:', data.data)
+
+                    })
+
+                    onError((error) => {
+                        console.error('Ошибка обновление:', error.message)
+                    })
+
+                    await mutate(variables)
+
+
+                } catch (error) {
+                    console.error('Ошибка при выполнении запроса:', error)
+                } finally {
+                    this.loading = false
+                }
+            },
+
+            async DeletePlant(input: Identifier) {
+                try {
+                    this.loading = true
+                    const mutation = gql`
+                            mutation deletePlant( $data: ID! ){
+                              trialSite{
+                                deletePlant(id:$data){
+                                \tresult
+                                }
+                              }
+                            }
                             `
 
                     const variables = {

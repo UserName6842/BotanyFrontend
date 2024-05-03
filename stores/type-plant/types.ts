@@ -11,9 +11,9 @@ export type TypePlantStore = {
 
 export type TypePlant = {
     id?: Identifier
-    title : string
-    subtitle: string
-    ecomorphsEntity: TypeEcomorph[]
+    title?: string
+    subtitle?: string
+    ecomorphsEntity?: TypeEcomorph[]
     img?: Img
 }
 

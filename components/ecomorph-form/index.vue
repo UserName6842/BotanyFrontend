@@ -1,7 +1,11 @@
 <template>
   <div class="p-4">
     <div class="wrapper-home">
-      <span class="subtitle-page"> Создание Экоморфа </span>
+      <div class="type-plant-form-title">
+        <span v-if="type === 'create'">Создание</span>
+        <span v-else>Обновление</span>
+        Экоморфа
+      </div>
       <UBadge color="white" variant="solid" v-if="type === 'update'">ID: {{modelValue.id.resourceId}}</UBadge>
       <UInput v-model:model-value="modelValue.title" placeholder="Название"></UInput>
       <UInput v-model:model-value="modelValue.description" placeholder="Описание"></UInput>

@@ -47,7 +47,6 @@ const clearFile = () => {
 
 const handleDrop = (event: DragEvent) => {
   event.preventDefault();
-  debugger
   const files = event.dataTransfer?.files;
   if (files && files.length > 0) {
     file.value = files[0];

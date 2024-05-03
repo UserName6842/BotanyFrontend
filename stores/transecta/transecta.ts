@@ -105,31 +105,33 @@ export const useTransecta = defineStore('Transecta', {
                     query getTrialSite($data: ID!){
                       transect{
                         getTransect(id:$data){
-                          id{
+                           id{
                               resourceId
                             }
                             title
                             square
                             covered
-                            rating
-                            countTypes
                             squareTrialSite
                             trialSite {
                             id {
                               resourceId
                             }
                               title
-                              
-                          }
+                              covered
+                              countTypes
+                              rating
+                          \t}
                             subDominant{
                                id{
                               resourceId
                             }
+                              title
                             }
                             dominant{
                                id{
                               resourceId
                             }
+                              title
                             }
                         }
                       }
@@ -204,7 +206,6 @@ export const useTransecta = defineStore('Transecta', {
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
-                        debugger
                         this.transect = data.data.transect.createTransect
                         console.log('Успешное создание:', data.data)
                     })
@@ -228,43 +229,60 @@ export const useTransecta = defineStore('Transecta', {
                     mutation upTrialSite( $data: InputTransectRequest ){
                       transect{
                         upTransect(input:$data){
+                        id{
+                          resourceId
+                        }
+                        title
+                        square
+                        covered
+                        squareTrialSite
+                        trialSite {
+                        id {
+                          resourceId
+                        }
+                          title
+                          covered
+                          countTypes
+                          rating
+                      \t}
+                        subDominant{
                            id{
-                              resourceId
-                            }
-                            title
-                            square
-                            covered
-                            rating
-                            countTypes
-                            squareTrialSite
-                            trialSite {
-                            id {
-                              resourceId
-                            }
-                              title
-                              
-                          }
-                            subDominant{
-                               id{
-                              resourceId
-                            }
-                            }
-                            dominant{
-                               id{
-                              resourceId
-                            }
-                            }
+                          resourceId
+                        }
+                          title
+                        }
+                        dominant{
+                           id{
+                          resourceId
+                        }
+                          title
+                        }
                         }
                       }
                     }
                             `
 
-                    const {id, trialSite, ...fiald} = input
-                    const variables = {
-                        data: {
-                            id: id,
-                            input: {
-                                ...fiald
+                    const {id, trialSite, img, ...fiald} = input
+                    let variables = {}
+                    if(trialSite){
+                        variables = {
+                            data: {
+                                id: id,
+                                input: {
+                                    trialSite,
+                                    ...fiald
+
+                                }
+                            }
+                        }
+                    }else {
+                        variables = {
+                            data: {
+                                id: id,
+                                input: {
+                                    ...fiald
+
+                                }
                             }
                         }
                     }
@@ -302,7 +320,7 @@ export const useTransecta = defineStore('Transecta', {
                       }
                     }
                             `
-debugger
+
                     const variables = {
                         id: input.resourceId
                     }

@@ -16,7 +16,7 @@ export type TrialSite = {
     rating?: number
     dominant?: TypePlant
     subDominant?: TypePlant
-    plant: Plant[]
+    plant?: Plant[]
     img?: Img
 }
 
@@ -28,5 +28,5 @@ export type Plant = {
     id: Identifier
     coverage: number
     count: number
-    typePlant: TypePlant
+    typePlant?: TypePlant
 }

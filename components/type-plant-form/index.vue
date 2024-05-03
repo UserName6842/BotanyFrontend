@@ -168,7 +168,6 @@ const onUpdateType = async () => {
 
     const modal: TypePlant = modelValue.value
 
-    debugger
     await formingModal(modal)
 
     await typePlantStores.UpdateTypePlant(modal)

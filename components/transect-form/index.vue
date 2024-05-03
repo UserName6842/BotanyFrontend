@@ -18,7 +18,7 @@
       <div class="plant-title">
         Пробные площадки
       </div>
-      <UTable :columns="columns" :rows="rows">
+      <UTable :columns="columns" :loading="loading" :rows="rows">
         <template #id-data="{row, index}">
           {{ index + 1 }}
         </template>
@@ -26,6 +26,12 @@
           <UDropdown :items="items(row)">
             <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
           </UDropdown>
+        </template>
+        <template #dominant-data="{ row }">
+          <span v-if="row.dominant"> {{ row.dominant.title }} </span>
+        </template>
+        <template #subDominant-data="{ row }">
+          <span v-if="row.subDominant"> {{ row.subDominant.title }} </span>
         </template>
         <template #empty-state>
           <div class="wrapper-empty-state">
@@ -47,7 +53,7 @@
     </div>
   </div>
   <UModal v-model="isOpen">
-    <trail-sait-form/>
+    <trail-sait-form type="create" @on-create="CreateTrailSite"/>
   </UModal>
 </template>
 
@@ -56,6 +62,8 @@
 import type {Transecta} from "~/stores/transecta/types";
 import type {TypeForm} from "~/stores/types";
 import {useTransecta} from "~/stores/transecta/transecta";
+import type {TrialSite} from "~/stores/trial-site/types";
+import {useTrialSite} from "~/stores/trial-site/trial-site";
 
 
 interface TransectaFormProps {
@@ -72,6 +80,7 @@ interface TrialSiteFormEmit {
 const emits = defineEmits<TrialSiteFormEmit>()
 const loading = ref<boolean>(false)
 const transectaStore = useTransecta()
+const trialSiteStore = useTrialSite()
 
 const props = withDefaults(defineProps<TransectaFormProps>(), {
   modelValue: (props) => {
@@ -86,6 +95,26 @@ const props = withDefaults(defineProps<TransectaFormProps>(), {
   type: "update"
 })
 
+const CreateTrailSite = async (input: TrialSite) => {
+  try {
+    loading.value = true
+    await trialSiteStore.CrateTrialSite(input)
+    if (!value.value.trialSite) {
+      value.value.trialSite = []
+      value.value.trialSite.push(trialSiteStore.getTrialSite)
+    } else {
+      const trialSite = value.value.trialSite
+      trialSite.push(trialSiteStore.getTrialSite)
+      value.value.trialSite = trialSite
+    }
+
+    await handlerOnUpdate()
+  } catch (e) {
+    console.log(e)
+  } finally {
+    loading.value = false
+  }
+}
 
 const handlerOnCreate = async () => {
   try {
@@ -94,7 +123,6 @@ const handlerOnCreate = async () => {
 
     const transecta = transectaStore.getTransect
     if (transecta && transecta.id && transecta.id.resourceId !== "") {
-      debugger
       navigateTo("/transecta/" + btoa(transecta.id.resourceId))
     }
 
@@ -110,8 +138,6 @@ const handlerOnUpdate = async () => {
   try {
     loading.value = true
     await transectaStore.UpdateTransecta(value.value)
-
-
   } catch (e) {
     console.log(e)
   } finally {
@@ -140,15 +166,23 @@ const columns = [{
 }, {
   key: 'covered',
   label: 'Покрытость'
-}, {
-  key: 'actions'
-}]
+},
+  {
+    key: 'dominant',
+    label: 'Доминант'
+  },
+  {
+    key: 'subDominant',
+    label: 'Сабдоминант'
+  }, {
+    key: 'actions'
+  }]
 
 const items = (row) => [
   [{
     label: 'Открыть',
     icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => navigateTo("/trial-site/" + btoa(row.id))
+    click: () => navigateTo("/trial-site/" + btoa(row.id?.resourceId!))
   },], [{
     label: 'Удалить',
     icon: 'i-heroicons-trash-20-solid',
