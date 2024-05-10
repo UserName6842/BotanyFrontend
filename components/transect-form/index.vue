@@ -3,18 +3,18 @@
     <div class="transecta-title">
       Трансекта
     </div>
-    <UBadge v-if="valueType === 'update' && value.id.resourceId" color="white" variant="solid">ID:
-      {{ value.id.resourceId }}
+    <UBadge v-if="type === 'update' && modelValue && modelValue.id" color="white" variant="solid">ID:
+      {{ modelValue.id.resourceId }}
     </UBadge>
     <div class="wrapper-transecta-input">
-      <UInput v-model:model-value="value.title" placeholder="Название"/>
-      <UInput v-model:model-value="value.rating" placeholder="Балы"/>
-      <UInput v-model:model-value="value.covered" placeholder="Покрытость"/>
-      <UInput v-model:model-value="value.countTypes" placeholder="Количество типов растений"/>
-      <UInput v-model:model-value="value.squareTrialSite" placeholder="Площадь ПП"/>
-      <UInput v-model:model-value="value.square" placeholder="Площадь"/>
+      <UInput v-model:model-value="modelValue.title" placeholder="Название"/>
+      <UInput v-model:model-value="modelValue.rating" placeholder="Балы"/>
+      <UInput v-model:model-value="modelValue.covered" placeholder="Покрытость"/>
+      <UInput v-model:model-value="modelValue.countTypes" placeholder="Количество типов растений"/>
+      <UInput v-model:model-value="modelValue.squareTrialSite" placeholder="Площадь ПП"/>
+      <UInput v-model:model-value="modelValue.square" placeholder="Площадь"/>
     </div>
-    <div v-if="valueType === 'update' " class="wrapper-transecta-table">
+    <div v-if="type === 'update' " class="wrapper-transecta-table">
       <div class="plant-title">
         Пробные площадки
       </div>
@@ -43,11 +43,11 @@
         </template>
       </UTable>
       <div class="wrapper-transecta-footer-table">
-        <UButton v-if=" value.trialSite && value.trialSite.length > 0" @click="isOpen = true">Создать</UButton>
-        <UPagination v-if="value.trialSite" v-model="page" :page-count="pageCount" :total="value.trialSite.length"/>
+        <UButton v-if=" modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true">Создать</UButton>
+        <UPagination v-if="modelValue.trialSite" v-model="page" :page-count="pageCount" :total="modelValue.trialSite.length"/>
       </div>
     </div>
-    <UButton v-if="valueType === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
+    <UButton v-if="type === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
     <div v-else>
       <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
     </div>
@@ -58,115 +58,88 @@
 </template>
 
 <script lang="ts" setup>
-
 import type {Transecta} from "~/stores/transecta/types";
 import type {TypeForm} from "~/stores/types";
 import {useTransecta} from "~/stores/transecta/transecta";
 import type {TrialSite} from "~/stores/trial-site/types";
 import {useTrialSite} from "~/stores/trial-site/trial-site";
 
-
 interface TransectaFormProps {
   type: TypeForm
   modelValue: Transecta
 }
 
-interface TrialSiteFormEmit {
-  (event: 'onCreate', value: Transecta | undefined): Promise<Transecta | undefined>
 
-  (event: 'onUpdated', value: Transecta | undefined): void
-}
-
-const emits = defineEmits<TrialSiteFormEmit>()
+const page = ref(1)
+const pageCount = 8
 const loading = ref<boolean>(false)
 const transectaStore = useTransecta()
 const trialSiteStore = useTrialSite()
+const isOpen = ref<boolean>(false)
 
-const props = withDefaults(defineProps<TransectaFormProps>(), {
-  modelValue: (props) => {
-    return {
-      id: {
-        resourceId: ""
-      },
-      title: "",
-      trialSite: [],
-    }
-  },
-  type: "update"
-})
+const {modelValue} = defineProps<TransectaFormProps>()
 
 const CreateTrailSite = async (input: TrialSite) => {
   try {
-    loading.value = true
-    await trialSiteStore.CrateTrialSite(input)
-    if (!value.value.trialSite) {
-      value.value.trialSite = []
-      value.value.trialSite.push(trialSiteStore.getTrialSite)
-    } else {
-      const trialSite = value.value.trialSite
-      trialSite.push(trialSiteStore.getTrialSite)
-      value.value.trialSite = trialSite
+    loading.value = true;
+    await trialSiteStore.CrateTrialSite(input);
+    const newTrialSite = trialSiteStore.getTrialSite;
+    if (!modelValue.trialSite) {
+     modelValue.trialSite = [];
     }
-
-    await handlerOnUpdate()
-  } catch (e) {
-    console.log(e)
+   modelValue.trialSite.push(newTrialSite);
+    await handlerOnUpdate();
+  } catch (error) {
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
-
+};
 const handlerOnCreate = async () => {
   try {
-    loading.value = true
-    await transectaStore.CrateTransecta(value.value)
-
-    const transecta = transectaStore.getTransect
-    if (transecta && transecta.id && transecta.id.resourceId !== "") {
-      navigateTo("/transecta/" + btoa(transecta.id.resourceId))
+    loading.value = true;
+    await transectaStore.CrateTransecta(modelValue);
+    const transecta = transectaStore.getTransect;
+    if (transecta && transecta.id && transecta.id.resourceId !== '') {
+      navigateTo(`/transecta/${btoa(transecta.id.resourceId)}`);
     }
-
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-
-}
+};
 
 const handlerOnUpdate = async () => {
   try {
-    loading.value = true
-    await transectaStore.UpdateTransecta(value.value)
-  } catch (e) {
-    console.log(e)
+    loading.value = true;
+    await transectaStore.UpdateTransecta(modelValue);
+  } catch (error) {
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-
-}
-
-let {modelValue, type} = toRefs(props)
-
-let value = ref<Transecta>({...modelValue.value})
-let valueType = type.value.toString()
+};
 
 
-const isOpen = ref<boolean>(false)
-
-const columns = [{
-  key: 'id',
-  label: '№'
-}, {
-  key: 'title',
-  label: 'Название'
-}, {
-  key: 'rating',
-  label: 'Рейтинг'
-}, {
-  key: 'covered',
-  label: 'Покрытость'
-},
+//Таблица
+const columns = [
+  {
+    key: 'id',
+    label: '№'
+  },
+  {
+    key: 'title',
+    label: 'Название'
+  },
+  {
+    key: 'rating',
+    label: 'Рейтинг'
+  },
+  {
+    key: 'covered',
+    label: 'Покрытость'
+  },
   {
     key: 'dominant',
     label: 'Доминант'
@@ -190,15 +163,9 @@ const items = (row) => [
   }]
 ]
 
-const page = ref(1)
-const pageCount = 8
-
 const rows = computed(() => {
-  if (value.value.trialSite) {
-    return value.value.trialSite.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-  }
+  return  modelValue && modelValue.trialSite ? modelValue.trialSite.slice((page.value - 1) * pageCount, (page.value) * pageCount) : []
 })
-
 </script>
 
 <style lang="scss" scoped>

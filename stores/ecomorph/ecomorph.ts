@@ -10,7 +10,7 @@ export const useEcomorph = defineStore('Ecomorph', {
             loading: false
         }),
         getters: {
-            getEcomorphs: (state) => state.ecomorhs,
+            getEcomorphs: (state):Ecomorph[] => state.ecomorhs,
             getIsLoading: (state) => state.loading,
         },
         actions: {
@@ -43,14 +43,11 @@ export const useEcomorph = defineStore('Ecomorph', {
 
                 try {
                     this.loading = true
-                    const {  onResult} = useQuery(query,  variables , {fetchPolicy: "network-only"});
+                    const {  data} = await useAsyncQuery(query,  variables);
                     // Проверяем, есть ли уже данные в результате запроса
 
-                    onResult((param) => {
-                        this.ecomorhs = param.data.ecomorph.getListEcomorph.list;
-                        console.log('Данные успешно получены:', param.data.ecomorph.getListEcomorph.list)
-
-                    })
+                    this.ecomorhs = data.value.ecomorph.getListEcomorph.list;
+                    console.log('Данные успешно получены:', data.value.ecomorph.getListEcomorph.list)
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error);

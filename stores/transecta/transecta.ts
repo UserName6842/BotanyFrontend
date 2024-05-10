@@ -1,8 +1,10 @@
 import type {Identifier} from "~/stores/types";
-import type {Transecta, TransectaListRequest, TransectaStore} from "./types"
+import type {Analysis, Transecta, TransectaListRequest, TransectaStore} from "./types"
+import type {TrialSite} from "~/stores/trial-site/types";
 
 export const useTransecta = defineStore('Transecta', {
         state: (): TransectaStore => ({
+            analysis: {},
             totalCount: 0,
             transects: [],
             transect: {
@@ -16,20 +18,13 @@ export const useTransecta = defineStore('Transecta', {
                 covered: 0,
                 rating: 0,
                 trialSite: [],
-                img: {
-                    id: {
-                        resourceId: ""
-                    },
-                    path: "",
-                    name: ""
-                }
             },
             loading: false
         }),
         getters: {
             getTransects: (state) => state.transects,
             getTotalCountTransectas: (state) => state.totalCount,
-            getTransect: (state) : Transecta => state.transect,
+            getTransect: (state): Transecta => state.transect,
             getIsLoading: (state) => state.loading,
         },
         actions: {
@@ -110,6 +105,8 @@ export const useTransecta = defineStore('Transecta', {
                             }
                             title
                             square
+                            rating
+                            countTypes
                             covered
                             squareTrialSite
                             trialSite {
@@ -120,6 +117,18 @@ export const useTransecta = defineStore('Transecta', {
                               covered
                               countTypes
                               rating
+                              subDominant{
+                               id{
+                              resourceId
+                            }
+                              title
+                            }
+                            dominant{
+                               id{
+                              resourceId
+                            }
+                              title
+                            }
                           \t}
                             subDominant{
                                id{
@@ -143,21 +152,60 @@ export const useTransecta = defineStore('Transecta', {
 
                 try {
 
-                    const {onResult} = useQuery(query, variables, {fetchPolicy: "network-only"});
-                    // Проверяем, есть ли уже данные в результате запроса
-
-                    onResult((param) => {
-                        this.transect = param.data.transect.getTransect;
-                        console.log(`Данные об трансекте ${id} успешно получены:`, param.data.transect.getTransect)
-
-                    })
-
+                    const {data} = await useAsyncQuery(query, variables)
+                    this.transect =  data.value.transect.getTransect
+                    console.log(`Успешное получение ПП по id: ${id}`, data.value)
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error);
                 } finally {
                     this.loading = false
                 }
             },
+
+            setTrialSite(input: TrialSite){
+                this.transect.trialSite.push(input)
+            },
+
+            async CrateAnalysis(input: Analysis) {
+                try {
+                    const mutation = gql`
+                        mutation creatAnalysis($data:InputCreateAnalysis!) {
+                          analysis{
+                            creatAnalysis(input:$data){
+                              title
+                              path
+                            }
+                          }
+                        }
+                            `
+
+
+                    const variables = {
+                        data: {
+                            ...input
+                        }
+                    };
+
+
+                    const {mutate, onDone, onError} = useMutation(mutation)
+
+                    onDone((data) => {
+                        this.analysis = data.data.analysis.creatAnalysis
+                        console.log('Успешное создание:', data.data)
+                    })
+
+                    onError((error) => {
+                        console.error('Ошибка создании:', error.message)
+                    })
+
+                    await mutate(variables)
+
+
+                } catch (error) {
+                    console.error('Ошибка при выполнении запроса:', error)
+                }
+            },
+
 
 
             async CrateTransecta(input: Transecta) {
@@ -171,6 +219,8 @@ export const useTransecta = defineStore('Transecta', {
                             }
                             title
                             square
+                            rating
+                            countTypes
                             covered
                             squareTrialSite
                             trialSite {
@@ -194,7 +244,7 @@ export const useTransecta = defineStore('Transecta', {
                         }
                             `
 
-                    const { id, trialSite,  ...rest } = input;
+                    const {id, trialSite, ...rest} = input;
 
                     const variables = {
                         data: {
@@ -234,6 +284,8 @@ export const useTransecta = defineStore('Transecta', {
                         }
                         title
                         square
+                        rating
+                        countTypes
                         covered
                         squareTrialSite
                         trialSite {
@@ -264,7 +316,7 @@ export const useTransecta = defineStore('Transecta', {
 
                     const {id, trialSite, img, ...fiald} = input
                     let variables = {}
-                    if(trialSite){
+                    if (trialSite) {
                         variables = {
                             data: {
                                 id: id,
@@ -275,7 +327,7 @@ export const useTransecta = defineStore('Transecta', {
                                 }
                             }
                         }
-                    }else {
+                    } else {
                         variables = {
                             data: {
                                 id: id,

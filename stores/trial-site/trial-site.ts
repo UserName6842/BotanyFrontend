@@ -105,13 +105,9 @@ export const useTrialSite = defineStore('TrialSite', {
 
                 try {
 
-                    const {onResult} = useQuery(query, variables, {fetchPolicy: "network-only"});
-                    // Проверяем, есть ли уже данные в результате запроса
+                    const {data} = await useAsyncQuery(query, variables)
 
-                    onResult((param) => {
-                        this.trialSite = param.data.trialSite.getTrialSite;
-                        console.log(`Данные об ПП ${id} успешно получены:`, param.data.trialSite.getTrialSite)
-                    })
+                    this.trialSite = data.value?.trialSite.getTrialSite;
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error);
@@ -132,6 +128,9 @@ export const useTrialSite = defineStore('TrialSite', {
                                 resourceId
                               }
                               title
+                              covered
+                              rating
+                              countTypes
                             }
                           }
                         }
@@ -175,6 +174,37 @@ export const useTrialSite = defineStore('TrialSite', {
                             resourceId
                           }
                           title
+                          covered
+                          rating
+                          countTypes
+                          dominant{
+                          \tid\t{
+                            \tresourceId
+                          \t}
+                        \t}
+                          subDominant{
+                          \tid\t{
+                            \tresourceId
+                          \t}
+                          }
+                          img{
+                            \tid {
+                              \tresourceId
+                          \t}
+                          }
+                          plant{
+                           id{
+                                resourceId
+                              }
+                          count
+                          coverage
+                          typePlant{
+                              id{
+                                resourceId
+                              }
+                              title
+                            }
+                        }
                         }
                       }
                     }
@@ -192,8 +222,8 @@ export const useTrialSite = defineStore('TrialSite', {
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
+                        this.trialSite = data.data.trialSite.upTrialSite
                         console.log('Успешное обновление:', data.data)
-
                     })
 
                     onError((error) => {
@@ -214,17 +244,16 @@ export const useTrialSite = defineStore('TrialSite', {
                 try {
                     this.loading = true
                     const mutation = gql`
-                     mutation deleteTrialSite($data: ID!){
-                      transect{
-                        deleteTransect(id:$data){
-                          result
-                        }
-                      }
-                    }
+                            mutation deleteTrialSite($data: ID!){
+                              trialSite{
+                                deleteTrialSite(id:$data){
+                                  result
+                                }
+                              }
+                            }
                             `
-
                     const variables = {
-                        id: input.resourceId
+                        data: input.resourceId
                     }
 
                     const {mutate, onDone, onError} = useMutation(mutation)
@@ -253,10 +282,17 @@ export const useTrialSite = defineStore('TrialSite', {
                     mutation insertPlant($data: InputFormPlant){
                         trialSite{
                             createPlant(input:$data){
-                              id{
-                                resourceId
-                              }
-                              coverage
+                                id{
+                                    resourceId
+                                }
+                                count
+                                coverage
+                                typePlant{
+                                    id{
+                                        resourceId
+                                    }
+                                title
+                                }
                             }
                           }
                          }
@@ -289,6 +325,7 @@ export const useTrialSite = defineStore('TrialSite', {
                     this.loading = false
                 }
             },
+
 
             async UpdatePlant(input: Plant) {
                 try {
@@ -340,10 +377,10 @@ export const useTrialSite = defineStore('TrialSite', {
                 try {
                     this.loading = true
                     const mutation = gql`
-                            mutation deletePlant( $data: ID! ){
+                            mutation deletePlant($id: ID! ){
                               trialSite{
-                                deletePlant(id:$data){
-                                \tresult
+                                deletePlant(id:$id){
+                                result
                                 }
                               }
                             }

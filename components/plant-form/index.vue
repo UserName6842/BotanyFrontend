@@ -5,6 +5,7 @@
     <span v-else>Обновление</span>
     растения
   </div>
+  <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ model.id.resourceId.toString() }}</UBadge>
   <USelectMenu v-model:model-value="selectValue"
                :options="optionTypePlant" class="w-36">
     <template #label>
@@ -17,8 +18,8 @@
   </USelectMenu>
   <UInput v-model:model-value="model.coverage" placeholder="Название"></UInput>
   <UInput v-model:model-value="model.count" placeholder="Описание"></UInput>
-  <UButton v-if="type === 'create'" @click="handlerOnCreate">Создать</UButton>
-  <UButton v-else @click="handlerOnUpdete">Обновить</UButton>
+  <UButton v-if="type === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
+  <UButton v-else :loading="loading" @click="handlerOnUpdete">Обновить</UButton>
 </div>
 </template>
 
@@ -26,6 +27,7 @@
 
 import type {Plant} from "~/stores/trial-site/types";
 import type {TypePlant} from "~/stores/type-plant/types";
+
 
 interface PlantFormEmit {
   (event: 'onCreate', value: Plant | undefined): void
@@ -41,16 +43,16 @@ interface PlantFormProps {
 
 const handlerOnCreate = () => {
   if(selectValue.value){
-    model.value.typePlant = { id:selectValue.value?.id}
+    model.typePlant = { id:selectValue.value?.id, title:selectValue.value?.title }
   }
-  emits('onCreate',  model.value )
+  emits('onCreate',  model )
 }
 
 const handlerOnUpdete = () => {
   if(selectValue.value){
-    model.value.typePlant = selectValue.value
+    model.typePlant = { id:selectValue.value?.id, title:selectValue.value?.title }
   }
-  emits('onUpdated',  model.value )
+  emits('onUpdated',  model )
 }
 
 const props =  withDefaults(defineProps<PlantFormProps>(),{
@@ -65,12 +67,15 @@ const props =  withDefaults(defineProps<PlantFormProps>(),{
     }
   }
 })
+
 const {modelValue} = toRefs(props)
 const emits = defineEmits<PlantFormEmit>()
+const loading = ref<boolean>(false)
 
-
-const model = ref<Plant>(modelValue.value)
+const model = reactive<Plant>({...modelValue.value})
 const selectValue = ref<TypePlant>()
+
+selectValue.value = modelValue.value.typePlant
 
 
 

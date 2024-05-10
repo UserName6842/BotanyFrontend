@@ -15,6 +15,7 @@
 			auth{
     			signInUser(data:$data){
       			access_token
+            refresh_token
     			}
   			}
 		}
@@ -31,6 +32,9 @@
       const { mutate, onDone, onError } = useMutation(mutation)
 
       onDone( async (data) => {
+        debugger
+        const refreshToken = useCookie("refresh_token")
+        refreshToken.value = data.data.auth.signInUser.refresh_token
         const { onLogin, getToken} = useApollo()
         const token = data.data.auth.signInUser.access_token
         onLogin(token)

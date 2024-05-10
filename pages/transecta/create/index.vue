@@ -9,6 +9,7 @@ import type {Transecta} from "~/stores/transecta/types";
 
 const transectaStore = useTransecta()
 
+transectaStore.$reset()
 
 </script>
 

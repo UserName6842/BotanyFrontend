@@ -3,7 +3,7 @@
     <div class="transecta-title">
       Пробная площадка
     </div>
-    <UBadge color="white" variant="solid">ID: {{ id.toString() }}</UBadge>
+    <UBadge color="white" variant="solid">ID: {{ model.id.resourceId.toString() }}</UBadge>
     <div class="wrapper-transecta-input">
       <UInput v-model:model-value="model.title"/>
       <UInput v-model:model-value="model.rating"/>
@@ -30,19 +30,19 @@
             <div>
               Создать новое растение
             </div>
-            <UButton @click="isOpen = true">Создать</UButton>
+            <UButton @click="onCreatPlant">Создать</UButton>
           </div>
         </template>
       </UTable>
       <div class="wrapper-transecta-footer-table" v-if="model.plant && model.plant.length > 0">
-        <UButton @click="isOpen = true">Создать</UButton>
+        <UButton @click="onCreatPlant">Создать</UButton>
         <UPagination v-model="page" :page-count="pageCount" :total="model.plant.length"/>
       </div>
     </div>
     <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
   </div>
   <UModal  v-model="isOpen">
-    <plant-form :type="typePlantForm" :option-type-plant="typePlantStore.getTypePlants" @on-create="CratePlant"/>
+    <plant-form :type="typePlantForm" :model-value="plant" :option-type-plant="typePlantStore.getTypePlants" @on-create="CratePlant" @on-updated="UpdatePlant"/>
   </UModal>
 </template>
 
@@ -52,21 +52,33 @@ import {useTrialSite} from "~/stores/trial-site/trial-site";
 import {useTypePlant} from "~/stores/type-plant/type-plant";
 import type {TypeForm} from "~/stores/types";
 
+
 const isOpen = ref<boolean>(false)
 const trialSiteStore = useTrialSite()
 const typePlantStore = useTypePlant()
 const route = useRoute();
 const id = atob(route.params.id.toString());
-typePlantStore.fetchTypePlant()
-trialSiteStore.fetchTrialSiteById(id)
 const loading = ref<boolean>(false)
 
 const typePlantForm = ref<TypeForm>("create")
+const plant= ref<Plant>()
+
+const page = ref(1)
+const pageCount = 8
+
+await useAsyncData( async () => {
+  await trialSiteStore.fetchTrialSiteById(id)
+})
+
+typePlantStore.fetchTypePlant()
+
+let model =  reactive({...trialSiteStore.getTrialSite})
+
 
 const handlerOnUpdate = async () => {
   try {
     loading.value = true
-    await trialSiteStore.UpdateTrialSite(model.value)
+    await trialSiteStore.UpdateTrialSite(model)
   } catch (e) {
     console.log(e)
   } finally {
@@ -76,17 +88,19 @@ const handlerOnUpdate = async () => {
 
 const CratePlant = async (value: Plant) => {
   try {
+    debugger
     loading.value = true
     await trialSiteStore.CratePlant(value)
-    if (!model.value.plant) {
-      model.value.plant = []
-      model.value.plant.push(trialSiteStore.getPlant)
+    if (!model.plant) {
+      model.plant = []
+      model.plant.push(trialSiteStore.getPlant)
     } else {
-      const trialSite = model.value.plant
-      trialSite.push(trialSiteStore.getPlant)
-      model.value.plant = trialSite
+      const trialSite = model.plant
+      const plant = trialSiteStore.getPlant
+      trialSite.push(plant)
+      model.plant = trialSite
     }
-    await trialSiteStore.UpdateTrialSite(model.value)
+    await trialSiteStore.UpdateTrialSite(model)
   } catch (e) {
     console.log(e)
   } finally {
@@ -94,11 +108,44 @@ const CratePlant = async (value: Plant) => {
   }
 }
 
+const UpdatePlant = async (value: Plant) => {
+  try {
+    debugger
+    loading.value = true
+    await trialSiteStore.UpdatePlant(value)
+    const index = model.plant.findIndex(item => item.id!.resourceId === value.id!.resourceId)
+    model.plant[index] = value
+  } catch (e) {
+    console.log(e)
+  } finally {
+    loading.value = false
+  }
+}
+
+const onCreatPlant = () => {
+  isOpen.value = true
+  typePlantForm.value = "create"
+  plant.value = undefined
+}
+
+const handlerOnDeletePlant = async (input: Plant) => {
+  try {
+    loading.value = true;
+    await trialSiteStore.DeletePlant(input.id!);
+    const index = model.plant.findIndex(item => item.id!.resourceId === input.id!.resourceId)
+    model.plant.splice(index, 1)
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+};
 
 
-const model = ref<TrialSite>(trialSiteStore.getTrialSite)
 
-const columns = [{
+//Таблица
+const columns = [
+    {
   key: 'id',
   label: '№'
 }, {
@@ -114,24 +161,26 @@ const columns = [{
   key: 'actions'
 }]
 
-const items = (row) => [
+const items = (row: Plant) => [
   [{
-    label: 'Открыть',
+    label: 'Изменить',
     icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => navigateTo("transecta/" + btoa(row.id))
+    click: () => {
+      isOpen.value = true
+      plant.value = row
+      typePlantForm.value = "update"
+    }
   },], [{
     label: 'Удалить',
     icon: 'i-heroicons-trash-20-solid',
-    click: () => console.log("Delete", row)
+    click: () => handlerOnDeletePlant(row)
   }]
 ]
 
-const page = ref(1)
-const pageCount = 8
 
 const rows = computed(() => {
-  if(model.value.plant){
-    return model.value.plant.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+  if(model.plant){
+    return model.plant.slice((page.value - 1) * pageCount, (page.value) * pageCount)
   }
 })
 

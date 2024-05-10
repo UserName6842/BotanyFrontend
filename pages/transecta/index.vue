@@ -13,18 +13,61 @@
     </template>
   </UTable>
     <div class="wrapper-transecta-table">
-
       <UPagination v-if="transectaStore.getTransects" v-model="page" :page-count="pageCount" :total="transectaStore.getTransects.length"/>
     </div>
   </div>
+  <UModal v-model="isOpen">
+    <analysis-form :transect="transect" @on-download="onDownload"/>
+  </UModal>
+  <a ref="linkDownload" />
+
 </template>
 
 <script lang="ts" setup>
 import {useTransecta} from "~/stores/transecta/transecta";
-
+import type {Analysis, Transecta} from "~/stores/transecta/types";
+import {useEcomorph} from "~/stores/ecomorph/ecomorph";
 
 const transectaStore = useTransecta()
 await transectaStore.fetchTransecta()
+
+const isOpen = ref<boolean>(false)
+const transect = ref<Transecta>()
+const linkDownload = ref()
+const ecomorhStores = useEcomorph()
+await useAsyncData( async () => {
+  await ecomorhStores.fetchEcomorhs()
+})
+
+const onDownload = async (input: Analysis) => {
+  console.log(input)
+  debugger
+  await transectaStore.CrateAnalysis(input)
+  let reader = new FileReader();
+  reader.onload = function() {
+    linkDownload.value.href = reader.result;
+    linkDownload.value.download = transectaStore.analysis.title ;
+    linkDownload.value.click();
+  };
+  const url =  "http://localhost:8080" + transectaStore.analysis.path
+  const blob = await downloadFileAsBlob(url)
+  reader.readAsDataURL(blob!);
+}
+
+async function downloadFileAsBlob(url: string) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to download image');
+    }
+    const blob = await response.blob();
+    return blob;
+  } catch (error) {
+    console.error('Error downloading image:', error.message);
+    return null;
+  }
+}
+
 const columns = [{
   key: 'id',
   label: '№'
@@ -54,13 +97,18 @@ const items = (row) => [
   [{
     label: 'Открыть',
     icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => navigateTo( "transecta/"+ btoa(row.id?.resourceId!))
+    click: () => {
+      navigateTo("transecta/" + btoa(row.id?.resourceId!))
+    }
   },],
   [{
-    label: 'Получить анализ',
-    icon: 'i-ph-download-simple-light',
-    click: () => console.log("анализ")
-  },]
+      label: 'Получить анализ ',
+      icon: 'i-ph-download-simple-light',
+      click: () => {
+        isOpen.value = true
+        transect.value = row
+      }
+    },]
   , [{
     label: 'Удалить',
     icon: 'i-heroicons-trash-20-solid',
@@ -76,6 +124,8 @@ const rows = computed(() => {
     return transectaStore.getTransects.slice((page.value - 1) * pageCount, (page.value) * pageCount)
   }
 })
+
+
 </script>
 
 <style lang="scss" scoped>

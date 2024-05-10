@@ -64,7 +64,10 @@ const items = (row) => [
   }]
 ]
 
-ecomorhStores.fetchEcomorhs()
+await useAsyncData( async () => {
+  await ecomorhStores.fetchEcomorhs()
+})
+
 
 let ecoporph = reactive<Ecomorph>({
   title: "",
