@@ -88,7 +88,6 @@ const handlerOnUpdate = async () => {
 
 const CratePlant = async (value: Plant) => {
   try {
-    debugger
     loading.value = true
     await trialSiteStore.CratePlant(value)
     if (!model.plant) {
@@ -110,7 +109,6 @@ const CratePlant = async (value: Plant) => {
 
 const UpdatePlant = async (value: Plant) => {
   try {
-    debugger
     loading.value = true
     await trialSiteStore.UpdatePlant(value)
     const index = model.plant.findIndex(item => item.id!.resourceId === value.id!.resourceId)
@@ -150,13 +148,13 @@ const columns = [
   label: '№'
 }, {
   key: 'typePlant',
-  label: 'Тип растения'
+  label: 'Вид растения'
 }, {
   key: 'count',
-  label: 'Количество'
+  label: 'Количество особей'
 }, {
   key: 'coverage',
-  label: 'Покрытость'
+  label: 'Покрытие'
 }, {
   key: 'actions'
 }]

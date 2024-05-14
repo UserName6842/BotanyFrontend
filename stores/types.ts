@@ -2,6 +2,14 @@
 export type AuthStore = {
     userName: string
     isLogin: boolean
+    user?: User
+}
+
+export type RoleType = "NormalUser" | "SuperUser"
+
+export type User = {
+    name: string
+    role: RoleType
 }
 
 export type Identifier = {

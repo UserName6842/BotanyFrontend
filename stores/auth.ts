@@ -7,6 +7,7 @@ export const useAuth = defineStore('Auth', {
     }),
     getters: {
         getIsLogin: (state) => state.isLogin,
+        getUser: (state) => state.user,
     },
     actions: {
         setIsLogin(input: boolean){
@@ -17,6 +18,31 @@ export const useAuth = defineStore('Auth', {
             const {getToken} = useApollo()
             const token = await getToken()
             this.isLogin = !!token
+        },
+
+        async getMe() {
+            const query = gql`
+                query getMe{
+                   userQuery{
+                    getMe{
+                      name
+                      role
+                    }
+                  }
+                }
+               `
+            try {
+                const {onResult} = useQuery(query, {}, {fetchPolicy: "network-only"});
+                // Проверяем, есть ли уже данные в результате запроса
+
+                onResult((param) => {
+                    this.user = param.data.userQuery.getMe;
+
+                })
+
+            } catch (error) {
+                console.error('Ошибка при выполнении запроса:', error);
+            }
         }
     }
     }

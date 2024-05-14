@@ -1,7 +1,4 @@
-
-import {useAsyncData} from "#app";
 import type {Ecomorph, EcomorphStore} from "~/stores/ecomorph/types";
-import {TypeEcomorph} from "~/stores/type-ecomorphs/types";
 import type {Identifier} from "~/stores/types";
 
 export const useEcomorph = defineStore('Ecomorph', {
@@ -10,7 +7,7 @@ export const useEcomorph = defineStore('Ecomorph', {
             loading: false
         }),
         getters: {
-            getEcomorphs: (state):Ecomorph[] => state.ecomorhs,
+            getEcomorphs: (state): Ecomorph[] => state.ecomorhs,
             getIsLoading: (state) => state.loading,
         },
         actions: {
@@ -36,14 +33,12 @@ export const useEcomorph = defineStore('Ecomorph', {
                `
 
                 const variables = {
-                    dataPage: {
-
-                    }
+                    dataPage: {}
                 }
 
                 try {
                     this.loading = true
-                    const {  data} = await useAsyncQuery(query,  variables);
+                    const {data} = await useAsyncQuery(query, variables);
                     // Проверяем, есть ли уже данные в результате запроса
 
                     this.ecomorhs = data.value.ecomorph.getListEcomorph.list;
@@ -72,13 +67,13 @@ export const useEcomorph = defineStore('Ecomorph', {
                             `
 
                     const variables = {
-                        data:{
+                        data: {
                             title: input.title,
                             description: input.description
                         }
                     }
                     this.loading = true
-                    const { mutate, onDone, onError } = useMutation(mutation)
+                    const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
                         console.log('Успешное создание:', data.data)
@@ -95,7 +90,7 @@ export const useEcomorph = defineStore('Ecomorph', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
-                }   finally {
+                } finally {
                     this.loading = false
                 }
             },
@@ -118,12 +113,13 @@ export const useEcomorph = defineStore('Ecomorph', {
                     const variables = {
                         data: {
                             id: input.id,
-                            payload:{
+                            payload: {
                                 title: input.title,
                                 description: input.description,
                             }
                         }
                     }
+
                     this.loading = true
                     const {mutate, onDone, onError} = useMutation(mutation)
 
@@ -142,7 +138,7 @@ export const useEcomorph = defineStore('Ecomorph', {
 
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error)
-                }finally {
+                } finally {
                     this.loading = false
                 }
             },
@@ -163,7 +159,7 @@ export const useEcomorph = defineStore('Ecomorph', {
                         id: input.resourceId
                     }
                     this.loading = true
-                    const { mutate, onDone, onError } = useMutation(mutation)
+                    const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
                         console.log('Успешное удаление:', data.data)

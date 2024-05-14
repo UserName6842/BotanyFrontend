@@ -9,7 +9,9 @@
     <div v-else class="wrapper-type-plant-form" >
     <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ modelValue.id.resourceId }}</UBadge>
     <div class="type-plant-form-wrapper-title">
-      <UInput v-model:model-value="modelValue.title" placeholder="Название"/>
+      <UInput placeholder="Семейства"/>
+      <UInput placeholder="Род"/>
+      <UInput v-model:model-value="modelValue.title" placeholder="Вид"/>
       <UInput v-model:model-value="modelValue.subtitle" placeholder="Название на латыни"/>
     </div>
 

@@ -4,8 +4,9 @@
       <img v-if="option.img && option.img.path" :src=" 'http://localhost:8080' + option.img.path" :alt="option.title" class="plant-cart-image">
     </div>
     <div>
-      <div class="plant-cart-title">
-        {{option.title}}
+      <div  class="plant-cart-title">
+        <span v-if="option.title" >{{option.title}}</span>
+        <span v-else >?</span>
       </div>
     </div>
   </div>

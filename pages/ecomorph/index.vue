@@ -1,7 +1,7 @@
 <template>
 
   <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs">
-    <template #id-data="{ row, index}">
+    <template #id-data="{row, index}">
       {{ index + 1 }}
     </template>
     <template #actions-data="{ row }">
@@ -40,7 +40,7 @@ const columns = [{
   label: '№'
 }, {
   key: 'title',
-  label: 'Название'
+  label: 'Экоморфы'
 }, {
   key: 'description',
   label: 'Описание'

@@ -41,7 +41,6 @@ await useAsyncData( async () => {
 
 const onDownload = async (input: Analysis) => {
   console.log(input)
-  debugger
   await transectaStore.CrateAnalysis(input)
   let reader = new FileReader();
   reader.onload = function() {
@@ -50,6 +49,7 @@ const onDownload = async (input: Analysis) => {
     linkDownload.value.click();
   };
   const url =  "http://localhost:8080" + transectaStore.analysis.path
+  debugger
   const blob = await downloadFileAsBlob(url)
   reader.readAsDataURL(blob!);
 }

@@ -94,7 +94,6 @@ const handlerOnDeleteTrailSite = async (input: TrialSite) => {
 const CreateTrailSite = async (input: TrialSite) => {
   try {
     loading.value = true;
-    debugger
     await trialSiteStore.CrateTrialSite(input);
     const newTrialSite = { ...trialSiteStore.getTrialSite };
     if (!modelValue.trialSite) {
@@ -134,11 +133,11 @@ const columns = [
   },
   {
     key: 'rating',
-    label: 'Рейтинг'
+    label: 'Обилие'
   },
   {
     key: 'covered',
-    label: 'Покрытость'
+    label: 'Покрытие'
   },
   {
     key: 'dominant',
@@ -146,7 +145,7 @@ const columns = [
   },
   {
     key: 'subDominant',
-    label: 'Сабдоминант'
+    label: 'Содоминант'
   }, {
     key: 'actions'
   }]

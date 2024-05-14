@@ -2,11 +2,10 @@
   <div class="wrapper-header">
     <div>
       <NuxtLink to="/">
-      <logo class="h-16"/>
+        <logo class="h-16"/>
       </NuxtLink>
     </div>
-
-    <div class="wrapper-header-auth" v-if="!auth.getIsLogin" >
+    <div v-if="!auth.getIsLogin" class="wrapper-header-auth">
       <NuxtLink to="/login">
         <UButton>
           Авторизация
@@ -26,23 +25,23 @@
 
 <script lang="ts" setup>
 import logo from "assets/icons/logo.svg"
-import OpenIcon from "../../assets/icons/menu/open-icon.svg"
 import {useAuth} from "~/stores/auth";
-const { getToken, onLogout } = useApollo()
+
+const {getToken, onLogout} = useApollo()
 
 const auth = useAuth()
 
-auth.checkLogin()
+await auth.checkLogin()
 
 </script>
 
 <style lang="scss" scoped>
-.wrapper-header{
+.wrapper-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  .wrapper-header-auth{
+  .wrapper-header-auth {
     display: flex;
     align-items: center;
     gap: 5px;

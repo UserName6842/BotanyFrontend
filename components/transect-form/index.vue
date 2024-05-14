@@ -43,8 +43,10 @@
         </template>
       </UTable>
       <div class="wrapper-transecta-footer-table">
-        <UButton v-if=" modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true">Создать</UButton>
-        <UPagination v-if="modelValue.trialSite" v-model="page" :page-count="pageCount" :total="modelValue.trialSite.length"/>
+        <UButton v-if=" modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true">Создать
+        </UButton>
+        <UPagination v-if="modelValue.trialSite" v-model="page" :page-count="pageCount"
+                     :total="modelValue.trialSite.length"/>
       </div>
     </div>
     <UButton v-if="type === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
@@ -66,8 +68,9 @@ import {useTrialSite} from "~/stores/trial-site/trial-site";
 
 interface TransectaFormProps {
   type: TypeForm
-  modelValue: Transecta
 }
+
+defineProps<TransectaFormProps>()
 
 
 const page = ref(1)
@@ -77,7 +80,11 @@ const transectaStore = useTransecta()
 const trialSiteStore = useTrialSite()
 const isOpen = ref<boolean>(false)
 
-const {modelValue} = defineProps<TransectaFormProps>()
+const modelValue: Transecta = {
+  id: {resourceId: ""},
+  title: "",
+  trialSite: []
+};
 
 const CreateTrailSite = async (input: TrialSite) => {
   try {
@@ -85,9 +92,9 @@ const CreateTrailSite = async (input: TrialSite) => {
     await trialSiteStore.CrateTrialSite(input);
     const newTrialSite = trialSiteStore.getTrialSite;
     if (!modelValue.trialSite) {
-     modelValue.trialSite = [];
+      modelValue.trialSite = [];
     }
-   modelValue.trialSite.push(newTrialSite);
+    modelValue.trialSite.push(newTrialSite);
     await handlerOnUpdate();
   } catch (error) {
     console.error(error);
@@ -164,7 +171,7 @@ const items = (row) => [
 ]
 
 const rows = computed(() => {
-  return  modelValue && modelValue.trialSite ? modelValue.trialSite.slice((page.value - 1) * pageCount, (page.value) * pageCount) : []
+  return modelValue && modelValue.trialSite ? modelValue.trialSite.slice((page.value - 1) * pageCount, (page.value) * pageCount) : []
 })
 </script>
 

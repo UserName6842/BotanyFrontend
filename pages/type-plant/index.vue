@@ -29,7 +29,10 @@ const typePlantStores = useTypePlant()
 const option = ref<TypePlant[]>([])
 
 const page = ref(1)
-typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}})
+useAsyncData(async () => {
+  typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}})
+})
+
 const total: number = typePlantStores.getTotalCountTypePlants
 
 const onClickCart = (value: TypePlant) => {

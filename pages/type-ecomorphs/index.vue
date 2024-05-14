@@ -45,24 +45,28 @@ const isOpen = ref(false)
 const columns = [{
   key: 'id',
   label: '№'
-}, {
-  key: 'title',
-  label: 'Название'
-}, {
-  key: 'description',
-  label: 'Описание'
-}, {
-  key: 'displayTable',
-  label: 'Отображение в таблице'
-}, {
-  key: 'score',
-  label: 'Баллы'
-}, {
-  key: 'ecomorph',
-  label: 'Екоморф'
-}, {
-  key: 'actions'
-}]
+},
+  {
+    sortable: true,
+    key: 'ecomorph',
+    label: 'Екоморф'
+  }, {
+    key: 'title',
+    label: 'Название'
+  },
+  {
+    key: 'description',
+    label: 'Описание'
+  }, {
+    key: 'displayTable',
+    label: 'Отображение в таблице'
+  }, {
+    key: 'score',
+    label: 'Баллы',
+    sortable: true
+  }, {
+    key: 'actions'
+  }]
 
 const items = (row) => [
   [{

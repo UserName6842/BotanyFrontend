@@ -13,6 +13,9 @@
             <UButton class="my-1" color="gray" icon="i-heroicons-x-mark-20-solid" variant="ghost"
                      @click="isOpen = false"/>
           </div>
+          <div v-if="auth.user">
+            {{ auth.user.name }}
+          </div>
         </template>
 
         <template #default>
@@ -35,36 +38,44 @@ import {useAuth} from "~/stores/auth";
 
 const isOpen = ref(false)
 
-const route = useRoute()
+const links = computed(() => {
+  const config = [
+    {
+      label: 'Главная',
+      icon: 'i-heroicons-home',
+      to: '/home'
+    }, {
+      label: 'Геоботаническое описание',
+      icon: 'i-heroicons-document-text',
+      to: '/transecta'
+    }, {
+      label: 'Видовой состав',
+      icon: 'i-ph-plant-light',
+      to: '/type-plant'
+    }]
 
-const links = [
-  {
-    label: 'Главная',
-    icon: 'i-heroicons-home',
-    to: '/home'
-  }, {
-    label: 'Трансекты',
-    icon: 'i-heroicons-document-text',
-    to: '/transecta'
-  }, {
-    label: 'Типы растений',
-    icon: 'i-ph-plant-light',
-    to: '/type-plant'
-  },
-  {
-    label: 'Группы Экоморфов',
-    icon: 'i-ph-plant-light',
-    to: '/ecomorph'
+  if (auth.user?.role === "SuperUser") {
+    config.push({
+      label: 'Группы Экоморфов',
+      icon: 'i-ph-plant-light',
+      to: '/ecomorph'
+    })
+    config.push({
+      label: 'Экоморфы',
+      icon: 'i-ph-plant-light',
+      to: '/type-ecomorphs'
+    })
   }
-  ,
-  {
-    label: 'Экоморфы',
-    icon: 'i-ph-plant-light',
-    to: '/type-ecomorphs'
-  }]
+
+  return config
+})
 
 
 const auth = useAuth()
+
+await auth.getMe()
+
+
 const logout = async () => {
   const {onLogout} = useApollo()
   auth.setIsLogin(false)

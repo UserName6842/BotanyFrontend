@@ -25,7 +25,6 @@ export default defineNuxtPlugin((nuxtApp) => {
             const {mutate, onDone, onError} = useMutation(quert)
 
             onDone(async (data) => {
-                debugger
                 const token = data.data.auth.RefreshToken.access_token
                 console.log(token)
                 await onLogin(token)
