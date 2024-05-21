@@ -21,7 +21,7 @@
       <!--    </template>-->
     </USelectMenu>
     <URadioGroup v-model="model.typeAnalysis" :options="options" class="wrapper-form-radio"/>
-    <UButton @click="handlerOnDownload">Загрузить</UButton>
+    <UButton @click="handlerOnDownload">Скачать</UButton>
   </div>
 </template>
 

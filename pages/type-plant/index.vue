@@ -3,7 +3,10 @@
   <div v-else class="wrapper-plant-list">
     <div class="wrapper-title">
       <div class="type-plant-form-title">Список типов растений</div>
-      <div class="type-plant-form-title">Всего растений {{ total }}</div>
+      <div>
+        <div class="type-plant-form-total">Всего растений {{ total }}</div>
+      </div>
+
       <div>
         <UButton label="Создать новое растение" @click="navigateTo('type-plant/create')"/>
       </div>
@@ -13,7 +16,7 @@
 
     </div>
     <div class="wrapper-pagination">
-      <UPagination v-model="page" @update:modelValue="(value) => typePlantStores.fetchTypePlant({page: {page: value, limit: 10}})" :total="total"/>
+      <UPagination v-if="typePlantStores.getTypePlants.length > 0" v-model="page" @update:modelValue="(value) => typePlantStores.fetchTypePlant({page: {page: value, limit: 10}})" :total="total"/>
     </div>
 
   </div>

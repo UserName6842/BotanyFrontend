@@ -123,18 +123,9 @@ export const useTypePlant = defineStore('TypePlant', {
                 const variables = {
                     data: id
                 }
-
                 try {
-
-                    const {onResult} = useQuery(query, variables, {fetchPolicy: "network-only"});
-                    // Проверяем, есть ли уже данные в результате запроса
-
-                    onResult((param) => {
-                        this.typePlant = param.data.typePlant.getTypePlant;
-                        console.log(`Данные об типе растения ${id} успешно получены:`, param.data.typePlant.getTypePlant)
-
-                    })
-
+                    const {data} = await useAsyncQuery(query, variables);
+                    this.typePlant = data.value?.typePlant.getTypePlant;
                 } catch (error) {
                     console.error('Ошибка при выполнении запроса:', error);
                 } finally {

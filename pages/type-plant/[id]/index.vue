@@ -1,5 +1,6 @@
 <template>
-  <type-plant-form  type="update"  :model-value="modelValue" />
+  <defaults-loader v-if="typePlantStores.loading"/>
+  <type-plant-form v-else  type="update"  :model-value="modelValue" />
 </template>
 
 <script setup lang="ts">
@@ -13,17 +14,16 @@ const typePlantStores = useTypePlant()
 
 const route = useRoute();
 
-const modelValue = typePlantStores.getTypePlant
 
 const id = atob(route.params.id.toString());
 
 ecomorhStores.fetchEcomorhs()
 typeEcomorhStores.fetchEcomorhs()
-useAsyncData(async () => {
+await useAsyncData(async () => {
   await typePlantStores.fetchTypePlantById(id)
 })
 
-
+const modelValue = reactive({...typePlantStores.getTypePlant})
 
 </script>
 

@@ -1,7 +1,7 @@
 <template>
-  <UTable :columns="columns" :rows="typeEomorhStores.getTypeEcomorphs">
+  <UTable :columns="columns" :rows="rows">
     <template #id-data="{ row, index}">
-      {{ index + 1 }}
+      {{ (index + 1) + (pageCount * (page - 1)) }}
     </template>
     <template #ecomorph-data="{ row }">
       <span v-if="row.ecomorphs && row.ecomorphs.title">{{
@@ -21,6 +21,9 @@
       isOpen = true
       typeModal = 'create'
     }"/>
+  </div>
+  <div class="wrapper-pagination">
+    <UPagination v-model="page" :page-count="pageCount" :total="typeEomorhStores.getTypeEcomorphs.length"/>
   </div>
   <UModal v-model="isOpen">
     <type-ecomorph-form
@@ -106,6 +109,16 @@ const updateTypeEcomorph = async (value: TypeEcomorph) => {
   isOpen.value = false
   await typeEomorhStores.UpdateEcomorhs(value)
 }
+
+const page = ref(1)
+const pageCount = 8
+
+const rows = computed(() => {
+  if (typeEomorhStores.getTypeEcomorphs) {
+    return typeEomorhStores.getTypeEcomorphs.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+  }
+})
+
 </script>
 
 
@@ -123,6 +136,13 @@ const updateTypeEcomorph = async (value: TypeEcomorph) => {
     }
 
   }
+}
+
+.wrapper-pagination {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .wrapper-home {
