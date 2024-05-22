@@ -1,18 +1,16 @@
 <template>
   <div class="wrapper-transecta">
-    <div class="transecta-title">
+    <div class="title-m">
       Трансекта
     </div>
     <UBadge v-if="type === 'update' && modelValue && modelValue.id" color="white" variant="solid">ID:
       {{ modelValue.id.resourceId }}
     </UBadge>
     <div class="wrapper-transecta-input">
-      <UInput v-model:model-value="modelValue.title" placeholder="Название"/>
-      <UInput v-model:model-value="modelValue.rating" placeholder="Балы"/>
-      <UInput v-model:model-value="modelValue.covered" placeholder="Покрытость"/>
-      <UInput v-model:model-value="modelValue.countTypes" placeholder="Количество типов растений"/>
-      <UInput v-model:model-value="modelValue.squareTrialSite" placeholder="Площадь ПП"/>
-      <UInput v-model:model-value="modelValue.square" placeholder="Площадь"/>
+      <b-input v-model:model-value="modelValue.title" placeholder="Введите название" title="Название"/>
+      <b-input v-model:model-value="modelValue.covered" placeholder="Введите покрытость" title="Покрытость"/>
+      <b-input v-model:model-value="modelValue.squareTrialSite" placeholder="Введите площадь ПП" title="Площадь ПП"/>
+      <b-input v-model:model-value="modelValue.square" placeholder="Введите площадь" title="Площадь"/>
     </div>
     <div v-if="type === 'update' " class="wrapper-transecta-table">
       <div class="plant-title">
@@ -218,9 +216,4 @@ const rows = computed(() => {
   gap: 15px;
 }
 
-.transecta-title {
-  font-size: 36px;
-  color: var(--ling-root);
-  font-weight: 700;
-}
 </style>

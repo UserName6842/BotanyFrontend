@@ -17,7 +17,8 @@ export default defineNuxtConfig({
   },
 
   css: [
-    "./assets/styles/color.scss"
+    "./assets/styles/color.scss",
+    "./assets/styles/fonts.scss"
   ],
 
   ui: {

@@ -4,7 +4,7 @@
       <img v-if="option.img && option.img.path" :src=" 'http://localhost:8080' + option.img.path" :alt="option.title" class="plant-cart-image">
     </div>
     <div>
-      <div  class="plant-cart-title">
+      <div  class="title-s">
         <span v-if="option.title" >{{option.title}}</span>
         <span v-else >?</span>
       </div>
@@ -44,12 +44,6 @@ defineProps<PlantCartProps>()
     transform: scale(1.05);
   }
 
-  .plant-cart-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--ling-root);
-    transition: color 0.3s ease;
-  }
 
   .wrapper-plant-cart-image {
     border-radius: 6px;

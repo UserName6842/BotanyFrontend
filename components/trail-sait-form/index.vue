@@ -1,9 +1,8 @@
 <template>
   <div class="wrapper-trail-site-form">
-    <div>Создание растения</div>
-    <UInput placeholder="Название" v-model="modelValue.title"></UInput>
-    <UInput placeholder="Балы" v-model="modelValue.rating"></UInput>
-    <UInput placeholder="Покрытие" v-model="modelValue.covered"></UInput>
+    <div class="title-s">Создание растения</div>
+    <b-input title="Название" placeholder="Введите название" v-model="modelValue.title"></b-input>
+    <b-input title="Покрытие" placeholder="Введите покрытие" v-model="modelValue.covered"></b-input>
     <UButton v-if="type === 'create'" @click="$emit('onCreate', modelValue )">Создать</UButton>
   </div>
 </template>

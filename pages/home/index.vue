@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper-page">
-    <span class="page-title">Ознакомление</span>
+    <span class="title-m">Ознакомление</span>
   <div class="wrapper-content">
     <div v-for="(item, index) of content" :key="index" class="item" :class="{'row-reverse': index % 2 == 1}">
       <div class="wrapper-content-text">
@@ -54,11 +54,6 @@ const content: { title: string, content: string, img:  string }[] = [
     justify-content: space-around;
     gap: 60px;
 
-    .page-title{
-      font-size: 36px;
-      color: var(--ling-root);
-      font-weight: 700;
-    }
   }
 
   .wrapper-content{

@@ -53,7 +53,7 @@ export const useTransecta = defineStore('Transecta', {
                           resourceId
                         }
                           title
-                          
+
                       }
                         subDominant{
                            id{
@@ -161,6 +161,77 @@ export const useTransecta = defineStore('Transecta', {
                     this.loading = false
                 }
             },
+
+          async fetchAsyncTransectaById(id: string) {
+            this.loading = true
+            const query = gql`
+                    query getTrialSite($data: ID!){
+                      transect{
+                        getTransect(id:$data){
+                           id{
+                              resourceId
+                            }
+                            title
+                            square
+                            rating
+                            countTypes
+                            covered
+                            squareTrialSite
+                            trialSite {
+                            id {
+                              resourceId
+                            }
+                              title
+                              covered
+                              countTypes
+                              rating
+                              subDominant{
+                               id{
+                              resourceId
+                            }
+                              title
+                            }
+                            dominant{
+                               id{
+                              resourceId
+                            }
+                              title
+                            }
+                          \t}
+                            subDominant{
+                               id{
+                              resourceId
+                            }
+                              title
+                            }
+                            dominant{
+                               id{
+                              resourceId
+                            }
+                              title
+                            }
+                        }
+                      }
+                    }
+               `
+            const variables = {
+              data: id
+            }
+
+            try {
+
+              const {onResult} = await useQuery(query, variables)
+              onResult((param) => {
+                this.transect = param.data.value.transect.getTransect
+                console.log(`Успешное получение ПП по id: ${id}`,  param.data.value)
+              })
+
+            } catch (error) {
+              console.error('Ошибка при выполнении запроса:', error);
+            } finally {
+              this.loading = false
+            }
+          },
 
             setTrialSite(input: TrialSite){
                 this.transect.trialSite.push(input)

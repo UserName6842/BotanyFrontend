@@ -1,16 +1,16 @@
 <template>
   <div class="p-4">
     <div class="wrapper-home">
-      <div class="type-plant-form-title">
+      <div class="title-s">
         <span v-if="type === 'create'">Создание</span>
         <span v-else>Обновление</span>
         группы растений
       </div>
       <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ modelValue.id.resourceId }}</UBadge>
-      <UInput v-model:model-value="modelValue.title" placeholder="Название"></UInput>
-      <UInput v-model:model-value="modelValue.description" placeholder="Описание"></UInput>
-      <UInput v-model:model-value="modelValue.displayTable" placeholder="Отображение в таблице"></UInput>
-      <UInput v-model:model-value="modelValue.score" placeholder="Баллы"></UInput>
+      <b-input title="Название" v-model:model-value="modelValue.title" placeholder="Введите название"></b-input>
+      <b-input title="Описание" v-model:model-value="modelValue.description" placeholder="Введите описание"></b-input>
+      <b-input title="Отображение в таблице" v-model:model-value="modelValue.displayTable" placeholder="Введите обазначение"></b-input>
+      <b-input title="Баллы" v-model:model-value="modelValue.score" placeholder="Введите баллы"></b-input>
       <USelectMenu v-model:model-value="modelValue.ecomorphs" :options="ecomorhStores.getEcomorphs">
         <template #label>
           <span class="truncate">{{ modelValue.ecomorphs.title }}</span>

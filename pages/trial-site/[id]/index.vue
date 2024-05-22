@@ -1,16 +1,30 @@
 <template>
   <div class="wrapper-transecta">
-    <div class="transecta-title">
+    <div class="title-m">
       Пробная площадка
     </div>
-    <UBadge color="white" variant="solid">ID: {{ model.id.resourceId.toString() }}</UBadge>
+    <div class="flex flex-wrap items-center justify-center gap-3 w-[350px]">
+      <UBadge v-if=" model && model.id" color="white" variant="solid">ID:
+        {{ model.id.resourceId }}
+      </UBadge>
+      <div class="flex gap-3">
+        <UBadge v-if=" model && model.id && model.dominant" color="white" variant="solid">
+          Доминант: {{ model.dominant?.title }}
+        </UBadge>
+        <UBadge v-if=" model && model.id && model.subDominant" color="white" variant="solid">
+          Содоминант: {{ model.subDominant?.title }}
+        </UBadge>
+      </div>
+      <UBadge v-if="model && model.rating" color="white" variant="solid">
+        Баллы: {{ model.rating }}
+      </UBadge>
+    </div>
     <div class="wrapper-transecta-input">
       <UInput v-model:model-value="model.title"/>
-      <UInput v-model:model-value="model.rating"/>
       <UInput v-model:model-value="model.covered"/>
     </div>
-    <div>
-      <div class="plant-title">
+    <div class="wrapper-trial-site-table">
+      <div class="title-xs">
         Растения
       </div>
       <UTable :columns="columns" :rows="rows">
@@ -18,7 +32,7 @@
           {{ index + 1 }}
         </template>
         <template #typePlant-data="{row, index}">
-          <span v-if= "row.typePlant && row.typePlant.title">{{ row.typePlant.title }}</span>
+          <span v-if="row.typePlant && row.typePlant.title">{{ row.typePlant.title }}</span>
         </template>
         <template #actions-data="{ row }">
           <UDropdown :items="items(row)">
@@ -34,20 +48,21 @@
           </div>
         </template>
       </UTable>
-      <div class="wrapper-transecta-footer-table" v-if="model.plant && model.plant.length > 0">
+      <div v-if="model.plant && model.plant.length > 0" class="wrapper-transecta-footer-table">
         <UButton @click="onCreatPlant">Создать</UButton>
-        <UPagination v-model="page" :page-count="pageCount" :total="model.plant.length"/>
+        <UPagination v-if="model.plant && model.plant.length > pageCount" v-model="page" :page-count="pageCount" :total="model.plant.length"/>
       </div>
     </div>
     <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
   </div>
-  <UModal  v-model="isOpen">
-    <plant-form :type="typePlantForm" :model-value="plant" :option-type-plant="typePlantStore.getTypePlants" @on-create="CratePlant" @on-updated="UpdatePlant"/>
+  <UModal v-model="isOpen">
+    <plant-form :model-value="plant" :option-type-plant="typePlantStore.getTypePlants" :type="typePlantForm"
+                @on-create="CratePlant" @on-updated="UpdatePlant"/>
   </UModal>
 </template>
 
 <script lang="ts" setup>
-import type {Plant, TrialSite} from "~/stores/trial-site/types";
+import type {Plant} from "~/stores/trial-site/types";
 import {useTrialSite} from "~/stores/trial-site/trial-site";
 import {useTypePlant} from "~/stores/type-plant/type-plant";
 import type {TypeForm} from "~/stores/types";
@@ -61,18 +76,18 @@ const id = atob(route.params.id.toString());
 const loading = ref<boolean>(false)
 
 const typePlantForm = ref<TypeForm>("create")
-const plant= ref<Plant>()
+const plant = ref<Plant>()
 
 const page = ref(1)
 const pageCount = 8
 
-await useAsyncData( async () => {
+await useAsyncData(async () => {
   await trialSiteStore.fetchTrialSiteById(id)
 })
 
 typePlantStore.fetchTypePlant()
 
-let model =  reactive({...trialSiteStore.getTrialSite})
+let model = reactive({...trialSiteStore.getTrialSite})
 
 
 const handlerOnUpdate = async () => {
@@ -140,24 +155,23 @@ const handlerOnDeletePlant = async (input: Plant) => {
 };
 
 
-
 //Таблица
 const columns = [
-    {
-  key: 'id',
-  label: '№'
-}, {
-  key: 'typePlant',
-  label: 'Вид растения'
-}, {
-  key: 'count',
-  label: 'Количество особей'
-}, {
-  key: 'coverage',
-  label: 'Покрытие'
-}, {
-  key: 'actions'
-}]
+  {
+    key: 'id',
+    label: '№'
+  }, {
+    key: 'typePlant',
+    label: 'Вид растения'
+  }, {
+    key: 'count',
+    label: 'Количество особей'
+  }, {
+    key: 'coverage',
+    label: 'Покрытие'
+  }, {
+    key: 'actions'
+  }]
 
 const items = (row: Plant) => [
   [{
@@ -177,7 +191,7 @@ const items = (row: Plant) => [
 
 
 const rows = computed(() => {
-  if(model.plant){
+  if (model.plant) {
     return model.plant.slice((page.value - 1) * pageCount, (page.value) * pageCount)
   }
 })
@@ -192,6 +206,7 @@ const rows = computed(() => {
   justify-content: space-around;
   gap: 15px;
 }
+
 .wrapper-empty-state {
   display: flex;
   flex-direction: column;
@@ -209,15 +224,21 @@ const rows = computed(() => {
   gap: 15px;
 }
 
-.wrapper-transecta-footer-table{
+.wrapper-transecta-footer-table {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
+  width: 100%;
+}
+.wrapper-trial-site-table{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  justify-content: center;
+  border: 1px solid var(--ling-root);
+  border-radius: 16px;
 }
 
-.transecta-title {
-  font-size: 36px;
-  color: var(--ling-root);
-  font-weight: 700;
-}
+
 </style>

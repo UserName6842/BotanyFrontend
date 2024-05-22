@@ -1,28 +1,33 @@
 <template>
 
-  <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs">
-    <template #id-data="{row, index}">
-      {{ index + 1 }}
-    </template>
-    <template #actions-data="{ row }">
-      <UDropdown :items="items(row)">
-        <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
-      </UDropdown>
-    </template>
-  </UTable>
-  <div class="wrapper-add-button">
-    <UButton class="add-button" icon="i-ph-list-plus" @click="() => {
+  <div class="wrapper">
+    <div class="title">
+      Список Групп экоморфов
+    </div>
+    <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs">
+      <template #id-data="{row, index}">
+        {{ index + 1 }}
+      </template>
+      <template #actions-data="{ row }">
+        <UDropdown :items="items(row)">
+          <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
+        </UDropdown>
+      </template>
+    </UTable>
+    <div class="wrapper-add-button">
+      <UButton class="add-button" icon="i-ph-list-plus" @click="() => {
       isOpen = true
       typeModal = 'create'
       ecoporph = {id:{resourceId: ''}, description: '',title: ''}
     }"/>
+    </div>
   </div>
   <UModal v-model="isOpen">
     <ecomorph-form
-        v-model:model-value="ecoporph"
-        :type="typeModal"
-        @on-create="onCreate"
-        @on-updated="onUpdate"/>
+      v-model:model-value="ecoporph"
+      :type="typeModal"
+      @on-create="onCreate"
+      @on-updated="onUpdate"/>
   </UModal>
 
 </template>
@@ -64,7 +69,7 @@ const items = (row) => [
   }]
 ]
 
-await useAsyncData( async () => {
+await useAsyncData(async () => {
   await ecomorhStores.fetchAsyncEcomorhs()
 })
 
@@ -87,6 +92,19 @@ const onUpdate = async () => {
 
 
 <style lang="scss">
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.title {
+  font-size: 40px;
+  color: var(--ling-root);
+  font-weight: 700;
+}
 .wrapper-add-button {
   align-items: flex-end;
   margin-left: auto;

@@ -1,28 +1,40 @@
 <template>
-  <defaults-loader v-if="false" />
+  <defaults-loader v-if="false"/>
   <div v-else>
     <div class="wrapper-transecta">
-      <div class="transecta-title">
+      <div class="title-m">
         Трансекта
       </div>
-      <UBadge v-if=" modelValue && modelValue.id" color="white" variant="solid">ID:
-        {{ modelValue.id.resourceId }}
-      </UBadge>
+      <div class="flex flex-wrap items-center justify-center gap-3 w-[300px]">
+        <UBadge v-if=" modelValue && modelValue.id" color="white" variant="solid">ID:
+          {{ modelValue.id.resourceId }}
+        </UBadge>
+        <UBadge v-if="modelValue && modelValue.rating" color="white" variant="solid">
+          Баллы: {{ modelValue.rating }}
+        </UBadge>
+        <UBadge v-if=" modelValue && modelValue.countTypes" color="white" variant="solid">
+          Кол-во видов: {{ modelValue.countTypes }}
+        </UBadge>
+        <UBadge v-if=" modelValue  && modelValue.dominant" color="white" variant="solid">
+          Доминант: {{ modelValue.dominant?.title }}
+        </UBadge>
+        <UBadge v-if=" modelValue  && modelValue.subDominant" color="white" variant="solid">
+          Содоминант: {{ modelValue.subDominant?.title }}
+        </UBadge>
+      </div>
       <div class="wrapper-transecta-input">
-        <UInput v-model:model-value="modelValue.title" placeholder="Название"/>
-        <UInput v-model:model-value="modelValue.rating" placeholder="Балы"/>
-        <UInput v-model:model-value="modelValue.covered" placeholder="Покрытость"/>
-        <UInput v-model:model-value="modelValue.countTypes" placeholder="Количество типов растений"/>
-        <UInput v-model:model-value="modelValue.squareTrialSite" placeholder="Площадь ПП"/>
-        <UInput v-model:model-value="modelValue.square" placeholder="Площадь"/>
+        <b-input v-model:model-value="modelValue.title" placeholder="Введите название" title="Название"/>
+        <b-input v-model:model-value="modelValue.covered" placeholder="Введите покрытость" title="Покрытость"/>
+        <b-input v-model:model-value="modelValue.squareTrialSite" placeholder="Введите площадь ПП" title="Площадь ПП"/>
+        <b-input v-model:model-value="modelValue.square" placeholder="Введите площадь" title="Площадь"/>
       </div>
       <div class="wrapper-transecta-table">
-        <div class="plant-title">
+        <div class="title-xs">
           Пробные площадки
         </div>
         <UTable :columns="columns" :loading="loading" :rows="rows">
           <template #id-data="{row, index}">
-            {{ (index + 1) + (pageCount * (page - 1))  }}
+            {{ (index + 1) + (pageCount * (page - 1)) }}
           </template>
           <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
@@ -45,33 +57,35 @@
           </template>
         </UTable>
         <div class="wrapper-transecta-footer-table">
-          <UButton v-if=" modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true">Создать</UButton>
-          <UPagination v-if="modelValue.trialSite" v-model="page" :page-count="pageCount" :total="modelValue.trialSite.length"/>
+          <UButton v-if=" modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true">Создать
+          </UButton>
+          <UPagination v-if="modelValue.trialSite && modelValue.trialSite.length > pageCount" v-model="page" :page-count="pageCount"
+                       :total="modelValue.trialSite.length"/>
         </div>
       </div>
-        <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
+      <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
     </div>
     <UModal v-model="isOpen">
       <trail-sait-form type="create" @on-create="CreateTrailSite"/>
-    </UModal></div>
+    </UModal>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { useTransecta } from "~/stores/transecta/transecta";
+import {useTransecta} from "~/stores/transecta/transecta";
 import type {TrialSite} from "~/stores/trial-site/types";
 import {useTrialSite} from "~/stores/trial-site/trial-site";
-import type {Transecta} from "~/stores/transecta/types";
 
 const route = useRoute();
 const id = atob(route.params.id.toString());
 const transectaStore = useTransecta()
 const page = ref(1)
-const pageCount = 8
+const pageCount = 4
 const loading = ref<boolean>(false)
 const trialSiteStore = useTrialSite()
 const isOpen = ref<boolean>(false)
 
-await useAsyncData( async () => {
+await useAsyncData(async () => {
   await transectaStore.fetchTransectaById(id)
 })
 
@@ -95,7 +109,7 @@ const CreateTrailSite = async (input: TrialSite) => {
   try {
     loading.value = true;
     await trialSiteStore.CrateTrialSite(input);
-    const newTrialSite = { ...trialSiteStore.getTrialSite };
+    const newTrialSite = {...trialSiteStore.getTrialSite};
     if (!modelValue.trialSite) {
       modelValue.trialSite = [];
     }
@@ -118,7 +132,6 @@ const handlerOnUpdate = async () => {
     loading.value = false;
   }
 };
-
 
 
 //Таблица
@@ -163,7 +176,7 @@ const items = (row: TrialSite) => [
 ]
 
 const rows = computed(() => {
-  return  modelValue && modelValue.trialSite ? modelValue.trialSite.slice((page.value - 1) * pageCount, (page.value) * pageCount) : []
+  return modelValue && modelValue.trialSite ? modelValue.trialSite.slice((page.value - 1) * pageCount, (page.value) * pageCount) : []
 })
 
 </script>
@@ -198,7 +211,8 @@ const rows = computed(() => {
 .wrapper-transecta-footer-table {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  width: 100%;
+  justify-content: space-around;
 }
 
 .wrapper-transecta-input {
@@ -211,9 +225,4 @@ const rows = computed(() => {
   gap: 15px;
 }
 
-.transecta-title {
-  font-size: 36px;
-  color: var(--ling-root);
-  font-weight: 700;
-}
 </style>

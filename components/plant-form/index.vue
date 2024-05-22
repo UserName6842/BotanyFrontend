@@ -1,29 +1,32 @@
 <template>
-<div class="wrapper-plant-form">
-  <div class="type-plant-form-title">
-    <span v-if="type === 'create'">Создание</span>
-    <span v-else>Обновление</span>
-    растения
+  <div class="wrapper-plant-form">
+    <div class="title-s">
+      <span v-if="type === 'create'">Создание</span>
+      <span v-else>Обновление</span>
+      растения
+    </div>
+    <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ model.id.resourceId.toString() }}</UBadge>
+    <div class="flex flex-col items-center justify-center">
+      <span class="text-sm">Вид растения</span>
+      <USelectMenu v-model:model-value="selectValue"
+                   :options="optionTypePlant" class="w-36">
+        <template #label>
+          <span v-if="selectValue" class="truncate">{{ selectValue.title }}</span>
+          <span v-else class="truncate">Не выбрано</span>
+        </template>
+        <template #option="{ option }">
+          <span class="truncate">{{ option.title }}</span>
+        </template>
+      </USelectMenu>
+    </div>
+    <b-input v-model:model-value="model.coverage" placeholder="Введите % покрытия" title="Покрытие"/>
+    <b-input v-model:model-value="model.count" placeholder="Введите кол-во" title="Количество"/>
+    <UButton v-if="type === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
+    <UButton v-else :loading="loading" @click="handlerOnUpdete">Обновить</UButton>
   </div>
-  <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ model.id.resourceId.toString() }}</UBadge>
-  <USelectMenu v-model:model-value="selectValue"
-               :options="optionTypePlant" class="w-36">
-    <template #label>
-      <span v-if="selectValue" class="truncate">{{ selectValue.title }}</span>
-      <span v-else class="truncate">Не выбрано</span>
-    </template>
-    <template #option="{ option }">
-      <span class="truncate">{{ option.title }}</span>
-    </template>
-  </USelectMenu>
-  <UInput v-model:model-value="model.coverage" placeholder="Название"></UInput>
-  <UInput v-model:model-value="model.count" placeholder="Описание"></UInput>
-  <UButton v-if="type === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
-  <UButton v-else :loading="loading" @click="handlerOnUpdete">Обновить</UButton>
-</div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import type {Plant} from "~/stores/trial-site/types";
 import type {TypePlant} from "~/stores/type-plant/types";
@@ -42,27 +45,27 @@ interface PlantFormProps {
 }
 
 const handlerOnCreate = () => {
-  if(selectValue.value){
-    model.typePlant = { id:selectValue.value?.id, title:selectValue.value?.title }
+  if (selectValue.value) {
+    model.typePlant = {id: selectValue.value?.id, title: selectValue.value?.title}
   }
-  emits('onCreate',  model )
+  emits('onCreate', model)
 }
 
 const handlerOnUpdete = () => {
-  if(selectValue.value){
-    model.typePlant = { id:selectValue.value?.id, title:selectValue.value?.title }
+  if (selectValue.value) {
+    model.typePlant = {id: selectValue.value?.id, title: selectValue.value?.title}
   }
-  emits('onUpdated',  model )
+  emits('onUpdated', model)
 }
 
-const props =  withDefaults(defineProps<PlantFormProps>(),{
-  modelValue: () =>{
+const props = withDefaults(defineProps<PlantFormProps>(), {
+  modelValue: () => {
     return {
-      id:{
+      id: {
         resourceId: ''
       },
       count: 0,
-      coverage:0,
+      coverage: 0,
       typePlant: undefined
     }
   }
@@ -78,12 +81,12 @@ const selectValue = ref<TypePlant>()
 selectValue.value = modelValue.value.typePlant
 
 
-
 </script>
 
-<style scoped lang="scss">
-.wrapper-plant-form{
+<style lang="scss" scoped>
+.wrapper-plant-form {
   display: flex;
+  padding: 10px;
   flex-direction: column;
   align-items: center;
   gap: 10px;

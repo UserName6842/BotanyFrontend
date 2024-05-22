@@ -1,17 +1,15 @@
 <template>
   <div class="wrapper">
-    <div class="title">
+    <div class="title-m">
       Список Экоморфов
     </div>
     <div class="wrapper-search">
-      <span>Поиск по названию</span>
-      <div class="wrapper-search-input">
-        <UInput v-model:model-value="searchValue" placeholder="Введите название"/>
-        <div class="wrapper-search-button">
-          <UButton label="Поиск" @click="onSearch"/>
-          <UButton label="Очистить" @click="onCleanSearch"/>
-        </div>
-      </div>
+      <b-search
+        v-model:model-value="searchValue"
+        placeholder="Введите название"
+        title="Поиск по названию"
+        @on-clean="onCleanSearch"
+        @on-search="onSearch"/>
     </div>
     <UTable :columns="columns" :rows="rows">
       <template #id-data="{ row, index}">
@@ -37,7 +35,9 @@
     }"/>
     </div>
     <div class="wrapper-pagination">
-      <UPagination v-model="page" :page-count="pageCount" :total="typeEomorhStores.getTypeEcomorphs.length"/>
+      <UPagination
+        v-if="typeEomorhStores.getTypeEcomorphs.length && typeEomorhStores.getTypeEcomorphs.length > pageCount"
+        v-model="page" :page-count="pageCount" :total="typeEomorhStores.getTypeEcomorphs.length"/>
     </div>
   </div>
   <UModal v-model="isOpen">

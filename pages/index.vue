@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="wrapper-title">
-      <div class="title">
+      <div class="title-x">
         Биологический калькулятор
       </div>
       <div class="subtitle">
@@ -58,11 +58,6 @@ const listCart = ref<CartProps[]>([
     text-align: center;
   }
 
-  .title {
-    font-size: 50px;
-    color: var(--ling-root);
-    font-weight: 700;
-  }
 }
 
 @media (max-width: 900px) {

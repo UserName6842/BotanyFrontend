@@ -1,8 +1,8 @@
 <template>
 
   <div class="wrapper-form">
-    <span v-if="type === 'login'" class="form-title">Авторизация</span>
-    <span v-if="type === 'logup'" class="form-title">Регистрация</span>
+    <span v-if="type === 'login'" class="title-s">Авторизация</span>
+    <span v-if="type === 'logup'" class="title-s">Регистрация</span>
     <UInput v-model:model-value="value.email" placeholder="Email"/>
     <UInput v-if="type === 'logup'" v-model:model-value="value.name" placeholder="Name"/>
     <div class="form-password">
@@ -68,9 +68,5 @@ const showPassword = ref<boolean>(false)
   }
 }
 
-.form-title {
-  font-size: 24px;
-  color: var(--ling-root);
-}
 
 </style>

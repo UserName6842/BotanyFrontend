@@ -1,39 +1,40 @@
 <template>
   <div class="wrapper-type-plant-form">
-    <div class="type-plant-form-title">
+    <div class="title-m">
       <span v-if="type === 'create'">Создание</span>
       <span v-else>Обновление</span>
       типа растения
     </div>
     <defaults-loader v-if="loadingForm"/>
-    <div v-else class="wrapper-type-plant-form" >
-    <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ modelValue.id.resourceId }}</UBadge>
-    <div class="type-plant-form-wrapper-title">
-      <UInput v-model:model-value="modelValue.title" placeholder="Вид"/>
-      <UInput v-model:model-value="modelValue.subtitle" placeholder="Название на латыни"/>
-    </div>
-
-    <div class="wrapper-type-plant-form-select">
-      <div v-for="(item, index) of ecomorhStores.getEcomorphs" :key="item.id.resourceId" class="type-plant-form-select">
-        <span class="type-plant-form-select-title">{{ item.title }} </span>
-        <USelectMenu :key="item.id.resourceId" v-model:model-value="typeEcomorh[index]"
-                     :options="getEcomorphByEcomorphGroup(item)" class="w-36">
-          <template #label>
-            <span v-if="typeEcomorh[index]" class="truncate">{{ typeEcomorh[index].title }}</span>
-            <span v-else class="truncate">Не выбрано</span>
-          </template>
-          <template #option="{ option }">
-            <span class="truncate">{{ option.title }}</span>
-          </template>
-        </USelectMenu>
+    <div v-else class="wrapper-type-plant-form">
+      <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ modelValue.id.resourceId }}</UBadge>
+      <div class="type-plant-form-wrapper-title">
+        <b-input v-model:model-value="modelValue.title" placeholder="Вид" title="Вид"/>
+        <b-input v-model:model-value="modelValue.subtitle" placeholder="Название на латыни" title="Название на латыни"/>
       </div>
-    </div>
-    <file-input v-model:file="file" v-model:is-edit="isEdit"/>
-    <UButton v-if="type === 'create'" :loading="loading" @click="onCreate">Сохранить</UButton>
-    <div v-else class="wrapper-plant-form-button">
-      <UButton :loading="loading" @click="onUpdateType">Обновить</UButton>
-      <UButton :loading="loading" color="red" @click="onDelete"> Удалить</UButton>
-    </div>
+
+      <div class="wrapper-type-plant-form-select">
+        <div v-for="(item, index) of ecomorhStores.getEcomorphs" :key="item.id.resourceId"
+             class="type-plant-form-select">
+          <span class="type-plant-form-select-title">{{ item.title }} </span>
+          <USelectMenu :key="item.id.resourceId" v-model:model-value="typeEcomorh[index]"
+                       :options="getEcomorphByEcomorphGroup(item)" class="w-36">
+            <template #label>
+              <span v-if="typeEcomorh[index]" class="truncate">{{ typeEcomorh[index].title }}</span>
+              <span v-else class="truncate">Не выбрано</span>
+            </template>
+            <template #option="{ option }">
+              <span class="truncate">{{ option.title }}</span>
+            </template>
+          </USelectMenu>
+        </div>
+      </div>
+      <file-input v-model:file="file" v-model:is-edit="isEdit"/>
+      <UButton v-if="type === 'create'" :loading="loading" @click="onCreate">Сохранить</UButton>
+      <div v-else class="wrapper-plant-form-button">
+        <UButton :loading="loading" @click="onUpdateType">Обновить</UButton>
+        <UButton :loading="loading" color="red" @click="onDelete"> Удалить</UButton>
+      </div>
     </div>
   </div>
 </template>
@@ -107,9 +108,10 @@ async function downloadImageAsBlob(url: string) {
     return null;
   }
 }
+
 let loadingForm = ref(false)
 const initForm = async () => {
-  try{
+  try {
     loadingForm.value = true
     selectValue()
     await selectFile()
@@ -121,7 +123,7 @@ const initForm = async () => {
 
 }
 
-await  initForm()
+await initForm()
 
 interface PlantCartProps {
   type: "create" | "update"
