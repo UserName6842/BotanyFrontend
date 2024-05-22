@@ -1,4 +1,4 @@
-import type {Identifier} from "~/stores/types";
+import type {Identifier, PagesRequest} from "~/stores/types";
 import type {Ecomorph} from "~/stores/ecomorph/types";
 
 export type TypeEcomorphStore = {
@@ -15,3 +15,10 @@ export type TypeEcomorph = {
     ecomorphs?: Ecomorph
 }
 
+export type EcomorphListRequest = {
+  filter?: FilterEcomorph
+}
+
+export type FilterEcomorph = {
+  searchTitle: string
+}

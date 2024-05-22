@@ -6,7 +6,16 @@
       <div>
         <div class="type-plant-form-total">Всего растений {{ total }}</div>
       </div>
-
+      <div class="wrapper-search">
+        <span>Поиск по названию</span>
+        <div class="wrapper-search-input">
+          <UInput v-model:model-value="searchValue" placeholder="Введите название"/>
+          <div class="wrapper-search-button">
+            <UButton label="Поиск" @click="onSearch"/>
+            <UButton label="Очистить" @click="onCleanSearch"/>
+          </div>
+        </div>
+      </div>
       <div>
         <UButton label="Создать новое растение" @click="navigateTo('type-plant/create')"/>
       </div>
@@ -16,7 +25,9 @@
 
     </div>
     <div class="wrapper-pagination">
-      <UPagination v-if="typePlantStores.getTypePlants.length > 0" v-model="page" @update:modelValue="(value) => typePlantStores.fetchTypePlant({page: {page: value, limit: 10}})" :total="total"/>
+      <UPagination v-if="typePlantStores.getTypePlants.length > 0" v-model="page"
+                   :total="total"
+                   @update:modelValue="(value) => typePlantStores.fetchTypePlant({page: {page: value, limit: 10}})"/>
     </div>
 
   </div>
@@ -28,11 +39,12 @@ import {useTypePlant} from "~/stores/type-plant/type-plant";
 
 const typePlantStores = useTypePlant()
 
+const searchValue = ref("")
 
 const option = ref<TypePlant[]>([])
 
 const page = ref(1)
-useAsyncData(async () => {
+await useAsyncData(async () => {
   typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}})
 })
 
@@ -42,9 +54,36 @@ const onClickCart = (value: TypePlant) => {
   navigateTo("/type-plant/" + btoa(value.id?.resourceId!))
 }
 
+const onSearch = () => {
+  typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}, filter: {searchTitle: searchValue.value}})
+}
+const onCleanSearch = () => {
+  searchValue.value = ""
+  typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}, filter: {searchTitle: searchValue.value}})
+}
+
 </script>
 
 <style lang="scss" scoped>
+
+.wrapper-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  .wrapper-search-input {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    align-items: center;
+    .wrapper-search-button{
+      display: flex;
+      gap: 8px;
+    }
+  }
+}
+
 .wrapper-plant-list {
   width: 1261px;
 }

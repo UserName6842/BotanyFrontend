@@ -29,7 +29,7 @@ const typePlant = reactive<TypePlant>(
 )
 
 
-ecomorhStores.fetchEcomorhs()
+ecomorhStores.fetchAsyncEcomorhs()
 typeEcomorhStores.fetchEcomorhs()
 </script>
 

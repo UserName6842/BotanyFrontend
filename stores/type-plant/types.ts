@@ -18,5 +18,10 @@ export type TypePlant = {
 }
 
 export type TypePlantListRequest = {
-    page: PagesRequest
+    page?: PagesRequest
+    filter?: FilterTypePlant
+}
+
+export type FilterTypePlant = {
+  searchTitle: string
 }

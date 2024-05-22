@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.1.12",
+    "@nuxt/image": "^1.7.0",
     "@nuxtjs/apollo": "^5.0.0-alpha.14",
     "@pinia/nuxt": "^0.5.1",
     "nuxt-icon": "^0.6.10",

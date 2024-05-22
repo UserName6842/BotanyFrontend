@@ -36,7 +36,7 @@ const transect = ref<Transecta>()
 const linkDownload = ref()
 const ecomorhStores = useEcomorph()
 await useAsyncData( async () => {
-  await ecomorhStores.fetchEcomorhs()
+  await ecomorhStores.fetchAsyncEcomorhs()
 })
 
 const onDownload = async (input: Analysis) => {

@@ -65,7 +65,7 @@ const items = (row) => [
 ]
 
 await useAsyncData( async () => {
-  await ecomorhStores.fetchEcomorhs()
+  await ecomorhStores.fetchAsyncEcomorhs()
 })
 
 
@@ -88,7 +88,8 @@ const onUpdate = async () => {
 
 <style lang="scss">
 .wrapper-add-button {
-  display: flex;
+  align-items: flex-end;
+  margin-left: auto;
   flex-direction: row-reverse;
 
   .add-button {

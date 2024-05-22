@@ -1,37 +1,53 @@
 <template>
-  <UTable :columns="columns" :rows="rows">
-    <template #id-data="{ row, index}">
-      {{ (index + 1) + (pageCount * (page - 1)) }}
-    </template>
-    <template #ecomorph-data="{ row }">
+  <div class="wrapper">
+    <div class="title">
+      Список Экоморфов
+    </div>
+    <div class="wrapper-search">
+      <span>Поиск по названию</span>
+      <div class="wrapper-search-input">
+        <UInput v-model:model-value="searchValue" placeholder="Введите название"/>
+        <div class="wrapper-search-button">
+          <UButton label="Поиск" @click="onSearch"/>
+          <UButton label="Очистить" @click="onCleanSearch"/>
+        </div>
+      </div>
+    </div>
+    <UTable :columns="columns" :rows="rows">
+      <template #id-data="{ row, index}">
+        {{ (index + 1) + (pageCount * (page - 1)) }}
+      </template>
+      <template #ecomorph-data="{ row }">
       <span v-if="row.ecomorphs && row.ecomorphs.title">{{
           row.ecomorphs.title
         }}
         </span>
-    </template>
-    <template #actions-data="{ row }">
-      <UDropdown :items="items(row)">
-        <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
-      </UDropdown>
-    </template>
-  </UTable>
-  <div class="wrapper-add-button">
-    <UButton class="add-button" icon="i-ph-list-plus" @click="() => {
+      </template>
+      <template #actions-data="{ row }">
+        <UDropdown :items="items(row)">
+          <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
+        </UDropdown>
+      </template>
+    </UTable>
+    <div class="wrapper-add-button">
+      <UButton class="add-button" icon="i-ph-list-plus" @click="() => {
       typeEomorhFormData = { id:{resourceId: ''}, title: '', description: '' ,displayTable: '', score: 0, ecomorphs: ecomorhStores.getEcomorphs[0]}
       isOpen = true
       typeModal = 'create'
     }"/>
-  </div>
-  <div class="wrapper-pagination">
-    <UPagination v-model="page" :page-count="pageCount" :total="typeEomorhStores.getTypeEcomorphs.length"/>
+    </div>
+    <div class="wrapper-pagination">
+      <UPagination v-model="page" :page-count="pageCount" :total="typeEomorhStores.getTypeEcomorphs.length"/>
+    </div>
   </div>
   <UModal v-model="isOpen">
     <type-ecomorph-form
-        v-model:model-value="typeEomorhFormData"
-        :type="typeModal"
-        @on-create="createTypeEcomorph"
-        @on-updated="updateTypeEcomorph"/>
+      v-model:model-value="typeEomorhFormData"
+      :type="typeModal"
+      @on-create="createTypeEcomorph"
+      @on-updated="updateTypeEcomorph"/>
   </UModal>
+
 </template>
 
 <script lang="ts" setup>
@@ -44,6 +60,16 @@ import type {TypeForm} from "~/stores/types";
 const typeEomorhStores = useTypeEcomorph()
 const ecomorhStores = useEcomorph()
 const isOpen = ref(false)
+
+const searchValue = ref("")
+
+const onSearch = () => {
+  typeEomorhStores.fetchEcomorhs({filter: {searchTitle: searchValue.value}})
+}
+const onCleanSearch = () => {
+  searchValue.value = ""
+  typeEomorhStores.fetchEcomorhs({filter: {searchTitle: searchValue.value}})
+}
 
 const columns = [{
   key: 'id',
@@ -89,7 +115,7 @@ const items = (row) => [
 
 typeEomorhStores.fetchEcomorhs()
 
-ecomorhStores.fetchEcomorhs()
+ecomorhStores.fetchAsyncEcomorhs()
 
 const typeModal = ref<TypeForm>("create")
 
@@ -123,9 +149,42 @@ const rows = computed(() => {
 
 
 <style lang="scss">
+.title {
+  font-size: 40px;
+  color: var(--ling-root);
+  font-weight: 700;
+}
+
+.wrapper-search {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  .wrapper-search-input {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    align-items: center;
+
+    .wrapper-search-button {
+      display: flex;
+      gap: 8px;
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .wrapper-add-button {
   display: flex;
   flex-direction: row-reverse;
+  margin-left: auto;
 
   .add-button {
     border-radius: 30px;

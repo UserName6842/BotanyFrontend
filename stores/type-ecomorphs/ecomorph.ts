@@ -1,4 +1,9 @@
-import type {EcomorphsEntityListRequest, TypeEcomorph, TypeEcomorphStore} from "~/stores/type-ecomorphs/types";
+import type {
+  EcomorphListRequest,
+  EcomorphsEntityListRequest,
+  TypeEcomorph,
+  TypeEcomorphStore
+} from "~/stores/type-ecomorphs/types";
 import {Identifier} from "~/stores/types";
 
 export const useTypeEcomorph = defineStore('TypeEcomorph', {
@@ -11,7 +16,7 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
             getIsLoading: (state) => state.loading,
         },
         actions: {
-            async fetchEcomorhs() {
+            async fetchEcomorhs(input?: EcomorphListRequest) {
                 const query = gql`
                   query getListEcomorphsEntity($data: EcomorphsEntityListRequest){
                       ecomorphsEntity{
@@ -37,6 +42,7 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                `
                 const variables = {
                     data: {
+                      ...input
                     }
                 }
 

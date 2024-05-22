@@ -17,7 +17,7 @@ const route = useRoute();
 
 const id = atob(route.params.id.toString());
 
-ecomorhStores.fetchEcomorhs()
+ecomorhStores.fetchAsyncEcomorhs()
 typeEcomorhStores.fetchEcomorhs()
 await useAsyncData(async () => {
   await typePlantStores.fetchTypePlantById(id)
