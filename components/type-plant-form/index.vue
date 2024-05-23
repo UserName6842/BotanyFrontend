@@ -138,13 +138,15 @@ const getEcomorphByEcomorphGroup = (ecomorph: Ecomorph) => {
 
 
 const formingModal = async (value: TypePlant) => {
+
   value.ecomorphsEntity = []
   for (const key in typeEcomorh.value) {
     value.ecomorphsEntity.push(typeEcomorh.value[key])
   }
   if (isEdit.value) {
+    debugger
     const img = await onCreateImg()
-    value.img.id!.resourceId = img.id.resourceId
+    value.img.id = img.id
   }
 }
 

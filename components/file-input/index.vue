@@ -56,7 +56,6 @@ const handleDrop = (event: DragEvent) => {
 
 <style scoped lang="scss">
 .wrapper-upload{
-  margin-top: 2rem;
   display: flex;
   justify-content: center;
   border-radius: 1rem;

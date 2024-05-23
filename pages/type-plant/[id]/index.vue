@@ -1,6 +1,5 @@
 <template>
-  <defaults-loader v-if="typePlantStores.loading"/>
-  <type-plant-form v-else  type="update"  :model-value="modelValue" />
+  <type-plant-form type="update"  :model-value="modelValue" />
 </template>
 
 <script setup lang="ts">
@@ -19,6 +18,7 @@ const id = atob(route.params.id.toString());
 
 ecomorhStores.fetchAsyncEcomorhs()
 typeEcomorhStores.fetchEcomorhs()
+
 await useAsyncData(async () => {
   await typePlantStores.fetchTypePlantById(id)
 })
