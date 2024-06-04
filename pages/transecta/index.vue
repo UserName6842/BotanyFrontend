@@ -124,7 +124,7 @@ const items = (row) => [
 ]
 
 const page = ref(1)
-const pageCount = 8
+const pageCount = 6
 
 const rows = computed(() => {
   if (transectaStore.getTransects) {

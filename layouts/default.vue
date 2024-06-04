@@ -1,14 +1,22 @@
 <template>
-  <div class="flex flex-col items-center justify-between w-full h-screen ">
-    <UContainer class="h-20 w-full pt-2">
-      <defaults-header/>
-    </UContainer>
-    <UContainer class="flex-1">
-      <slot name="default"/>
-    </UContainer>
-    <UContainer class="footer h-20 w-full">
-      <defaults-footer/>
-    </UContainer>
+  <div class="h-screen">
+    <UCard :ui="{strategy:'override', base: 'flex h-screen ', body:{strategy:'override', base: 'flex-1 p-0'}}" class="h-full w-full flex flex-col  justify-between">
+      <template #header>
+        <UContainer class="footer w-full ">
+          <defaults-header/>
+        </UContainer>
+      </template>
+
+      <div class="flex flex-col items-center justify-between">
+        <slot name="default"/>
+      </div>
+
+      <template #footer>
+        <UContainer class="footer  w-full">
+          <defaults-footer/>
+        </UContainer>
+      </template>
+    </UCard>
   </div>
 </template>
 
@@ -22,6 +30,5 @@
   align-items: center;
   justify-content: space-around;
   gap: 30px;
-  border-top: 1px solid var(--ling-root);
 }
 </style>

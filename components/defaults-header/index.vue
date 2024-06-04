@@ -40,6 +40,7 @@ await auth.checkLogin()
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 
   .wrapper-header-auth {
     display: flex;

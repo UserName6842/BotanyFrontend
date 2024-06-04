@@ -17,7 +17,8 @@
     "nuxt": "^3.11.2",
     "swiper": "^11.1.3",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "zod": "^3.24.0-canary.20240523T174819"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.1.12",

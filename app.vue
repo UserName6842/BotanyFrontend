@@ -13,11 +13,11 @@
     accurateTrackBounce:true
     });
   </component>
-  <noscript><div><img src="https://mc.yandex.ru/watch/97451761" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <noscript>
+    <div><img alt="" src="https://mc.yandex.ru/watch/97451761" style="position:absolute; left:-9999px;"/></div>
+  </noscript>
   <!-- /Yandex.Metrika counter -->
-  <div>
-    <NuxtLayout>
-      <NuxtPage/>
-    </NuxtLayout>
-  </div>
+  <NuxtLayout>
+    <NuxtPage/>
+  </NuxtLayout>
 </template>

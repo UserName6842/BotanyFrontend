@@ -137,7 +137,7 @@ const updateTypeEcomorph = async (value: TypeEcomorph) => {
 }
 
 const page = ref(1)
-const pageCount = 8
+const pageCount = 6
 
 const rows = computed(() => {
   if (typeEomorhStores.getTypeEcomorphs) {

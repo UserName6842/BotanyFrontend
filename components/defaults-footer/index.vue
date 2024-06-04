@@ -1,9 +1,9 @@
 <template>
-  <div class="w-[220px] text-center md: text-sm">
+  <div class="first-content">
     10:00-20:00 MSK • GMT +3
     hello@result.school
   </div>
-  <div class="flex  flex-col items-center justify-center mr-24 md: mr-2 text-sm">
+  <div class="center-content">
       <NuxtLink href="/home" target="_blank">
         Документация
       </NuxtLink>
@@ -39,6 +39,17 @@ import vkontacte from "assets/icons/footer/vkontacte.svg"
     height: 32px;
   }
 }
+.first-content{
+  max-width: 220px;
+  text-align: center;
+}
+
+.center-content{
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  margin-right: 96px;
+}
 
 @media (max-width: 768px) {
   .icon-wrapper {
@@ -49,6 +60,13 @@ import vkontacte from "assets/icons/footer/vkontacte.svg"
       width: 24px;
       height: 24px;
     }
+  }
+  .first-content{
+    font-size: 12px;
+  }
+  .center-content{
+    font-size: 14px;
+    margin-right: 0;
   }
 }
 

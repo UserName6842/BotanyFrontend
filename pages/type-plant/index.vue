@@ -2,13 +2,11 @@
   <defaults-loader v-if="typePlantStores.loading"/>
   <div v-else class="wrapper-plant-list">
     <div class="wrapper-title">
-      <div class="title-x">Список типов растений</div>
-      <div>
-      </div>
+      <div class="title-m">Список типов растений</div>
       <div class="flex items-center justify-center gap-56">
         <div>Всего растений {{ total }}</div>
         <div>
-          <UButton label="Создать новое растение" @click="navigateTo('type-plant/create')"/>
+          <UButton label="Добавить новое растение" @click="navigateTo('type-plant/create')"/>
         </div>
       </div>
       <div class="wrapper-search">
@@ -21,14 +19,15 @@
       </div>
 
     </div>
-    <div class="mt-20">
+    <div class="mt-8">
       <plant-cart-list :option="typePlantStores.getTypePlants" @on-click="onClickCart"/>
 
     </div>
     <div class="wrapper-pagination">
-      <UPagination v-if="typePlantStores.getTypePlants && typePlantStores.getTypePlants.length > 10" v-model="page"
-                   :total="total"
-                   @update:modelValue="(value) => typePlantStores.fetchTypePlant({page: {page: value, limit: 10}})"/>
+      <UPagination
+      v-model="page"
+      :total="total"
+      @update:modelValue="(value) => typePlantStores.fetchTypePlant({page: {page: value, limit: 10}})"/>
     </div>
 
   </div>
@@ -46,7 +45,7 @@ const option = ref<TypePlant[]>([])
 
 const page = ref(1)
 await useAsyncData(async () => {
-  typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}})
+  await typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}})
 })
 
 const total: number = typePlantStores.getTotalCountTypePlants

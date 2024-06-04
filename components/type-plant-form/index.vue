@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper-type-plant-form">
-    <div class="title-m">
+    <div class="title-s">
       <span v-if="type === 'create'">Создание</span>
       <span v-else>Обновление</span>
       типа растения

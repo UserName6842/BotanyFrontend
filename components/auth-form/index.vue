@@ -1,28 +1,41 @@
 <template>
 
-  <div class="wrapper-form">
+  <UForm :schema="schema" :state="value" class="wrapper-form" @submit="$emit('onClick', value)">
     <span v-if="type === 'login'" class="title-s">Авторизация</span>
     <span v-if="type === 'logup'" class="title-s">Регистрация</span>
-    <UInput v-model:model-value="value.email" placeholder="Email"/>
-    <UInput v-if="type === 'logup'" v-model:model-value="value.name" placeholder="Name"/>
-    <div class="form-password">
-      <UInput v-model:model-value="value.password"  placeholder="Password" :type="!showPassword ? 'password' : ''"></UInput>
-      <div class="form-wrapper-toggle">
-      <UToggle  v-model:model-value="showPassword" />
-        <span class="form-toggle-title">Показать пароль</span>
-      </div>
-    </div>
-    <div class="wra">
-      <UButton @click="$emit('onClick', value)" >
-        <span v-if="type === 'login'" >Авторизоваться</span>
-        <span v-if="type === 'logup'" >Зарегистрироваться</span>
-      </UButton>
-    </div>
-  </div>
+
+    <UFormGroup label="Почта" name="email">
+      <UInput v-model="value.email"/>
+    </UFormGroup>
+
+    <UFormGroup v-if="type === 'logup'" label="Имя">
+      <UInput v-model="value.name" />
+    </UFormGroup>
+
+    <UFormGroup label="Пароль" class="w-[179px]" name="password">
+      <UInput v-model="value.password" type="password"/>
+    </UFormGroup>
+
+
+
+    <UButton @click="$emit('onClick', value)">
+      <span v-if="type === 'login'">Авторизоваться</span>
+      <span v-if="type === 'logup'">Зарегистрироваться</span>
+    </UButton>
+  </UForm>
 </template>
 
 <script lang="ts" setup>
 import type {ModelAuth} from "~/components/auth-form/types";
+import {z} from 'zod'
+
+const schema = z.object({
+  email: z.string().email('Некоректный формат'),
+  password: z.string().min(8, 'Нужно более 8 символов').regex(/[0-9]/, 'Нужна хотябы одна цифра').regex(/[A-Z]/, 'Нужна одна заглавная буква'),
+})
+
+type Schema = z.output<typeof schema>
+
 
 interface AuthFormProps {
   type: 'login' | "logup"
@@ -35,6 +48,7 @@ interface AuthFormEmit {
 defineProps<AuthFormProps>()
 const value = defineModel<ModelAuth>("value", {default: {email: '', name: '', password: ''}})
 defineEmits<AuthFormEmit>()
+
 
 const showPassword = ref<boolean>(false)
 
@@ -56,12 +70,12 @@ const showPassword = ref<boolean>(false)
     flex-direction: column;
     gap: 8px;
 
-    .form-wrapper-toggle{
+    .form-wrapper-toggle {
       display: flex;
       flex-direction: row;
       gap: 5px;
 
-      .form-toggle-title{
+      .form-toggle-title {
         font-size: 12px;
       }
     }
