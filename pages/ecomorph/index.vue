@@ -1,5 +1,4 @@
 <template>
-
   <div class="wrapper">
     <div class="title">
       Список Групп экоморфов

@@ -75,7 +75,9 @@ export const useTypePlant = defineStore('TypePlant', {
 
                     onResult((param) => {
                         this.typePlants = param.data.typePlant.getAllTypePlant.list;
-                        this.totalCount = param.data.typePlant.getAllTypePlant.page.total;
+                        if(param.data.typePlant.getAllTypePlant.page && param.data.typePlant.getAllTypePlant.page.total){
+                          this.totalCount = param.data.typePlant.getAllTypePlant.page.total;
+                        }
                         console.log('Данные об типах растения успешно получены:', param.data.typePlant.getAllTypePlant.list)
 
                     })

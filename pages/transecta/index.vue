@@ -55,7 +55,7 @@ const onDownload = async (input: Analysis) => {
     linkDownload.value.download = transectaStore.analysis.title;
     linkDownload.value.click();
   };
-  const url = "http://localhost:8080" + transectaStore.analysis.path
+  const url = useRuntimeConfig().public.apiURL + ":8080" + transectaStore.analysis.path
   debugger
   const blob = await downloadFileAsBlob(url)
   reader.readAsDataURL(blob!);

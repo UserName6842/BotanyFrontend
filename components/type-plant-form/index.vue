@@ -87,7 +87,7 @@ const selectValue = () => {
 
 const selectFile = async () => {
   if (modelValue.value.img) {
-    const blob = await downloadImageAsBlob("http://localhost:8080" + modelValue.value.img.path)
+    const blob = await downloadImageAsBlob( useRuntimeConfig().public.apiURL + ":8080" + modelValue.value.img.path)
     if (blob) {
       file.value = new File([blob], modelValue.value.img.name)
     }
@@ -206,7 +206,8 @@ const onCreateImg = async () => {
       const blob = new Blob([file.value!]);
       const formData = new FormData();
       formData.append("image", blob);
-      const response = await axios.post("http://localhost:8080/save", formData, {
+
+      const response = await axios.post(useRuntimeConfig().public.apiURL + ":8080/save", formData, {
         headers: {
           "Authorization": "Bearer " + token,
           "Content-Type": "multipart/form-data",

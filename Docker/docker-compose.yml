@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  botany:
+    build:
+      dockerfile: Docker/Dockerfile
+      context: ../
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      GRAPHQL_API_URL: http://193.176.79.195/api
+      API_URL: http://193.176.79.195

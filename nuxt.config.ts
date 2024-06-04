@@ -1,5 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      apiURL: process.env.API_URL
+    }
+  },
   devtools: {enabled: true},
   modules: [
     "@pinia/nuxt",
@@ -33,7 +38,7 @@ export default defineNuxtConfig({
     proxyCookies: true,
     clients: {
       default: {
-        httpEndpoint: 'http://localhost/api'
+        httpEndpoint: process.env.GRAPHQL_API_URL!
       }
     },
   },
