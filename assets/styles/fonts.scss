@@ -22,3 +22,17 @@
   color: var(--ling-root);
   font-weight: 700;
 }
+
+@media (max-width: 768px) {
+  .title-x {
+    font-size: 26px;
+  }
+
+  .title-m{
+    font-size: 20px;
+  }
+  .wrapper-title .subtitle {
+    font-size: 18px;
+  }
+}
+

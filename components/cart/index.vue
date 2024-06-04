@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper-cart" :class="{'small' : type == 'small', 'big' : type == 'big'}">
+  <div :class="{'small' : type == 'small', 'big' : type == 'big'}" class="wrapper-cart">
     <div class="title">
       {{ title }}
     </div>
@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import type {CartProps} from "./types";
+
 const props = defineProps<CartProps>()
 
 </script>
@@ -26,15 +27,15 @@ const props = defineProps<CartProps>()
   padding: 20px 25px 20px 20px;
   font-weight: bold;
 
-  .title{
+  .title {
     font-size: 29px;
   }
 
-  :hover{
+  :hover {
     cursor: pointer;
   }
 
-  .content{
+  .content {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 16px;

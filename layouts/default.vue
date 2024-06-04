@@ -23,6 +23,5 @@
   justify-content: space-around;
   gap: 30px;
   border-top: 1px solid var(--ling-root);
-
 }
 </style>

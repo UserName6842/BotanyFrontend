@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="w-full">
     <div class="wrapper-title">
-      <div class="title-x">
+      <div class="title-x md: text-xl">
         Биологический калькулятор
       </div>
-      <div class="subtitle">
+      <div class="subtitle md: text-m">
         Новое решение для биологов всех поколений для вычисления экологического анализа
       </div>
       <div>
@@ -43,33 +43,29 @@ const listCart = ref<CartProps[]>([
   margin-top: 70px;
 }
 
+.subtitle {
+  font-size: 20px;
+  font-weight: 700;
+  width: 80%;
+  margin: 0 auto; /* Добавляем отступы по бокам для центрирования */
+  text-align: center;
+}
+
 .wrapper-title {
   margin-top: 120px;
   display: flex;
   gap: 15px;
   flex-direction: column;
   align-items: center;
-
-  .subtitle {
-    font-size: 20px;
-    font-weight: 700;
-    width: 80%;
-    margin: 0 auto; /* Добавляем отступы по бокам для центрирования */
-    text-align: center;
-  }
-
 }
 
 @media (max-width: 900px) {
-  .wrapper-title {
-    margin-top: 100px;
+  .wrapper-swiper{
+    display: none;
   }
 
-  .wrapper-title .title {
-    font-size: 26px;
-  }
-  .wrapper-title .subtitle {
-    font-size: 18px;
+  .subtitle{
+    font-size: 14px;
   }
 }
 

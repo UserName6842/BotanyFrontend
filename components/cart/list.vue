@@ -35,4 +35,10 @@ const {content} = defineProps<ListCartProps>()
   align-items: center;
   gap: 90px;
 }
+
+@media (max-width: 768px) {
+  .slides{
+    gap: 35px
+  }
+}
 </style>

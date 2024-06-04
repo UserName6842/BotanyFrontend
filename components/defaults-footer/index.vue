@@ -1,9 +1,9 @@
 <template>
-  <div class="w-[220px] text-center">
+  <div class="w-[220px] text-center md: text-sm">
     10:00-20:00 MSK • GMT +3
     hello@result.school
   </div>
-  <div class="flex  flex-col items-center justify-center mr-24">
+  <div class="flex  flex-col items-center justify-center mr-24 md: mr-2 text-sm">
       <NuxtLink href="/home" target="_blank">
         Документация
       </NuxtLink>
@@ -37,6 +37,18 @@ import vkontacte from "assets/icons/footer/vkontacte.svg"
   svg {
     width: 32px;
     height: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .icon-wrapper {
+    width: 102px;
+    height: 32px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
 

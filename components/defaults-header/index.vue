@@ -47,5 +47,12 @@ await auth.checkLogin()
     gap: 5px;
     justify-content: space-between;
   }
+
+}
+
+@media (max-width: 768px){
+  .wrapper-header-auth{
+    flex-direction: column;
+  }
 }
 </style>
