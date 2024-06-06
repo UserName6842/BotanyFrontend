@@ -21,4 +21,4 @@ FROM base
 
 COPY --from=build /src /src
 
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]
