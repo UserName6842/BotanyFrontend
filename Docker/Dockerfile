@@ -21,4 +21,4 @@ FROM base
 
 COPY --from=build /src /src
 
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "start"]
