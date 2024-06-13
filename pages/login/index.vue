@@ -5,7 +5,7 @@
 <script setup lang="ts">
   import type {ModelAuth} from "~/components/auth-form/types";
   import router from "#app/plugins/router";
-
+  const toast = useToast()
   const authValue = ref<ModelAuth>()
 
   const login = async (value: ModelAuth) =>{
@@ -20,6 +20,7 @@
   			}
 		}
     `
+
 
       const variables = {
         data:{
@@ -45,7 +46,10 @@
       })
 
       onError((error) => {
-        console.error('Ошибка при регистрации:', error)
+        console.error('Ошибка при авторизации:', error.message)
+        if(error.message == "record not found"){
+          toast.add({id:"recordNotFound", title: "Пользаватель не найден", timeout:5000, description:"", color:"red"})
+        }
       })
 
       mutate(variables)

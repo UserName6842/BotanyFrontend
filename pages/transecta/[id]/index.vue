@@ -22,12 +22,36 @@
           Содоминант: {{ modelValue.subDominant?.title }}
         </UBadge>
       </div>
-      <div class="wrapper-transecta-input">
-        <b-input v-model:model-value="modelValue.title" placeholder="Введите название" title="Название"/>
-        <b-input v-model:model-value="modelValue.covered" placeholder="Введите покрытость" title="Покрытость"/>
-        <b-input v-model:model-value="modelValue.squareTrialSite" placeholder="Введите площадь ПП" title="Площадь ПП"/>
-        <b-input v-model:model-value="modelValue.square" placeholder="Введите площадь" title="Площадь"/>
-      </div>
+      <UForm :state="modelValue" :validate="validateTransect" >
+        <div class="wrapper-transecta-input">
+
+          <UFormGroup label="Название" name="title">
+            <UInput v-model="modelValue.title" class="w-[205px]" placeholder="Введите название"/>
+          </UFormGroup>
+          <UFormGroup label="Покрытость" name="covered">
+            <UInput v-model="modelValue.covered" class="w-[205px]" placeholder="Введите покрытость" type="number">
+              <template #trailing>
+                <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
+              </template>
+            </UInput>
+          </UFormGroup>
+          <UFormGroup label="Площадь ПП" name="squareTrialSite">
+            <UInput v-model="modelValue.squareTrialSite" class="w-[205px]" placeholder="Введите Площадь ПП"
+                    type="number">
+              <template #trailing>
+                <span class="text-gray-500 dark:text-gray-400 text-xs">м <sup>2</sup></span>
+              </template>
+            </UInput>
+          </UFormGroup>
+          <UFormGroup label="Площадь" name="square">
+            <UInput v-model="modelValue.square" class="w-[205px]" placeholder="Введите Площадь Трансекты" type="number">
+              <template #trailing>
+                <span class="text-gray-500 dark:text-gray-400 text-xs">м <sup>2</sup></span>
+              </template>
+            </UInput>
+          </UFormGroup>
+        </div>
+      </UForm>
       <div class="wrapper-transecta-table">
         <div class="title-xs">
           Пробные площадки
@@ -59,7 +83,8 @@
         <div class="wrapper-transecta-footer-table">
           <UButton v-if=" modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true">Создать
           </UButton>
-          <UPagination v-if="modelValue.trialSite && modelValue.trialSite.length > pageCount" v-model="page" :page-count="pageCount"
+          <UPagination v-if="modelValue.trialSite && modelValue.trialSite.length > pageCount" v-model="page"
+                       :page-count="pageCount"
                        :total="modelValue.trialSite.length"/>
         </div>
       </div>
@@ -75,6 +100,7 @@
 import {useTransecta} from "~/stores/transecta/transecta";
 import type {TrialSite} from "~/stores/trial-site/types";
 import {useTrialSite} from "~/stores/trial-site/trial-site";
+import {validateTransect} from "~/components/transect-form/helpers";
 
 const route = useRoute();
 const id = atob(route.params.id.toString());
@@ -221,7 +247,7 @@ const rows = computed(() => {
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-around;
-  width: 600px;
+  width: 700px;
   gap: 15px;
 }
 

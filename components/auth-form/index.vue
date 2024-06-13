@@ -1,24 +1,21 @@
 <template>
 
-  <UForm :schema="schema" :state="value" class="wrapper-form" @submit="$emit('onClick', value)">
+  <UForm :validate="validateAuth" :state="value" class="wrapper-form" @submit="$emit('onClick', value)">
     <span v-if="type === 'login'" class="title-s">Авторизация</span>
     <span v-if="type === 'logup'" class="title-s">Регистрация</span>
 
     <UFormGroup label="Почта" name="email">
       <UInput v-model="value.email"/>
     </UFormGroup>
-
     <UFormGroup v-if="type === 'logup'" label="Имя">
       <UInput v-model="value.name" />
     </UFormGroup>
-
     <UFormGroup label="Пароль" class="w-[179px]" name="password">
       <UInput v-model="value.password" type="password"/>
     </UFormGroup>
 
 
-
-    <UButton @click="$emit('onClick', value)">
+    <UButton type="submit">
       <span v-if="type === 'login'">Авторизоваться</span>
       <span v-if="type === 'logup'">Зарегистрироваться</span>
     </UButton>
@@ -27,15 +24,7 @@
 
 <script lang="ts" setup>
 import type {ModelAuth} from "~/components/auth-form/types";
-import {z} from 'zod'
-
-const schema = z.object({
-  email: z.string().email('Некоректный формат'),
-  password: z.string().min(8, 'Нужно более 8 символов').regex(/[0-9]/, 'Нужна хотябы одна цифра').regex(/[A-Z]/, 'Нужна одна заглавная буква'),
-})
-
-type Schema = z.output<typeof schema>
-
+import {validateAuth} from "~/components/auth-form/helpers";
 
 interface AuthFormProps {
   type: 'login' | "logup"

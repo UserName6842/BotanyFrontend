@@ -6,12 +6,38 @@
     <UBadge v-if="type === 'update' && modelValue && modelValue.id" color="white" variant="solid">ID:
       {{ modelValue.id.resourceId }}
     </UBadge>
-    <div class="wrapper-transecta-input">
-      <b-input v-model:model-value="modelValue.title" placeholder="Введите название" title="Название"/>
-      <b-input v-model:model-value="modelValue.covered" placeholder="Введите покрытость" title="Покрытость"/>
-      <b-input v-model:model-value="modelValue.squareTrialSite" placeholder="Введите площадь ПП" title="Площадь ПП"/>
-      <b-input v-model:model-value="modelValue.square" placeholder="Введите площадь" title="Площадь"/>
-    </div>
+    <UForm :state="modelValue" :validate="validateTransect" @submit="handlerOnCreate">
+      <div class="wrapper-transecta-input">
+        <UFormGroup label="Название" name="title">
+          <UInput class="w-[205px]" v-model="modelValue.title" placeholder="Введите название"/>
+        </UFormGroup>
+        <UFormGroup label="Покрытость" name="covered">
+          <UInput class="w-[205px]" v-model="modelValue.covered" placeholder="Введите покрытость" type="number">
+            <template #trailing>
+              <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
+            </template>
+          </UInput>
+        </UFormGroup>
+        <UFormGroup label="Площадь ПП" name="squareTrialSite">
+          <UInput class="w-[205px]" v-model="modelValue.squareTrialSite" placeholder="Введите Площадь ПП" type="number">
+            <template #trailing>
+              <span class="text-gray-500 dark:text-gray-400 text-xs">м <sup>2</sup></span>
+            </template>
+          </UInput>
+        </UFormGroup>
+        <UFormGroup label="Площадь" name="square">
+          <UInput class="w-[205px]" v-model="modelValue.square" placeholder="Введите Площадь Трансекты" type="number">
+            <template #trailing>
+              <span class="text-gray-500 dark:text-gray-400 text-xs">м <sup>2</sup></span>
+            </template>
+          </UInput>
+        </UFormGroup>
+      </div>
+      <div class="flex flex-col mt-10 items-center">
+        <UButton v-if="type === 'create'" :loading="loading" type="submit">Создать</UButton>
+      </div>
+
+    </UForm>
     <div v-if="type === 'update' " class="wrapper-transecta-table">
       <div class="plant-title">
         Пробные площадки
@@ -47,8 +73,7 @@
                      :total="modelValue.trialSite.length"/>
       </div>
     </div>
-    <UButton v-if="type === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
-    <div v-else>
+    <div v-if="type === 'update'">
       <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
     </div>
   </div>
@@ -63,6 +88,8 @@ import type {TypeForm} from "~/stores/types";
 import {useTransecta} from "~/stores/transecta/transecta";
 import type {TrialSite} from "~/stores/trial-site/types";
 import {useTrialSite} from "~/stores/trial-site/trial-site";
+import {validateTransect} from "~/components/transect-form/helpers";
+
 
 interface TransectaFormProps {
   type: TypeForm
@@ -212,7 +239,7 @@ const rows = computed(() => {
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-around;
-  width: 600px;
+  width: 700px;
   gap: 15px;
 }
 

@@ -5,21 +5,24 @@
         <logo class="h-16"/>
       </NuxtLink>
     </div>
-    <div v-if="!auth.getIsLogin" class="wrapper-header-auth">
-      <NuxtLink to="/login">
-        <UButton>
-          Авторизация
-        </UButton>
-      </NuxtLink>
-      <NuxtLink to="/logup">
-        <UButton>
-          Регистрация
-        </UButton>
-      </NuxtLink>
-    </div>
-    <div v-else>
-      <defaults-menu/>
-    </div>
+    <ClientOnly>
+      <div v-if="!auth.getIsLogin" class="wrapper-header-auth">
+        <NuxtLink to="/login">
+          <UButton>
+            Авторизация
+          </UButton>
+        </NuxtLink>
+        <NuxtLink to="/logup">
+          <UButton>
+            Регистрация
+          </UButton>
+        </NuxtLink>
+      </div>
+
+      <div v-else>
+        <defaults-menu/>
+      </div>
+    </ClientOnly>
   </div>
 </template>
 
@@ -51,8 +54,8 @@ await auth.checkLogin()
 
 }
 
-@media (max-width: 768px){
-  .wrapper-header-auth{
+@media (max-width: 768px) {
+  .wrapper-header-auth {
     flex-direction: column;
   }
 }
