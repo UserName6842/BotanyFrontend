@@ -78,7 +78,7 @@ export const useEcomorph = defineStore('Ecomorph', {
 
         try {
           this.loading = true
-          const {onResult} = await useQuery(query, variables, {fetchPolicy:"network-only"});
+          const {onResult} = await useQuery(query, variables, {fetchPolicy: "network-only"});
           // Проверяем, есть ли уже данные в результате запроса
           onResult((param) => {
             this.ecomorhs = param.data.ecomorph.getListEcomorph.list;

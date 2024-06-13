@@ -29,7 +29,9 @@
           </USelectMenu>
         </div>
       </div>
-      <file-input v-model:file="file" v-model:is-edit="isEdit"/>
+      <ClientOnly>
+        <file-input v-model:file="file" v-model:is-edit="isEdit"/>
+      </ClientOnly>
       <UButton v-if="type === 'create'" :loading="loading" @click="onCreate">Сохранить</UButton>
       <div v-else class="wrapper-plant-form-button">
         <UButton :loading="loading" @click="onUpdateType">Обновить</UButton>
@@ -47,6 +49,7 @@ import {useTypeEcomorph} from "~/stores/type-ecomorphs/ecomorph";
 import type {TypeEcomorph} from "~/stores/type-ecomorphs/types";
 import axios from "axios";
 import {useTypePlant} from "~/stores/type-plant/type-plant";
+import type {Img} from "~/stores/types";
 
 const modelValue = defineModel<TypePlant>("modelValue", {
   default: {
@@ -61,17 +64,14 @@ const modelValue = defineModel<TypePlant>("modelValue", {
   }
 })
 
-
 const ecomorhStores = useEcomorph()
 const typeEcomorhStores = useTypeEcomorph()
 const typePlantStores = useTypePlant()
-
 const file = ref<File>()
 const isEdit = ref<boolean>(false)
 const typeEcomorh = ref<Record<string, TypeEcomorph>>({})
 
 const loading = ref(false)
-
 
 const selectValue = () => {
   ecomorhStores.getEcomorphs.forEach((ecomorph, index) => {
@@ -87,7 +87,7 @@ const selectValue = () => {
 
 const selectFile = async () => {
   if (modelValue.value.img) {
-    const blob = await downloadImageAsBlob( useRuntimeConfig().public.apiURL + ":8080" + modelValue.value.img.path)
+    const blob = await downloadImageAsBlob(useRuntimeConfig().public.apiURL + ":8080" + modelValue.value.img.path)
     if (blob) {
       file.value = new File([blob], modelValue.value.img.name)
     }
@@ -110,20 +110,6 @@ async function downloadImageAsBlob(url: string) {
 }
 
 let loadingForm = ref(false)
-const initForm = async () => {
-  try {
-    loadingForm.value = true
-    selectValue()
-    await selectFile()
-  } catch (e) {
-    console.log(e)
-  } finally {
-    loadingForm.value = false
-  }
-
-}
-
-await initForm()
 
 interface PlantCartProps {
   type: "create" | "update"
@@ -131,22 +117,39 @@ interface PlantCartProps {
 
 const props = defineProps<PlantCartProps>()
 
+const initForm = async () => {
+  try {
+    loadingForm.value = true
+    selectValue()
+    console.log(props.type)
+    if (props.type === "update") {
+      await selectFile()
+    }
+  } catch (e) {
+    console.log(e)
+  } finally {
+    loadingForm.value = false
+  }
+}
+
+await initForm()
 
 const getEcomorphByEcomorphGroup = (ecomorph: Ecomorph) => {
   return typeEcomorhStores.getTypeEcomorphs.filter((item: TypeEcomorph) => item.ecomorphs?.id?.resourceId === ecomorph.id?.resourceId)
 }
 
-
 const formingModal = async (value: TypePlant) => {
-
   value.ecomorphsEntity = []
   for (const key in typeEcomorh.value) {
     value.ecomorphsEntity.push(typeEcomorh.value[key])
   }
+  debugger
   if (isEdit.value) {
-    debugger
     const img = await onCreateImg()
-    value.img.id = img.id
+    const valueImg: Img = {
+      id: {resourceId : img.id.resourceId}
+    }
+    value.img = valueImg
   }
 }
 
@@ -164,7 +167,6 @@ const onCreate = async () => {
   } finally {
     loading.value = false
   }
-
 }
 
 const onUpdateType = async () => {
