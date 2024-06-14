@@ -1,15 +1,26 @@
 <template>
-  <div class="wrapper-trail-site-form">
-    <div class="title-s">Создание растения</div>
-    <b-input title="Название" placeholder="Введите название" v-model="modelValue.title"></b-input>
-    <b-input title="Покрытие" placeholder="Введите покрытие" v-model="modelValue.covered"></b-input>
-    <UButton v-if="type === 'create'" @click="$emit('onCreate', modelValue )">Создать</UButton>
-  </div>
+  <UForm :state="modelValue" :validate="validateTransect" @submit="$emit('onCreate', modelValue )">
+    <div class="wrapper-trail-site-form">
+      <div class="title-s">Создание растения</div>
+      <UFormGroup label="Название" name="title">
+        <UInput v-model="modelValue.title" class="w-[205px]" placeholder="Введите название"/>
+      </UFormGroup>
+      <UFormGroup label="Покрытость" name="covered">
+        <UInput v-model="modelValue.covered" class="w-[205px]" placeholder="Введите покрытость" type="number">
+          <template #trailing>
+            <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
+          </template>
+        </UInput>
+      </UFormGroup>
+      <UButton type="submit">Создать</UButton>
+    </div>
+  </UForm>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import type {TypeForm} from "~/stores/types";
 import type {TrialSite} from "~/stores/trial-site/types";
+import {validateTransect} from "~/components/transect-form/helpers";
 
 interface TrialSiteFormProps {
   type: TypeForm
@@ -22,26 +33,22 @@ interface TrialSiteFormEmit {
 
 defineEmits<TrialSiteFormEmit>()
 
-const props = withDefaults(defineProps<TrialSiteFormProps>(), {
-  modelValue: (props) => {
-    return {
-      id: {
-        resourceId: ""
-      },
-      title: "",
-      plant: []
-    }
-  }
+const modelValue: TrialSite = reactive({
+  id: {
+    resourceId: ""
+  },
+  title: "",
+  plant: []
 })
 
 </script>
 
-<style scoped lang="scss">
-.wrapper-trail-site-form{
+<style lang="scss" scoped>
+.wrapper-trail-site-form {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 5px;
+  padding: 20px;
 }
 </style>

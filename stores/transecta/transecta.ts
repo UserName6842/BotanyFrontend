@@ -1,6 +1,7 @@
 import type {Identifier} from "~/stores/types";
 import type {Analysis, Transecta, TransectaListRequest, TransectaStore} from "./types"
 import type {TrialSite} from "~/stores/trial-site/types";
+import {de} from "cronstrue/dist/i18n/locales/de";
 
 export const useTransecta = defineStore('Transecta', {
         state: (): TransectaStore => ({
