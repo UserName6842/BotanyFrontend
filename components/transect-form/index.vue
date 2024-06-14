@@ -243,4 +243,17 @@ const rows = computed(() => {
   gap: 15px;
 }
 
+
+@media (min-width: 260px) and (max-width: 700px) {
+  .wrapper-transecta-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 255px;
+  gap: 15px;
+}
+}
+
 </style>

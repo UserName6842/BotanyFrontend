@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div class="wrapper-title">
-      <div class="title-x md: text-xl">
+      <div class="title-x md: text-xl text-center">
         Биологический калькулятор
       </div>
       <div class="subtitle md: text-m">
