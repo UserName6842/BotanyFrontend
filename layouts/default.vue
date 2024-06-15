@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen h-auto">
+  <div class="h-full">
     <UCard :ui="{strategy:'override', base: 'flex h-screen ', body:{strategy:'override', base: 'flex-1 p-0'}}" class="h-full w-full flex flex-col  justify-between">
       <template #header>
         <UContainer class="footer w-full ">

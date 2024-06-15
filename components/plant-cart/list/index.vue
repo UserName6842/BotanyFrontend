@@ -34,4 +34,10 @@ defineProps<PlantCartListProps>()
   align-items: center;
   justify-content: space-around;
 }
+
+@media (min-width: 260px) and (max-width: 700px) {
+  .wrapper-plant-cart-list{
+    gap: 10px;
+  }
+}
 </style>

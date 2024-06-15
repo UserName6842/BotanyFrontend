@@ -13,7 +13,7 @@
   </div>
   <div class="icon-wrapper">
     <a href="https://t.me/Kalin24Don" target="_blank">
-      <telegram/>
+      <telegram class="telegram" />
     </a>
     <a href="https://vk.com/bio_profkom" target="_blank">
       <vkontacte/>
@@ -38,6 +38,10 @@ import vkontacte from "assets/icons/footer/vkontacte.svg"
     width: 32px;
     height: 32px;
   }
+}
+
+.telegram{
+  color: #091a28;
 }
 .first-content{
   max-width: 220px;

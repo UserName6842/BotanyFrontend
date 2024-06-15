@@ -22,7 +22,7 @@
           Содоминант: {{ modelValue.subDominant?.title }}
         </UBadge>
       </div>
-      <UForm :state="modelValue" :validate="validateTransect" >
+      <UForm :state="modelValue" :validate="validateTransect">
         <div class="wrapper-transecta-input">
 
           <UFormGroup label="Название" name="title">
@@ -101,6 +101,7 @@ import {useTransecta} from "~/stores/transecta/transecta";
 import type {TrialSite} from "~/stores/trial-site/types";
 import {useTrialSite} from "~/stores/trial-site/trial-site";
 import {validateTransect} from "~/components/transect-form/helpers";
+import {useWindowSize} from "@vueuse/core";
 
 const route = useRoute();
 const id = atob(route.params.id.toString());
@@ -160,34 +161,54 @@ const handlerOnUpdate = async () => {
 };
 
 
-//Таблица
-const columns = [
-  {
-    key: 'id',
-    label: '№'
-  },
-  {
-    key: 'title',
-    label: 'Название'
-  },
-  {
-    key: 'rating',
-    label: 'Обилие'
-  },
-  {
-    key: 'covered',
-    label: 'Покрытие'
-  },
-  {
-    key: 'dominant',
-    label: 'Доминант'
-  },
-  {
-    key: 'subDominant',
-    label: 'Содоминант'
-  }, {
-    key: 'actions'
-  }]
+const {width} = useWindowSize()
+
+
+const columns = computed(() => {
+  if (width.value > 700) {
+    return [
+      {
+        key: 'id',
+        label: '№'
+      },
+      {
+        key: 'title',
+        label: 'Название'
+      },
+      {
+        key: 'rating',
+        label: 'Обилие'
+      },
+      {
+        key: 'covered',
+        label: 'Покрытие'
+      },
+      {
+        key: 'dominant',
+        label: 'Доминант'
+      },
+      {
+        key: 'subDominant',
+        label: 'Содоминант'
+      }, {
+        key: 'actions'
+      }]
+  } else {
+    return [
+      {
+      key: 'id',
+      label: '№'
+      },
+      {
+        key: 'title',
+        label: 'Название'
+      },
+      {
+        key: 'actions'
+      }
+    ]
+  }
+})
 
 const items = (row: TrialSite) => [
   [{
@@ -249,6 +270,18 @@ const rows = computed(() => {
   justify-content: space-around;
   width: 700px;
   gap: 15px;
+}
+
+@media (min-width: 260px) and (max-width: 700px) {
+  .wrapper-transecta-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 255px;
+    gap: 15px;
+  }
 }
 
 </style>

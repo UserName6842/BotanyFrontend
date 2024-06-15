@@ -67,9 +67,10 @@ const handleDrop = (event: DragEvent) => {
     position: relative;
     cursor: pointer;
     border-radius: 6px;
-    background-color: #ffffff;
+    background-color: var(--gray);
     font-weight: 600;
-    color: var(--ling-root);
+    color: var(--text-color);
+    padding: 3px;
     outline: none;
     transition: color 0.2s;
 
