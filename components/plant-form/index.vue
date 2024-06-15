@@ -7,20 +7,33 @@
     </div>
     <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ model.id.resourceId.toString() }}</UBadge>
     <div class="flex flex-col items-center justify-center">
-      <span class="text-sm">Вид растения</span>
-      <USelectMenu v-model:model-value="selectValue"
-                   :options="optionTypePlant" class="w-36">
-        <template #label>
-          <span v-if="selectValue" class="truncate">{{ selectValue.title }}</span>
-          <span v-else class="truncate">Не выбрано</span>
-        </template>
-        <template #option="{ option }">
-          <span class="truncate">{{ option.title }}</span>
-        </template>
-      </USelectMenu>
+      <UFormGroup label="Покрытость" name="covered">
+        <USelectMenu v-model:model-value="selectValue" :options="optionTypePlant"
+                     :searchable="search" class="w-36">
+          <template #label>
+            <span v-if="selectValue" class="truncate">{{ selectValue.title }}</span>
+            <span v-else class="truncate">Не выбрано</span>
+          </template>
+          <template #option="{ option }">
+            <span class="truncate">{{ option.title }}</span>
+          </template>
+        </USelectMenu>
+      </UFormGroup>
     </div>
-    <b-input v-model:model-value="model.coverage" placeholder="Введите % покрытия" title="Покрытие"/>
-    <b-input v-model:model-value="model.count" placeholder="Введите кол-во" title="Количество"/>
+    <UFormGroup label="Покрытость" name="covered">
+      <UInput v-model="model.coverage" class="w-[205px]" placeholder="Введите покрытость" type="number">
+        <template #trailing>
+          <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
+        </template>
+      </UInput>
+    </UFormGroup>
+    <UFormGroup label="Количество" name="covered">
+      <UInput v-model="model.count" class="w-[205px]" placeholder="Введите количество" type="number">
+        <template #trailing>
+          <span class="text-gray-500 dark:text-gray-400 text-xs">шт</span>
+        </template>
+      </UInput>
+    </UFormGroup>
     <UButton v-if="type === 'create'" :loading="loading" @click="handlerOnCreate">Создать</UButton>
     <UButton v-else :loading="loading" @click="handlerOnUpdete">Обновить</UButton>
   </div>
@@ -80,7 +93,15 @@ const selectValue = ref<TypePlant>()
 
 selectValue.value = modelValue.value.typePlant
 
+async function search(q: string) {
+  loading.value = true
 
+  const option = props.optionTypePlant.filter(item => item.title!.toLowerCase().trim().includes(q.toLowerCase().trim()))
+
+  loading.value = false
+
+  return option
+}
 </script>
 
 <style lang="scss" scoped>

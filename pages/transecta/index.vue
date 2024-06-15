@@ -6,7 +6,7 @@
       <div>Всего растений {{ transectaStore.getTransects.length }}</div>
       <UButton  @click="navigateTo('/transecta/create')">Создать Трансекту</UButton>
     </div>
-    <UTable :columns="columns" :rows="rows" class="min-width">
+    <UTable :columns="columns" :rows="rows" class="min-width overflow-x-auto">
       <template #id-data="{ row, index }">
         {{ index + 1 + pageCount * (page - 1) }}
       </template>

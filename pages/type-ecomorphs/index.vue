@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper w-[100%]">
+  <div class="wrapper">
     <div class="title-m">
       Список Экоморфов
     </div>
@@ -11,7 +11,7 @@
         @on-clean="onCleanSearch"
         @on-search="onSearch"/>
     </div>
-    <UTable :columns="columns" :rows="rows" class="min-width">
+    <UTable :columns="columns" :rows="rows" class="overflow-x-auto min-width">
       <template #id-data="{ row, index}">
         {{ (index + 1) + (pageCount * (page - 1)) }}
       </template>
@@ -222,8 +222,11 @@ const rows = computed(() => {
 }
 
 @media (min-width: 260px) and (max-width: 768px) {
-  .min-width {
-    max-width: 100%;
+  .wrapper {
+    width: 100%;
+    .min-width {
+      max-width: 100%;
+      }
   }
 }
 </style>

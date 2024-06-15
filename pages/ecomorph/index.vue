@@ -3,7 +3,7 @@
     <div class="title-m">
       Список Групп экоморфов
     </div>
-    <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs">
+    <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs" class="overflow-x-auto">
       <template #id-data="{row, index}">
         {{ index + 1 }}
       </template>

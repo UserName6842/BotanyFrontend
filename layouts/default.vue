@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full">
-    <UCard :ui="{strategy:'override', base: 'flex h-screen ', body:{strategy:'override', base: 'flex-1 p-0'}}" class="h-full w-full flex flex-col  justify-between">
+  <div class="min-h-screen">
+    <UCard :ui="{strategy:'override', base: 'flex min-h-screen ', body:{strategy:'override', base: 'flex-1 p-0'}}" class="min-h-screen w-full flex flex-col  justify-between">
       <template #header>
         <UContainer class="footer w-full ">
           <defaults-header/>

@@ -19,40 +19,54 @@
         Баллы: {{ model.rating }}
       </UBadge>
     </div>
-    <div class="wrapper-transecta-input">
-      <UInput v-model:model-value="model.title"/>
-      <UInput v-model:model-value="model.covered"/>
-    </div>
-    <div class="wrapper-trial-site-table">
-      <div class="title-xs">
-        Растения
+    <UForm :state="model" :validate="validateTransect">
+      <div class="wrapper-trial-site-input">
+        <UFormGroup label="Название" name="title">
+          <UInput v-model:model-value="model.title" class="w-[205px]"/>
+        </UFormGroup>
+        <UFormGroup label="Покрытость" name="covered">
+          <UInput v-model:model-value="model.covered" class="w-[205px]">
+            <template #trailing>
+              <span class="text-gray-500 dark:text-gray-400 text-xs">%</span>
+            </template>
+          </UInput>
+        </UFormGroup>
       </div>
-      <UTable :columns="columns" :rows="rows">
-        <template #id-data="{row, index}">
-          {{ index + 1 }}
-        </template>
-        <template #typePlant-data="{row, index}">
-          <span v-if="row.typePlant && row.typePlant.title">{{ row.typePlant.title }}</span>
-        </template>
-        <template #actions-data="{ row }">
-          <UDropdown :items="items(row)">
-            <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
-          </UDropdown>
-        </template>
-        <template #empty-state>
-          <div class="wrapper-empty-state">
-            <div>
-              Создать новое растение
+    </UForm>
+    <ClientOnly>
+      <div class="wrapper-trial-site-table">
+        <div class="title-xs">
+          Растения
+        </div>
+
+        <UTable :columns="columns" :rows="rows" class="min-width overflow-x-auto">
+          <template #id-data="{row, index}">
+            {{ index + 1 }}
+          </template>
+          <template #typePlant-data="{row, index}">
+            <span v-if="row.typePlant && row.typePlant.title">{{ row.typePlant.title }}</span>
+          </template>
+          <template #actions-data="{ row }">
+            <UDropdown :items="items(row)">
+              <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
+            </UDropdown>
+          </template>
+          <template #empty-state>
+            <div class="wrapper-empty-state">
+              <div>
+                Создать новое растение
+              </div>
+              <UButton @click="onCreatPlant">Создать</UButton>
             </div>
-            <UButton @click="onCreatPlant">Создать</UButton>
-          </div>
-        </template>
-      </UTable>
-      <div v-if="model.plant && model.plant.length > 0" class="wrapper-transecta-footer-table">
-        <UButton @click="onCreatPlant">Создать</UButton>
-        <UPagination v-if="model.plant && model.plant.length > pageCount" v-model="page" :page-count="pageCount" :total="model.plant.length"/>
+          </template>
+        </UTable>
+        <div v-if="model.plant && model.plant.length > 0" class="wrapper-transecta-footer-table">
+          <UButton @click="onCreatPlant">Создать</UButton>
+          <UPagination v-if="model.plant && model.plant.length > pageCount" v-model="page" :page-count="pageCount"
+                       :total="model.plant.length"/>
+        </div>
       </div>
-    </div>
+    </ClientOnly>
     <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
   </div>
   <UModal v-model="isOpen">
@@ -66,6 +80,8 @@ import type {Plant} from "~/stores/trial-site/types";
 import {useTrialSite} from "~/stores/trial-site/trial-site";
 import {useTypePlant} from "~/stores/type-plant/type-plant";
 import type {TypeForm} from "~/stores/types";
+import {validateTransect} from "~/components/transect-form/helpers";
+import {useWindowSize} from "@vueuse/core";
 
 
 const isOpen = ref<boolean>(false)
@@ -115,9 +131,11 @@ const CratePlant = async (value: Plant) => {
       model.plant = trialSite
     }
     await trialSiteStore.UpdateTrialSite(model)
+    model = reactive({...trialSiteStore.getTrialSite})
   } catch (e) {
     console.log(e)
   } finally {
+    isOpen.value = false
     loading.value = false
   }
 }
@@ -131,6 +149,7 @@ const UpdatePlant = async (value: Plant) => {
   } catch (e) {
     console.log(e)
   } finally {
+    isOpen.value = false
     loading.value = false
   }
 }
@@ -154,24 +173,42 @@ const handlerOnDeletePlant = async (input: Plant) => {
   }
 };
 
+const {width} = useWindowSize()
 
-//Таблица
-const columns = [
-  {
-    key: 'id',
-    label: '№'
-  }, {
-    key: 'typePlant',
-    label: 'Вид растения'
-  }, {
-    key: 'count',
-    label: 'Количество особей'
-  }, {
-    key: 'coverage',
-    label: 'Покрытие'
-  }, {
-    key: 'actions'
-  }]
+const columns = computed(() => {
+  if (width.value > 700) {
+    return [
+      {
+        key: 'id',
+        label: '№'
+      }, {
+        key: 'typePlant',
+        label: 'Вид растения'
+      }, {
+        key: 'count',
+        label: 'Количество особей'
+      }, {
+        key: 'coverage',
+        label: 'Покрытие'
+      }, {
+        key: 'actions'
+      }]
+  } else {
+    return [
+      {
+        key: 'id',
+        label: '№'
+      }, {
+        key: 'typePlant',
+        label: 'Вид растения'
+      }, {
+        key: 'coverage',
+        label: 'Покрытие'
+      }, {
+        key: 'actions'
+      }]
+  }
+})
 
 const items = (row: Plant) => [
   [{
@@ -214,7 +251,8 @@ const rows = computed(() => {
   gap: 15px;
 }
 
-.wrapper-transecta-input {
+
+.wrapper-trial-site-input {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -224,13 +262,26 @@ const rows = computed(() => {
   gap: 15px;
 }
 
+@media (min-width: 260px) and (max-width: 700px) {
+  .wrapper-trial-site-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 300px;
+    gap: 15px;
+  }
+}
+
 .wrapper-transecta-footer-table {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
 }
-.wrapper-trial-site-table{
+
+.wrapper-trial-site-table {
   display: flex;
   flex-direction: column;
   align-items: center;

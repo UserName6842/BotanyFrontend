@@ -1,10 +1,16 @@
 export default defineAppConfig({
   ui: {
+    strategy: 'override',
     primary: "emerald",
     gray: 'cool',
     notifications: {
-      // Show toasts at the top right of the screen
-      position: 'top-auto bottom-16 '
+      position: 'top-auto bottom-16'
+    },
+    table: {
+      td: {
+        strategy: 'override',
+        base: "truncate max-w-[135px]"
+      }
     }
   }
 })
