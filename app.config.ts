@@ -1,6 +1,5 @@
 export default defineAppConfig({
   ui: {
-    strategy: 'override',
     primary: "emerald",
     gray: 'cool',
     notifications: {

@@ -143,7 +143,6 @@ const formingModal = async (value: TypePlant) => {
   for (const key in typeEcomorh.value) {
     value.ecomorphsEntity.push(typeEcomorh.value[key])
   }
-  debugger
   if (isEdit.value) {
     const img = await onCreateImg()
     const valueImg: Img = {

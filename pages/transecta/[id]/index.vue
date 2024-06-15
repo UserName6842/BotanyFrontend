@@ -137,7 +137,6 @@ const handlerOnDeleteTrailSite = async (input: TrialSite) => {
 const CreateTrailSite = async (input: TrialSite) => {
   try {
     loading.value = true;
-    debugger
     await trialSiteStore.CrateTrialSite(input);
     const newTrialSite = trialSiteStore.getTrialSite;
     transectaStore.pushTrialSite(newTrialSite)

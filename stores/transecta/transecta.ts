@@ -30,7 +30,6 @@ export const useTransecta = defineStore('Transecta', {
     actions: {
 
       pushTrialSite(input: TrialSite) {
-        debugger
         if (!this.transect.trialSite) {
           this.transect.trialSite = [];
         }
@@ -397,7 +396,6 @@ export const useTransecta = defineStore('Transecta', {
 
           const {id, trialSite, img, ...fiald} = input
           let variables = {}
-          debugger
           if (trialSite) {
             variables = {
               data: {
@@ -424,7 +422,6 @@ export const useTransecta = defineStore('Transecta', {
           const {mutate, onDone, onError} = useMutation(mutation)
 
           onDone((data) => {
-            debugger
             this.transect = data.data.transect.upTransect;
             console.log('Успешное обновление:', data.data)
           })
