@@ -3,7 +3,7 @@
   <div v-else class="wrapper-plant-list">
     <div class="wrapper-title">
       <div class="title-m">Список типов растений</div>
-      <div class="flex items-center justify-center gap-56">
+      <div class="plant-list-option">
         <div>Всего растений {{ total }}</div>
         <div>
           <UButton label="Добавить новое растение" @click="navigateTo('type-plant/create')"/>
@@ -86,7 +86,21 @@ const onCleanSearch = () => {
 }
 
 .wrapper-plant-list {
-  width: 1261px;
+  width: 80%;
+}
+
+.plant-list-option{
+  display: flex;
+  gap: 56px;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+@media (min-width: 260px) and (max-width: 700px) {
+  .plant-list-option{
+    gap: 0px;
+  }
 }
 
 .wrapper-pagination {

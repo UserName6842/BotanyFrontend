@@ -20,7 +20,7 @@
     <!-- /Yandex.Metrika counter -->
   </ClientOnly>
   <NuxtLayout>
-    <NuxtPage/>
+    <NuxtPage />
   </NuxtLayout>
   <ClientOnly>
     <div>

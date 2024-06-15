@@ -4,7 +4,7 @@
     <div class="title-m">Трансекта</div>
     <div class="flex items-center justify-center gap-20 sm:gap-40">
       <div>Всего растений {{ transectaStore.getTransects.length }}</div>
-      <UButton @click="navigateTo('/transecta/create')">Создать Трансекту</UButton>
+      <UButton  @click="navigateTo('/transecta/create')">Создать Трансекту</UButton>
     </div>
     <UTable :columns="columns" :rows="rows" class="min-width">
       <template #id-data="{ row, index }">

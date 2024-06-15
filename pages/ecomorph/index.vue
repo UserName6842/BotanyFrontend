@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="title">
+    <div class="title-m">
       Список Групп экоморфов
     </div>
     <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs">
@@ -99,11 +99,6 @@ const onUpdate = async () => {
 }
 
 
-.title {
-  font-size: 40px;
-  color: var(--ling-root);
-  font-weight: 700;
-}
 .wrapper-add-button {
   align-items: flex-end;
   margin-left: auto;

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper-transecta">
+  <div class="wrapper-transecta h-full">
     <div class="title-m">
       Трансекта
     </div>

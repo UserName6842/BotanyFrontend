@@ -4,7 +4,7 @@
       <img v-if="option.img && option.img.path" :src="  useRuntimeConfig().public.apiURL + ':8080' + option.img.path" :alt="option.title" class="plant-cart-image">
     </div>
     <div>
-      <div  class="title-s">
+      <div  class="title-xs">
         <span v-if="option.title" >{{option.title}}</span>
         <span v-else >?</span>
       </div>
@@ -65,6 +65,18 @@ defineProps<PlantCartProps>()
 
     .wrapper-plant-cart-image .plant-cart-image {
       transform: scale(1.03);
+    }
+  }
+}
+
+@media (min-width: 260px) and (max-width: 700px) {
+  .wrapper-plant-cart{
+    width: 145px;
+    height: 120px;
+
+    .wrapper-plant-cart-image .plant-cart-image {
+      width: 100px;
+      height: 75px;
     }
   }
 }

@@ -275,6 +275,10 @@ const onCreateImg = async () => {
     }
   }
 
-
+}
+@media (min-width: 260px) and (max-width: 700px) {
+  .wrapper-type-plant-form{
+    width: 100%;
+  }
 }
 </style>

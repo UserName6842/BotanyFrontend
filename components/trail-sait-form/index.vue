@@ -1,7 +1,7 @@
 <template>
   <UForm :state="modelValue" :validate="validateTransect" @submit="$emit('onCreate', modelValue )">
     <div class="wrapper-trail-site-form">
-      <div class="title-s">Создание растения</div>
+      <div class="title-s">Создание пробной площадки</div>
       <UFormGroup label="Название" name="title">
         <UInput v-model="modelValue.title" class="w-[205px]" placeholder="Введите название"/>
       </UFormGroup>
