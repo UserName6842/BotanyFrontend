@@ -28,15 +28,7 @@ export const useTransecta = defineStore("Transecta", {
     getIsLoading: (state) => state.loading,
   },
   actions: {
-    pushTrialSite(input: TrialSite) {
-      if (!this.transect.trialSite) {
-        this.transect.trialSite = [];
-      }
-      const newTrialSite = this.transect.trialSite;
-      newTrialSite.push(input);
 
-      this.transect.trialSite = newTrialSite;
-    },
     async fetchTransecta(request?: TransectaListRequest) {
       this.loading = true;
       const query = gql`

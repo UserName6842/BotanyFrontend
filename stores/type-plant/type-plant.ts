@@ -153,9 +153,11 @@ export const useTypePlant = defineStore("TypePlant", {
             title: input.title,
             subtitle: input.subtitle,
             ecomorphsEntity: input.ecomorphsEntity,
-            img: input.img,
           },
         };
+        if(input.img?.id?.resourceId !== "") {
+          variables.data.img = input.img
+        }
 
         const { mutate, onDone, onError } = useMutation(mutation);
 

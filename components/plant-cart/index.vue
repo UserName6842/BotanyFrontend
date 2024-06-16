@@ -2,8 +2,7 @@
   <div class="wrapper-plant-cart" @click="$emit('onClick', option)">
     <div class="wrapper-plant-cart-image">
       <img
-        v-if="option.img && option.img.path"
-        :src="useRuntimeConfig().public.apiURL + ':8080' + option.img.path"
+        :src="option.img && !!option.img.path  ? useRuntimeConfig().public.apiURL + ':8080' + option.img.path : '/logo.svg'"
         :alt="option.title"
         class="plant-cart-image"
       />

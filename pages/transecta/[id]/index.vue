@@ -54,44 +54,42 @@
           </UFormGroup>
         </div>
       </UForm>
-      <ClientOnly>
-        <div class="wrapper-transecta-table">
-          <div class="title-xs">Пробные площадки</div>
-          <UTable :columns="columns" :loading="loading" :rows="rows" class="overflow-x-auto">
-            <template #id-data="{ row, index }">
-              {{ index + 1 + pageCount * (page - 1) }}
-            </template>
-            <template #actions-data="{ row }">
-              <UDropdown :items="items(row)">
-                <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost" />
-              </UDropdown>
-            </template>
-            <template #dominant-data="{ row }">
-              <span v-if="row.dominant"> {{ row.dominant.title }} </span>
-            </template>
-            <template #subDominant-data="{ row }">
-              <span v-if="row.subDominant"> {{ row.subDominant.title }} </span>
-            </template>
-            <template #empty-state>
-              <div class="wrapper-empty-state">
-                <div>Создать пробную площадку</div>
-                <UButton @click="isOpen = true">Создать</UButton>
-              </div>
-            </template>
-          </UTable>
-          <div class="wrapper-transecta-footer-table">
-            <UButton v-if="modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true"
-              >Создать
-            </UButton>
-            <UPagination
-              v-if="modelValue.trialSite && modelValue.trialSite.length > pageCount"
-              v-model="page"
-              :page-count="pageCount"
-              :total="modelValue.trialSite.length"
-            />
-          </div>
+      <div class="wrapper-transecta-table">
+        <div class="title-xs">Пробные площадки</div>
+        <UTable :columns="columns" :loading="loading" :rows="rows" class="overflow-x-auto">
+          <template #id-data="{ row, index }">
+            {{ index + 1 + pageCount * (page - 1) }}
+          </template>
+          <template #actions-data="{ row }">
+            <UDropdown :items="items(row)">
+              <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost" />
+            </UDropdown>
+          </template>
+          <template #dominant-data="{ row }">
+            <span v-if="row.dominant"> {{ row.dominant.title }} </span>
+          </template>
+          <template #subDominant-data="{ row }">
+            <span v-if="row.subDominant"> {{ row.subDominant.title }} </span>
+          </template>
+          <template #empty-state>
+            <div class="wrapper-empty-state">
+              <div>Создать пробную площадку</div>
+              <UButton @click="isOpen = true">Создать</UButton>
+            </div>
+          </template>
+        </UTable>
+        <div class="wrapper-transecta-footer-table">
+          <UButton v-if="modelValue.trialSite && modelValue.trialSite.length > 0" @click="isOpen = true"
+            >Создать
+          </UButton>
+          <UPagination
+            v-if="modelValue.trialSite && modelValue.trialSite.length > pageCount"
+            v-model="page"
+            :page-count="pageCount"
+            :total="modelValue.trialSite.length"
+          />
         </div>
-      </ClientOnly>
+      </div>
       <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
     </div>
     <UModal v-model="isOpen">
@@ -120,14 +118,14 @@ await useAsyncData(async () => {
   await transectaStore.fetchTransectaById(id);
 });
 
-let modelValue = reactive({ ...transectaStore.getTransect });
+let modelValue = toRef(transectaStore.getTransect);
 
 const handlerOnDeleteTrailSite = async (input: TrialSite) => {
   try {
     loading.value = true;
     await trialSiteStore.DeleteTrialSite(input.id!);
-    const index = modelValue.trialSite.findIndex((item) => item.id!.resourceId === input.id!.resourceId);
-    modelValue.trialSite.splice(index, 1);
+    const index = modelValue.value.trialSite.findIndex((item) => item.id!.resourceId === input.id!.resourceId);
+    modelValue.value.trialSite.splice(index, 1);
   } catch (error) {
     console.error(error);
   } finally {
@@ -140,9 +138,9 @@ const CreateTrailSite = async (input: TrialSite) => {
     loading.value = true;
     await trialSiteStore.CrateTrialSite(input);
     const newTrialSite = trialSiteStore.getTrialSite;
-    transectaStore.pushTrialSite(newTrialSite);
+    modelValue.value.trialSite.push(newTrialSite);
     await handlerOnUpdate();
-    modelValue = reactive({ ...transectaStore.getTransect });
+    modelValue.value = reactive({ ...transectaStore.getTransect });
   } catch (error) {
     console.error(error);
   } finally {
@@ -154,8 +152,8 @@ const CreateTrailSite = async (input: TrialSite) => {
 const handlerOnUpdate = async () => {
   try {
     loading.value = true;
-    await transectaStore.UpdateTransecta(modelValue);
-    modelValue = reactive({ ...transectaStore.getTransect });
+    await transectaStore.UpdateTransecta(modelValue.value);
+    modelValue.value = reactive({ ...transectaStore.getTransect });
   } catch (error) {
     console.error(error);
   } finally {
@@ -231,9 +229,17 @@ const items = (row: TrialSite) => [
 ];
 
 const rows = computed(() => {
-  return modelValue && modelValue.trialSite
-    ? modelValue.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount)
-    : [];
+  if (modelValue.value && !modelValue.value.trialSite) {
+    return [];
+  }
+  const trialSite = modelValue.value.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount);
+
+  if (trialSite.length > 0) {
+    return trialSite;
+  } else {
+    page.value--;
+    return modelValue.value.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
 });
 </script>
 

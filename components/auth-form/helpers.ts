@@ -8,16 +8,6 @@ export const validateAuth = (state: ModelAuth): FormError[] => {
   if (state.email === "Admin" && state.password === "Admin") {
     return [];
   }
-  if (!state.email || !state.password) {
-    toast.add({
-      id: "NullField",
-      title: "Все поля должны быть заполнены",
-      timeout: 5000,
-      description: "",
-      color: "red",
-    });
-    errors.push({ path: "email", message: " " }, { path: "password", message: " " });
-  }
   // Проверка формата почты
   const emailRegex = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]+$/;
   if (state.email && !emailRegex.test(state.email)) {
@@ -28,7 +18,7 @@ export const validateAuth = (state: ModelAuth): FormError[] => {
       description: "",
       color: "red",
     });
-    errors.push({ path: "email", message: "Некорректный формат почты" });
+    errors.push({ path: "email", message: "" });
   }
 
   // Проверка формата пароля
@@ -38,7 +28,7 @@ export const validateAuth = (state: ModelAuth): FormError[] => {
       id: "InvalidPassword",
       title: "Некорректный формат пароля",
       timeout: 5000,
-      description: "Пароль должен содержать 8 символов, одну заглавную букву и одну цифру",
+      description: "Пароль должен содержать 8 символов, одну заглавную, одну строчную букву и одну цифру",
       color: "red",
     });
     errors.push({
@@ -46,6 +36,17 @@ export const validateAuth = (state: ModelAuth): FormError[] => {
       message: " ",
     });
   }
+  if (!state.email && !state.password) {
+    toast.add({
+      id: "NullField",
+      title: "Все поля должны быть заполнены",
+      timeout: 5000,
+      description: "",
+      color: "red",
+    });
+    errors.push({ path: "email", message: " " }, { path: "password", message: " " });
+  }
+
 
   return errors;
 };
