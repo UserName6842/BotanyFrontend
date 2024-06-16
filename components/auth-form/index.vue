@@ -5,13 +5,13 @@
     <span v-if="type === 'logup'" class="title-s">Регистрация</span>
 
     <UFormGroup label="Почта" name="email">
-      <UInput v-model="value.email"/>
+      <UInput class="w-[205px]" v-model="value.email"/>
     </UFormGroup>
     <UFormGroup v-if="type === 'logup'" label="Имя">
-      <UInput v-model="value.name" />
+      <UInput class="w-[205px]" v-model="value.name" />
     </UFormGroup>
-    <UFormGroup label="Пароль" class="w-[179px]" name="password">
-      <UInput v-model="value.password" type="password"/>
+    <UFormGroup label="Пароль"  name="password">
+      <UInput class="w-[205px]" v-model="value.password" type="password"/>
     </UFormGroup>
 
 

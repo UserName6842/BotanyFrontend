@@ -120,7 +120,8 @@ const props = defineProps<PlantCartProps>()
 const initForm = async () => {
   try {
     loadingForm.value = true
-    selectValue()if (props.type === "update") {
+    selectValue()
+    if (props.type === "update") {
       await selectFile()
     }
   } catch (e) {
@@ -144,7 +145,7 @@ const formingModal = async (value: TypePlant) => {
   if (isEdit.value) {
     const img = await onCreateImg()
     const valueImg: Img = {
-      id: {resourceId : img.id.resourceId}
+      id: {resourceId: img.id.resourceId}
     }
     value.img = valueImg
   }
@@ -273,8 +274,9 @@ const onCreateImg = async () => {
   }
 
 }
+
 @media (min-width: 260px) and (max-width: 700px) {
-  .wrapper-type-plant-form{
+  .wrapper-type-plant-form {
     width: 100%;
   }
 }

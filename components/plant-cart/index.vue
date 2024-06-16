@@ -71,7 +71,7 @@ defineProps<PlantCartProps>()
 
 @media (min-width: 260px) and (max-width: 700px) {
   .wrapper-plant-cart{
-    width: 145px;
+    width: 135px;
     height: 120px;
 
     .wrapper-plant-cart-image .plant-cart-image {
