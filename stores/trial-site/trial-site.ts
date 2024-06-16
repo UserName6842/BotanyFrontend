@@ -148,7 +148,6 @@ export const useTrialSite = defineStore('TrialSite', {
 
           onDone((data) => {
             this.trialSite = data.data.trialSite.createTrialSite
-            console.log('Успешное создание:', data.data)
           })
 
           onError((error) => {
@@ -225,7 +224,6 @@ export const useTrialSite = defineStore('TrialSite', {
 
           onDone((data) => {
             this.trialSite = data.data.trialSite.upTrialSite
-            console.log('Успешное обновление:', data.data)
           })
 
           onError((error) => {
@@ -311,7 +309,7 @@ export const useTrialSite = defineStore('TrialSite', {
 
           onDone((data) => {
             this.plant = data.data.trialSite.createPlant
-            console.log('Успешное создание:', data.data)
+
           })
 
           onError((error) => {

@@ -53,8 +53,6 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
 
                     onResult((param) => {
                         this.typeEcomorphs = param.data.ecomorphsEntity.getAllEcomorphEntity.list;
-                        console.log('Данные успешно получены:', param.data.ecomorphsEntity.getAllEcomorphEntity.list)
-
                     })
 
                 } catch (error) {
@@ -93,8 +91,6 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
-                        console.log('Успешное создание:', data.data)
-
                         this.fetchEcomorhs()
                     })
 
@@ -143,8 +139,6 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
-                        console.log('Успешное обновление:', data.data)
-
                         this.fetchEcomorhs()
                     })
 
@@ -182,7 +176,6 @@ export const useTypeEcomorph = defineStore('TypeEcomorph', {
                     const {mutate, onDone, onError} = useMutation(mutation)
 
                     onDone((data) => {
-                        console.log('Успешное удаление:', data.data)
                         this.fetchEcomorhs()
                     })
 

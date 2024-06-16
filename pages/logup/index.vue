@@ -39,7 +39,6 @@ const logup = async (value) => {
       onLogin(token)
       const auth = useAuth()
       auth.setIsLogin(true)
-      console.log('Успешная регистрация. Токен:', token)
       navigateTo('/home')
     })
 

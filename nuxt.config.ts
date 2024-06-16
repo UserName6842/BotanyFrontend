@@ -1,11 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr:false,
   runtimeConfig: {
     public: {
       apiURL: process.env.API_URL
     }
   },
-  devtools: {enabled: true},
+  devtools: {enabled: false},
   modules: [
     "@pinia/nuxt",
     '@nuxt/ui',

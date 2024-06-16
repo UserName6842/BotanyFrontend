@@ -120,9 +120,7 @@ const props = defineProps<PlantCartProps>()
 const initForm = async () => {
   try {
     loadingForm.value = true
-    selectValue()
-    console.log(props.type)
-    if (props.type === "update") {
+    selectValue()if (props.type === "update") {
       await selectFile()
     }
   } catch (e) {

@@ -31,7 +31,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
                 const auth = useAuth()
                 auth.setIsLogin(true)
-                console.log('Успешная регистрация. Токен:', token)
                 location.reload()
             })
 

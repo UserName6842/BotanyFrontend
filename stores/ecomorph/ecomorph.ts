@@ -42,8 +42,6 @@ export const useEcomorph = defineStore('Ecomorph', {
           // Проверяем, есть ли уже данные в результате запроса
 
           this.ecomorhs = data.value.ecomorph.getListEcomorph.list;
-          console.log('Данные успешно получены:', data.value.ecomorph.getListEcomorph.list)
-
         } catch (error) {
           console.error('Ошибка при выполнении запроса:', error);
         } finally {
@@ -82,7 +80,6 @@ export const useEcomorph = defineStore('Ecomorph', {
           // Проверяем, есть ли уже данные в результате запроса
           onResult((param) => {
             this.ecomorhs = param.data.ecomorph.getListEcomorph.list;
-            console.log('Данные успешно получены:', param.data.ecomorph.getListEcomorph.list)
           })
 
 
@@ -119,8 +116,6 @@ export const useEcomorph = defineStore('Ecomorph', {
 
           onDone((data) => {
             this.fetchEcomorhs()
-            console.log('Успешное создание:', data.data)
-
 
           })
 
@@ -168,7 +163,6 @@ export const useEcomorph = defineStore('Ecomorph', {
 
           onDone((data) => {
             this.fetchEcomorhs()
-            console.log('Успешное обновление:', data.data)
           })
 
           onError((error) => {
@@ -205,7 +199,6 @@ export const useEcomorph = defineStore('Ecomorph', {
 
           onDone((data) => {
             this.fetchEcomorhs()
-            console.log('Успешное удаление:', data.data)
           })
 
           onError((error) => {

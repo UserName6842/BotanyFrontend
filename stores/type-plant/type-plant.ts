@@ -78,7 +78,6 @@ export const useTypePlant = defineStore('TypePlant', {
             if (param.data.typePlant.getAllTypePlant.page && param.data.typePlant.getAllTypePlant.page.total) {
               this.totalCount = param.data.typePlant.getAllTypePlant.page.total;
             }
-            console.log('Данные об типах растения успешно получены:', param.data.typePlant.getAllTypePlant.list)
 
           })
 
@@ -164,7 +163,6 @@ export const useTypePlant = defineStore('TypePlant', {
           const {mutate, onDone, onError} = useMutation(mutation)
 
           onDone((data) => {
-            console.log('Успешное создание:', data.data)
 
             this.fetchTypePlant()
           })
@@ -213,8 +211,6 @@ export const useTypePlant = defineStore('TypePlant', {
           const {mutate, onDone, onError} = useMutation(mutation)
 
           onDone((data) => {
-            console.log('Успешное обновление:', data.data)
-
             this.fetchTypePlant()
           })
 
@@ -251,7 +247,6 @@ export const useTypePlant = defineStore('TypePlant', {
           const {mutate, onDone, onError} = useMutation(mutation)
 
           onDone((data) => {
-            console.log('Успешное удаление:', data.data)
             this.fetchTypePlant()
           })
 

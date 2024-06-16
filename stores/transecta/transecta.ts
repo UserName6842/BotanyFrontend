@@ -93,8 +93,6 @@ export const useTransecta = defineStore('Transecta', {
           onResult((param) => {
             this.transects = param.data.transect.getAllTransect.list;
             this.totalCount = param.data.transect.getAllTransect.page.total;
-            console.log('Данные об типах растения успешно получены:', param.data.typePlant.getAllTransecta.list)
-
           })
 
         } catch (error) {
@@ -164,7 +162,6 @@ export const useTransecta = defineStore('Transecta', {
 
           const {data} = await useAsyncQuery(query, variables)
           this.transect = data.value.transect.getTransect
-          console.log(`Успешное получение ПП по id: ${id}`, data.value)
         } catch (error) {
           console.error('Ошибка при выполнении запроса:', error);
         } finally {
@@ -233,7 +230,6 @@ export const useTransecta = defineStore('Transecta', {
           const {onResult} = await useQuery(query, variables)
           onResult((param) => {
             this.transect = param.data.value.transect.getTransect
-            console.log(`Успешное получение ПП по id: ${id}`, param.data.value)
           })
 
         } catch (error) {
@@ -271,9 +267,7 @@ export const useTransecta = defineStore('Transecta', {
           const {mutate, onDone, onError} = useMutation(mutation)
 
           onDone((data) => {
-            this.analysis = data.data.analysis.creatAnalysis
-            console.log('Успешное создание:', data.data)
-          })
+            this.analysis = data.data.analysis.creatAnalysis})
 
           onError((error) => {
             console.error('Ошибка создании:', error.message)
@@ -337,7 +331,6 @@ export const useTransecta = defineStore('Transecta', {
 
           onDone((data) => {
             this.transect = data.data.transect.createTransect
-            console.log('Успешное создание:', data.data)
           })
 
           onError((error) => {
@@ -423,7 +416,6 @@ export const useTransecta = defineStore('Transecta', {
 
           onDone((data) => {
             this.transect = data.data.transect.upTransect;
-            console.log('Успешное обновление:', data.data)
           })
 
           onError((error) => {
@@ -460,7 +452,6 @@ export const useTransecta = defineStore('Transecta', {
           const {mutate, onDone, onError} = useMutation(mutation)
 
           onDone((data) => {
-            console.log('Успешное удаление:', data.data)
             this.fetchTransecta()
           })
 

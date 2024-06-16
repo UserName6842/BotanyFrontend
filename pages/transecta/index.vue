@@ -49,7 +49,6 @@ await useAsyncData(async () => {
 });
 
 const onDownload = async (input: Analysis) => {
-  console.log(input);
   await transectaStore.CrateAnalysis(input);
   let reader = new FileReader();
   reader.onload = function () {
