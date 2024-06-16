@@ -1,32 +1,26 @@
 <template>
   <div class="wrapper-plant-cart-list">
-    <plant-cart
-      v-for="item of option"
-      :key="item.id?.resourceId"
-      :option="item"
-      @on-click="$emit('onClick', item)"
-      />
-    </div>
+    <plant-cart v-for="item of option" :key="item.id?.resourceId" :option="item" @on-click="$emit('onClick', item)" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import type {TypePlant} from "~/stores/type-plant/types";
+import type { TypePlant } from "~/stores/type-plant/types";
 
 interface PlantCartListProps {
-  option: TypePlant[]
+  option: TypePlant[];
 }
 
 interface PlantCartListEmits {
-  (event: 'onClick', id: TypePlant | undefined): void
+  (event: "onClick", id: TypePlant | undefined): void;
 }
-defineEmits<PlantCartListEmits>()
+defineEmits<PlantCartListEmits>();
 
-defineProps<PlantCartListProps>()
-
+defineProps<PlantCartListProps>();
 </script>
 
 <style scoped lang="scss">
-.wrapper-plant-cart-list{
+.wrapper-plant-cart-list {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
@@ -36,7 +30,7 @@ defineProps<PlantCartListProps>()
 }
 
 @media (min-width: 260px) and (max-width: 700px) {
-  .wrapper-plant-cart-list{
+  .wrapper-plant-cart-list {
     gap: 10px;
   }
 }

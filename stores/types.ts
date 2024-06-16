@@ -1,30 +1,29 @@
-
 export type AuthStore = {
-    userName: string
-    isLogin: boolean
-    user?: User
-}
+  userName: string;
+  isLogin: boolean;
+  user?: User;
+};
 
-export type RoleType = "NormalUser" | "SuperUser"
+export type RoleType = "NormalUser" | "SuperUser";
 
 export type User = {
-    name: string
-    role: RoleType
-}
+  name: string;
+  role: RoleType;
+};
 
 export type Identifier = {
-    resourceId: string
-}
+  resourceId: string;
+};
 
 export type Img = {
-    id?: Identifier
-    name:string
-    path:string
-}
+  id?: Identifier;
+  name: string;
+  path: string;
+};
 
-export type TypeForm = "create" | "update"
+export type TypeForm = "create" | "update";
 
 export type PagesRequest = {
-    page: number
-    limit: number
-}
+  page: number;
+  limit: number;
+};

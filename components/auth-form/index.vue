@@ -1,20 +1,21 @@
 <template>
-
-  <UForm :validate="validateAuth" :state="value" class="wrapper-form" @submit="$emit('onClick', value)">
+  <UForm :state="value" :validate="validateAuth" class="wrapper-form" @submit="$emit('onClick', value)">
     <span v-if="type === 'login'" class="title-s">Авторизация</span>
     <span v-if="type === 'logup'" class="title-s">Регистрация</span>
 
     <UFormGroup label="Почта" name="email">
-      <UInput class="w-[205px]" v-model="value.email"/>
+      <UInput v-model="value.email" class="w-[205px]" />
     </UFormGroup>
     <UFormGroup v-if="type === 'logup'" label="Имя">
-      <UInput class="w-[205px]" v-model="value.name" />
+      <UInput v-model="value.name" class="w-[205px]" />
     </UFormGroup>
-    <UFormGroup label="Пароль"  name="password">
-      <UInput class="w-[205px]" v-model="value.password" type="password"/>
+    <UFormGroup label="Пароль" name="password">
+      <UInput v-model="value.password" class="w-[205px]" :type="!showPassword ? 'password' : ''" />
     </UFormGroup>
-
-
+    <div class="form-wrapper-toggle">
+      <UToggle v-model:model-value="showPassword" />
+      <span class="form-toggle-title">Показать пароль</span>
+    </div>
     <UButton type="submit">
       <span v-if="type === 'login'">Авторизоваться</span>
       <span v-if="type === 'logup'">Зарегистрироваться</span>
@@ -23,24 +24,22 @@
 </template>
 
 <script lang="ts" setup>
-import type {ModelAuth} from "~/components/auth-form/types";
-import {validateAuth} from "~/components/auth-form/helpers";
+import type { ModelAuth } from "~/components/auth-form/types";
+import { validateAuth } from "~/components/auth-form/helpers";
 
 interface AuthFormProps {
-  type: 'login' | "logup"
+  type: "login" | "logup";
 }
 
 interface AuthFormEmit {
-  (event: 'onClick', id: ModelAuth | undefined): void
+  (event: "onClick", id: ModelAuth | undefined): void;
 }
 
-defineProps<AuthFormProps>()
-const value = defineModel<ModelAuth>("value", {default: {email: '', name: '', password: ''}})
-defineEmits<AuthFormEmit>()
+defineProps<AuthFormProps>();
+const value = defineModel<ModelAuth>("value", { default: { email: "", name: "", password: "" } });
+defineEmits<AuthFormEmit>();
 
-
-const showPassword = ref<boolean>(false)
-
+const showPassword = ref<boolean>(false);
 </script>
 
 <style lang="scss" scoped>
@@ -70,6 +69,4 @@ const showPassword = ref<boolean>(false)
     }
   }
 }
-
-
 </style>

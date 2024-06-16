@@ -1,43 +1,55 @@
 <template>
   <div class="wrapper">
-    <div class="title-m">
-      Список Экоморфов
-    </div>
+    <div class="title-m">Список Экоморфов</div>
     <div class="wrapper-search">
       <b-search
         v-model:model-value="searchValue"
         placeholder="Введите название"
         title="Поиск по названию"
         @on-clean="onCleanSearch"
-        @on-search="onSearch"/>
+        @on-search="onSearch"
+      />
     </div>
     <UTable :columns="columns" :rows="rows" class="overflow-x-auto min-width">
-      <template #id-data="{ row, index}">
-        {{ (index + 1) + (pageCount * (page - 1)) }}
+      <template #id-data="{ index }">
+        {{ index + 1 + pageCount * (page - 1) }}
       </template>
       <template #ecomorph-data="{ row }">
-      <span v-if="row.ecomorphs && row.ecomorphs.title">{{
-          row.ecomorphs.title
-        }}
-        </span>
+        <span v-if="row.ecomorphs && row.ecomorphs.title">{{ row.ecomorphs.title }} </span>
       </template>
       <template #actions-data="{ row }">
         <UDropdown :items="items(row)">
-          <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
+          <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost" />
         </UDropdown>
       </template>
     </UTable>
     <div class="wrapper-add-button">
-      <UButton class="add-button" icon="i-ph-list-plus" @click="() => {
-      typeEomorhFormData = { id:{resourceId: ''}, title: '', description: '' ,displayTable: '', score: 0, ecomorphs: ecomorhStores.getEcomorphs[0]}
-      isOpen = true
-      typeModal = 'create'
-    }"/>
+      <UButton
+        class="add-button"
+        icon="i-ph-list-plus"
+        @click="
+          () => {
+            typeEomorhFormData = {
+              id: { resourceId: '' },
+              title: '',
+              description: '',
+              displayTable: '',
+              score: 0,
+              ecomorphs: ecomorhStores.getEcomorphs[0],
+            };
+            isOpen = true;
+            typeModal = 'create';
+          }
+        "
+      />
     </div>
     <div class="wrapper-pagination">
       <UPagination
         v-if="typeEomorhStores.getTypeEcomorphs.length && typeEomorhStores.getTypeEcomorphs.length > pageCount"
-        v-model="page" :page-count="pageCount" :total="typeEomorhStores.getTypeEcomorphs.length"/>
+        v-model="page"
+        :page-count="pageCount"
+        :total="typeEomorhStores.getTypeEcomorphs.length"
+      />
     </div>
   </div>
   <UModal v-model="isOpen">
@@ -45,108 +57,116 @@
       v-model:model-value="typeEomorhFormData"
       :type="typeModal"
       @on-create="createTypeEcomorph"
-      @on-updated="updateTypeEcomorph"/>
+      @on-updated="updateTypeEcomorph"
+    />
   </UModal>
-
 </template>
 
 <script lang="ts" setup>
-import {useTypeEcomorph} from "~/stores/type-ecomorphs/ecomorph";
-import type {TypeEcomorph} from "~/stores/type-ecomorphs/types";
-import {useEcomorph} from "~/stores/ecomorph/ecomorph";
-import type {TypeForm} from "~/stores/types";
+import { useTypeEcomorph } from "~/stores/type-ecomorphs/ecomorph";
+import type { TypeEcomorph } from "~/stores/type-ecomorphs/types";
+import { useEcomorph } from "~/stores/ecomorph/ecomorph";
+import type { TypeForm } from "~/stores/types";
 
+const typeEomorhStores = useTypeEcomorph();
+const ecomorhStores = useEcomorph();
+const isOpen = ref(false);
 
-const typeEomorhStores = useTypeEcomorph()
-const ecomorhStores = useEcomorph()
-const isOpen = ref(false)
-
-const searchValue = ref("")
+const searchValue = ref("");
 
 const onSearch = () => {
-  typeEomorhStores.fetchEcomorhs({filter: {searchTitle: searchValue.value}})
-}
+  typeEomorhStores.fetchEcomorhs({ filter: { searchTitle: searchValue.value } });
+};
 const onCleanSearch = () => {
-  searchValue.value = ""
-  typeEomorhStores.fetchEcomorhs({filter: {searchTitle: searchValue.value}})
-}
+  searchValue.value = "";
+  typeEomorhStores.fetchEcomorhs({ filter: { searchTitle: searchValue.value } });
+};
 
-const columns = [{
-  key: 'id',
-  label: '№'
-},
+const columns = [
   {
-    sortable: true,
-    key: 'ecomorph',
-    label: 'Екоморф'
-  }, {
-    key: 'title',
-    label: 'Название'
+    key: "id",
+    label: "№",
   },
   {
-    key: 'description',
-    label: 'Описание'
-  }, {
-    key: 'displayTable',
-    label: 'Отображение в таблице'
-  }, {
-    key: 'score',
-    label: 'Баллы',
-    sortable: true
-  }, {
-    key: 'actions'
-  }]
+    sortable: true,
+    key: "ecomorph",
+    label: "Екоморф",
+  },
+  {
+    key: "title",
+    label: "Название",
+  },
+  {
+    key: "description",
+    label: "Описание",
+  },
+  {
+    key: "displayTable",
+    label: "Отображение в таблице",
+  },
+  {
+    key: "score",
+    label: "Баллы",
+    sortable: true,
+  },
+  {
+    key: "actions",
+  },
+];
 
 const items = (row) => [
-  [{
-    label: 'Edit',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => {
-      typeModal.value = "update"
-      isOpen.value = true
-      typeEomorhFormData = {...row}
-    }
-  },], [{
-    label: 'Delete',
-    icon: 'i-heroicons-trash-20-solid',
-    click: () => typeEomorhStores.DeleteEcomorhs(row.id)
-  }]
-]
+  [
+    {
+      label: "Edit",
+      icon: "i-heroicons-pencil-square-20-solid",
+      click: () => {
+        typeModal.value = "update";
+        isOpen.value = true;
+        typeEomorhFormData = { ...row };
+      },
+    },
+  ],
+  [
+    {
+      label: "Delete",
+      icon: "i-heroicons-trash-20-solid",
+      click: () => typeEomorhStores.DeleteEcomorhs(row.id),
+    },
+  ],
+];
 
-typeEomorhStores.fetchEcomorhs()
+typeEomorhStores.fetchEcomorhs();
 
-ecomorhStores.fetchAsyncEcomorhs()
+ecomorhStores.fetchAsyncEcomorhs();
 
-const typeModal = ref<TypeForm>("create")
+const typeModal = ref<TypeForm>("create");
 
 let typeEomorhFormData = reactive<TypeEcomorph>({
-  title: '',
-  description: '',
+  title: "",
+  description: "",
   score: 0,
   displayTable: "",
-  ecomorphs: ecomorhStores.getEcomorphs[0]
-})
+  ecomorphs: ecomorhStores.getEcomorphs[0],
+});
 
 const createTypeEcomorph = async (value: TypeEcomorph) => {
-  isOpen.value = false
-  await typeEomorhStores.CrateEcomorhs(value)
-}
+  isOpen.value = false;
+  await typeEomorhStores.CrateEcomorhs(value);
+};
 const updateTypeEcomorph = async (value: TypeEcomorph) => {
-  isOpen.value = false
-  await typeEomorhStores.UpdateEcomorhs(value)
-}
+  isOpen.value = false;
+  await typeEomorhStores.UpdateEcomorhs(value);
+};
 
-const page = ref(1)
-const pageCount = 6
+const page = ref(1);
+const pageCount = 6;
 
 const rows = computed(() => {
   if (typeEomorhStores.getTypeEcomorphs) {
-    return typeEomorhStores.getTypeEcomorphs.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    return typeEomorhStores.getTypeEcomorphs.slice((page.value - 1) * pageCount, page.value * pageCount);
   }
-})
-
+});
 </script>
-
 
 <style lang="scss">
 .title {
@@ -193,7 +213,6 @@ const rows = computed(() => {
       width: 32px;
       height: 32px;
     }
-
   }
 }
 
@@ -226,7 +245,7 @@ const rows = computed(() => {
     width: 100%;
     .min-width {
       max-width: 100%;
-      }
+    }
   }
 }
 </style>

@@ -4,7 +4,7 @@
       <div class="text-center">
         <div v-if="file" class="uploaded-image-container">
           <img :src="imageUrl" alt="Uploaded image" class="uploaded-image" />
-          <UButton @click="clearFile" class="remove-button">
+          <UButton class="remove-button" @click="clearFile">
             <UIcon name="i-ph-x-light" class="h-4 w-4" aria-hidden="true" />
           </UButton>
         </div>
@@ -23,13 +23,11 @@
 </template>
 
 <script setup lang="ts">
-
-
 const file = defineModel<File | undefined>("file");
 const isEdit = defineModel<boolean>("isEdit");
 
 const handleFileChange = (event: Event) => {
-  isEdit.value = true
+  isEdit.value = true;
   const target = event.target as HTMLInputElement;
   const files = target.files;
   if (files && files.length > 0) {
@@ -38,7 +36,7 @@ const handleFileChange = (event: Event) => {
 };
 
 const imageUrl = computed(() => {
-  return file.value ? URL.createObjectURL(file.value) : '';
+  return file.value ? URL.createObjectURL(file.value) : "";
 });
 
 const clearFile = () => {
@@ -55,7 +53,7 @@ const handleDrop = (event: DragEvent) => {
 </script>
 
 <style scoped lang="scss">
-.wrapper-upload{
+.wrapper-upload {
   display: flex;
   justify-content: center;
   border-radius: 1rem;
@@ -63,7 +61,7 @@ const handleDrop = (event: DragEvent) => {
 
   padding: 1.5rem;
 
-  .upload-label{
+  .upload-label {
     position: relative;
     cursor: pointer;
     border-radius: 6px;

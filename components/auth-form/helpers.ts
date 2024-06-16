@@ -1,10 +1,11 @@
-import type {FormError} from "#ui/types";
+import type { FormError } from "#ui/types";
+import type { ModelAuth } from "~/components/auth-form/types";
 
-export const validateAuth = (state: any): FormError[] => {
-  const toast = useToast()
-  const errors: FormError[] = []
+export const validateAuth = (state: ModelAuth): FormError[] => {
+  const toast = useToast();
+  const errors: FormError[] = [];
 
-  if (state.email === "Admin" && state.password === "Admin"){
+  if (state.email === "Admin" && state.password === "Admin") {
     return [];
   }
   if (!state.email || !state.password) {
@@ -13,19 +14,19 @@ export const validateAuth = (state: any): FormError[] => {
       title: "Все поля должны быть заполнены",
       timeout: 5000,
       description: "",
-      color: "red"
-    })
-    errors.push({path:"email", message:" "}, {path:"password", message:" "},)
+      color: "red",
+    });
+    errors.push({ path: "email", message: " " }, { path: "password", message: " " });
   }
   // Проверка формата почты
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]+$/;
   if (state.email && !emailRegex.test(state.email)) {
     toast.add({
       id: "InvalidEmail",
       title: "Некорректный формат почты",
       timeout: 5000,
       description: "",
-      color: "red"
+      color: "red",
     });
     errors.push({ path: "email", message: "Некорректный формат почты" });
   }
@@ -38,13 +39,13 @@ export const validateAuth = (state: any): FormError[] => {
       title: "Некорректный формат пароля",
       timeout: 5000,
       description: "Пароль должен содержать 8 символов, одну заглавную букву и одну цифру",
-      color: "red"
+      color: "red",
     });
     errors.push({
       path: "password",
-      message: " "
+      message: " ",
     });
   }
 
   return errors;
-}
+};

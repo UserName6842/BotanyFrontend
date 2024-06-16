@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <h1>Color mode: {{ $colorMode.value }}</h1>
@@ -12,17 +11,12 @@
   </div>
 </template>
 
-<script setup lang="ts">
-
-const colorMode = useColorMode()
-
-</script>
-
+<script setup lang="ts"></script>
 
 <style lang="scss">
 body {
   background-color: #fff;
-  color: rgba(0,0,0,0.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 .dark-mode body {
   background-color: #091a28;

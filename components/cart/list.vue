@@ -6,23 +6,23 @@
           :key="index"
           :content="item.content"
           :title="item.title"
-          :type="index != 1 ? 'small' : 'defaults' "
-          @click="  swapArrayElements(content, 1, index)"/>
+          :type="index != 1 ? 'small' : 'defaults'"
+          @click="swapArrayElements(content, 1, index)"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type {CartProps} from "~/components/cart/types";
-import {swapArrayElements} from "~/components/cart/helpers";
+import type { CartProps } from "~/components/cart/types";
+import { swapArrayElements } from "~/components/cart/helpers";
 
 interface ListCartProps {
-  content: CartProps[]
+  content: CartProps[];
 }
 
-const {content} = defineProps<ListCartProps>()
-
+const { content } = defineProps<ListCartProps>();
 </script>
 
 <style lang="scss">
@@ -38,8 +38,8 @@ const {content} = defineProps<ListCartProps>()
 }
 
 @media (max-width: 768px) {
-  .slides{
-    gap: 35px
+  .slides {
+    gap: 35px;
   }
 }
 </style>

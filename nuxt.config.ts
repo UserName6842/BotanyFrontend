@@ -2,18 +2,19 @@
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      apiURL: process.env.API_URL
-    }
+      apiURL: process.env.API_URL,
+    },
   },
-  devtools: {enabled: false},
+  devtools: { enabled: true },
   modules: [
     "@pinia/nuxt",
-    '@nuxt/ui',
-    '@nuxtjs/tailwindcss',
-    'nuxt-svgo',
-    'nuxt-icon',
-    '@nuxtjs/apollo',
-    '@nuxt/image',
+    "@nuxt/ui",
+    "@nuxtjs/tailwindcss",
+    "nuxt-svgo",
+    "nuxt-icon",
+    "@nuxtjs/apollo",
+    "@nuxt/image",
+    "@nuxt/eslint",
   ],
 
   svgo: {
@@ -21,28 +22,22 @@ export default defineNuxtConfig({
     defaultImport: "component",
   },
 
-  css: [
-    "./assets/styles/color.scss",
-    "./assets/styles/fonts.scss",
-    "./assets/styles/root.scss"
-  ],
+  css: ["./assets/styles/color.scss", "./assets/styles/fonts.scss", "./assets/styles/root.scss"],
 
   ui: {
-    icons: ['ph']
+    icons: ["ph"],
   },
 
   apollo: {
     autoImports: true,
-    authType: 'Bearer',
-    authHeader: 'Authorization',
-    tokenStorage: 'cookie',
+    authType: "Bearer",
+    authHeader: "Authorization",
+    tokenStorage: "cookie",
     proxyCookies: true,
     clients: {
       default: {
-        httpEndpoint: process.env.GRAPHQL_API_URL!
-      }
+        httpEndpoint: process.env.GRAPHQL_API_URL!,
+      },
     },
   },
-
-
-})
+});

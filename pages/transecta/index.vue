@@ -4,7 +4,7 @@
     <div class="title-m">Трансекта</div>
     <div class="flex items-center justify-center gap-20 sm:gap-40">
       <div>Всего растений {{ transectaStore.getTransects.length }}</div>
-      <UButton  @click="navigateTo('/transecta/create')">Создать Трансекту</UButton>
+      <UButton @click="navigateTo('/transecta/create')">Создать Трансекту</UButton>
     </div>
     <UTable :columns="columns" :rows="rows" class="min-width overflow-x-auto">
       <template #id-data="{ row, index }">
@@ -50,7 +50,7 @@ await useAsyncData(async () => {
 
 const onDownload = async (input: Analysis) => {
   await transectaStore.CrateAnalysis(input);
-  let reader = new FileReader();
+  const reader = new FileReader();
   reader.onload = function () {
     linkDownload.value.href = reader.result;
     linkDownload.value.download = transectaStore.analysis.title;
@@ -109,13 +109,15 @@ const columns = [
   },
 ];
 
-const items = (row) => [
+const items = (row: Transecta) => [
   [
     {
       label: "Открыть",
       icon: "i-heroicons-pencil-square-20-solid",
       click: () => {
-        navigateTo("transecta/" + btoa(row.id?.resourceId!));
+        if (row.id && row.id.resourceId) {
+          navigateTo("transecta/" + btoa(row.id.resourceId));
+        }
       },
     },
   ],
@@ -149,7 +151,6 @@ const rows = computed(() => {
 </script>
 
 <style scoped>
-
 @media (min-width: 260px) and (max-width: 768px) {
   .min-width {
     max-width: 100%;

@@ -1,29 +1,22 @@
 <template>
-  <div class="first-content">
-    10:00-20:00 MSK • GMT +3
-    hello@result.school
-  </div>
+  <div class="first-content">10:00-20:00 MSK • GMT +3 hello@result.school</div>
   <div class="center-content">
-      <NuxtLink href="/home" target="_blank">
-        Документация
-      </NuxtLink>
-    <a href="https://donnu.ru/bio/bec" target="_blank">
-        О нас
-      </a>
+    <NuxtLink href="/home" target="_blank"> Документация </NuxtLink>
+    <a href="https://donnu.ru/bio/bec" target="_blank"> О нас </a>
   </div>
   <div class="icon-wrapper">
     <a href="https://t.me/Kalin24Don" target="_blank">
       <telegram class="telegram" />
     </a>
     <a href="https://vk.com/bio_profkom" target="_blank">
-      <vkontacte/>
+      <vkontacte />
     </a>
   </div>
 </template>
 
 <script lang="ts" setup>
-import telegram from "assets/icons/footer/telegram.svg"
-import vkontacte from "assets/icons/footer/vkontacte.svg"
+import telegram from "assets/icons/footer/telegram.svg";
+import vkontacte from "assets/icons/footer/vkontacte.svg";
 </script>
 
 <style lang="scss" scoped>
@@ -40,15 +33,15 @@ import vkontacte from "assets/icons/footer/vkontacte.svg"
   }
 }
 
-.telegram{
+.telegram {
   color: #091a28;
 }
-.first-content{
+.first-content {
   max-width: 220px;
   text-align: center;
 }
 
-.center-content{
+.center-content {
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
@@ -65,13 +58,12 @@ import vkontacte from "assets/icons/footer/vkontacte.svg"
       height: 24px;
     }
   }
-  .first-content{
+  .first-content {
     font-size: 12px;
   }
-  .center-content{
+  .center-content {
     font-size: 14px;
     margin-right: 0;
   }
 }
-
 </style>

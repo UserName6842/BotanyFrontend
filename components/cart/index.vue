@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'small' : type == 'small', 'big' : type == 'big'}" class="wrapper-cart">
+  <div :class="{ small: type == 'small', big: type == 'big' }" class="wrapper-cart">
     <div class="title">
       {{ title }}
     </div>
@@ -10,10 +10,9 @@
 </template>
 
 <script lang="ts" setup>
-import type {CartProps} from "./types";
+import type { CartProps } from "./types";
 
-const props = defineProps<CartProps>()
-
+defineProps<CartProps>();
 </script>
 
 <style lang="scss" scoped>

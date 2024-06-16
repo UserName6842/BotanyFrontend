@@ -1,103 +1,107 @@
 <template>
   <div class="wrapper">
-    <div class="title-m">
-      Список Групп экоморфов
-    </div>
+    <div class="title-m">Список Групп экоморфов</div>
     <UTable :columns="columns" :rows="ecomorhStores.getEcomorphs" class="overflow-x-auto">
-      <template #id-data="{row, index}">
+      <template #id-data="{ row, index }">
         {{ index + 1 }}
       </template>
       <template #actions-data="{ row }">
         <UDropdown :items="items(row)">
-          <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost"/>
+          <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost" />
         </UDropdown>
       </template>
     </UTable>
     <div class="wrapper-add-button">
-      <UButton class="add-button" icon="i-ph-list-plus" @click="() => {
-      isOpen = true
-      typeModal = 'create'
-      ecoporph = {id:{resourceId: ''}, description: '',title: ''}
-    }"/>
+      <UButton
+        class="add-button"
+        icon="i-ph-list-plus"
+        @click="
+          () => {
+            isOpen = true;
+            typeModal = 'create';
+            ecoporph = { id: { resourceId: '' }, description: '', title: '' };
+          }
+        "
+      />
     </div>
   </div>
   <UModal v-model="isOpen">
-    <ecomorph-form
-      v-model:model-value="ecoporph"
-      :type="typeModal"
-      @on-create="onCreate"
-      @on-updated="onUpdate"/>
+    <ecomorph-form v-model:model-value="ecoporph" :type="typeModal" @on-create="onCreate" @on-updated="onUpdate" />
   </UModal>
-
 </template>
 
 <script lang="ts" setup>
-import {useEcomorph} from "~/stores/ecomorph/ecomorph";
-import type {Ecomorph} from "~/stores/ecomorph/types";
-import type {TypeForm} from "~/stores/types";
+import { useEcomorph } from "~/stores/ecomorph/ecomorph";
+import type { Ecomorph } from "~/stores/ecomorph/types";
+import type { TypeForm } from "~/stores/types";
 
-
-const ecomorhStores = useEcomorph()
-const isOpen = ref(false)
-const columns = [{
-  key: 'id',
-  label: '№'
-}, {
-  key: 'title',
-  label: 'Экоморфы'
-}, {
-  key: 'description',
-  label: 'Описание'
-}, {
-  key: 'actions'
-}]
+const ecomorhStores = useEcomorph();
+const isOpen = ref(false);
+const columns = [
+  {
+    key: "id",
+    label: "№",
+  },
+  {
+    key: "title",
+    label: "Экоморфы",
+  },
+  {
+    key: "description",
+    label: "Описание",
+  },
+  {
+    key: "actions",
+  },
+];
 
 const items = (row) => [
-  [{
-    label: 'Edit',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => {
-      typeModal.value = "update"
-      isOpen.value = true
-      ecoporph = {...row}
-    }
-  },], [{
-    label: 'Delete',
-    icon: 'i-heroicons-trash-20-solid',
-    click: () => ecomorhStores.DeleteEcomorhs(row.id)
-  }]
-]
+  [
+    {
+      label: "Edit",
+      icon: "i-heroicons-pencil-square-20-solid",
+      click: () => {
+        typeModal.value = "update";
+        isOpen.value = true;
+        ecoporph = { ...row };
+      },
+    },
+  ],
+  [
+    {
+      label: "Delete",
+      icon: "i-heroicons-trash-20-solid",
+      click: () => ecomorhStores.DeleteEcomorhs(row.id),
+    },
+  ],
+];
 
 await useAsyncData(async () => {
-  await ecomorhStores.fetchAsyncEcomorhs()
-})
-
+  await ecomorhStores.fetchAsyncEcomorhs();
+});
 
 let ecoporph = reactive<Ecomorph>({
   title: "",
-  description: ""
-})
-const typeModal = ref<TypeForm>("create")
+  description: "",
+});
+const typeModal = ref<TypeForm>("create");
 const onCreate = async () => {
-  isOpen.value = false
-  await ecomorhStores.CrateEcomorhs(ecoporph)
-}
+  isOpen.value = false;
+  await ecomorhStores.CrateEcomorhs(ecoporph);
+};
 
 const onUpdate = async () => {
-  isOpen.value = false
-  await ecomorhStores.UpdateEcomorhs(ecoporph)
-}
+  isOpen.value = false;
+  await ecomorhStores.UpdateEcomorhs(ecoporph);
+};
 </script>
 
-
 <style lang="scss">
-
 .wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 
 .wrapper-add-button {
   align-items: flex-end;
@@ -111,7 +115,6 @@ const onUpdate = async () => {
       width: 32px;
       height: 32px;
     }
-
   }
 }
 

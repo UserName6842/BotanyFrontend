@@ -1,17 +1,22 @@
 <template>
   <div>
-    <OpenIcon class="h-6 menu-open-icon" @click="isOpen = true"/>
+    <OpenIcon class="h-6 menu-open-icon" @click="isOpen = true" />
 
     <USlideover v-model="isOpen" side="left">
-      <UCard :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }"
-             class="flex flex-col flex-1">
+      <UCard
+        :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }"
+        class="flex flex-col flex-1"
+      >
         <template #header>
           <div class="flex items-center justify-between">
-            <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-              Меню
-            </h3>
-            <UButton class="my-1" color="gray" icon="i-heroicons-x-mark-20-solid" variant="ghost"
-                     @click="isOpen = false"/>
+            <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Меню</h3>
+            <UButton
+              class="my-1"
+              color="gray"
+              icon="i-heroicons-x-mark-20-solid"
+              variant="ghost"
+              @click="isOpen = false"
+            />
           </div>
           <div v-if="auth.user">
             {{ auth.user.name }}
@@ -20,13 +25,15 @@
 
         <template #default>
           <div class="wrapper-menu">
-            <UVerticalNavigation :links="links"/>
-            <UButton class="menu-logout" icon="i-heroicons-arrow-right-end-on-rectangle-solid" label="Выйти"
-                     @click="logout"/>
+            <UVerticalNavigation :links="links" />
+            <UButton
+              class="menu-logout"
+              icon="i-heroicons-arrow-right-end-on-rectangle-solid"
+              label="Выйти"
+              @click="logout"
+            />
           </div>
         </template>
-
-
       </UCard>
     </USlideover>
   </div>
@@ -34,61 +41,60 @@
 
 <script lang="ts" setup>
 import OpenIcon from "assets/icons/menu/open-icon.svg";
-import {useAuth} from "~/stores/auth";
+import { useAuth } from "~/stores/auth";
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
 const links = computed(() => {
   const config = [
     {
-      label: 'Главная',
-      icon: 'i-heroicons-home',
-      to: '/home'
-    }, {
-      label: 'Геоботаническое описание',
-      icon: 'i-heroicons-document-text',
-      to: '/transecta'
-    }, {
-      label: 'Видовой состав',
-      icon: 'i-ph-plant-light',
-      to: '/type-plant'
-    }]
+      label: "Главная",
+      icon: "i-heroicons-home",
+      to: "/home",
+    },
+    {
+      label: "Геоботаническое описание",
+      icon: "i-heroicons-document-text",
+      to: "/transecta",
+    },
+    {
+      label: "Видовой состав",
+      icon: "i-ph-plant-light",
+      to: "/type-plant",
+    },
+  ];
 
   if (auth.user?.role === "SuperUser") {
     config.push({
-      label: 'Группы Экоморфов',
-      icon: 'i-ph-plant-light',
-      to: '/ecomorph'
-    })
+      label: "Группы Экоморфов",
+      icon: "i-ph-plant-light",
+      to: "/ecomorph",
+    });
     config.push({
-      label: 'Экоморфы',
-      icon: 'i-ph-plant-light',
-      to: '/type-ecomorphs'
-    })
+      label: "Экоморфы",
+      icon: "i-ph-plant-light",
+      to: "/type-ecomorphs",
+    });
   }
 
-  return config
-})
+  return config;
+});
 
+const auth = useAuth();
 
-const auth = useAuth()
-
-await auth.getMe()
-
+await auth.getMe();
 
 const logout = async () => {
-  const {onLogout} = useApollo()
-  auth.setIsLogin(false)
-  await onLogout()
-  navigateTo('/')
-}
-
+  const { onLogout } = useApollo();
+  auth.setIsLogin(false);
+  await onLogout();
+  navigateTo("/");
+};
 </script>
 
 <style lang="scss" scoped>
 .menu-open-icon {
   color: var(--ling-root);
-
 
   &:hover {
     cursor: pointer;

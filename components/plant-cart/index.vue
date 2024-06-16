@@ -1,32 +1,35 @@
 <template>
   <div class="wrapper-plant-cart" @click="$emit('onClick', option)">
     <div class="wrapper-plant-cart-image">
-      <img v-if="option.img && option.img.path" :src="  useRuntimeConfig().public.apiURL + ':8080' + option.img.path" :alt="option.title" class="plant-cart-image">
+      <img
+        v-if="option.img && option.img.path"
+        :src="useRuntimeConfig().public.apiURL + ':8080' + option.img.path"
+        :alt="option.title"
+        class="plant-cart-image"
+      />
     </div>
     <div>
-      <div  class="title-xs">
-        <span v-if="option.title" >{{option.title}}</span>
-        <span v-else >?</span>
+      <div class="title-xs">
+        <span v-if="option.title">{{ option.title }}</span>
+        <span v-else>?</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type {TypePlant} from "~/stores/type-plant/types";
-
+import type { TypePlant } from "~/stores/type-plant/types";
 
 interface PlantCartProps {
-  option: TypePlant
+  option: TypePlant;
 }
 
 interface PlantCartEmits {
-  (event: 'onClick', id: TypePlant | undefined): void
+  (event: "onClick", id: TypePlant | undefined): void;
 }
-defineEmits<PlantCartEmits>()
+defineEmits<PlantCartEmits>();
 
-defineProps<PlantCartProps>()
-
+defineProps<PlantCartProps>();
 </script>
 
 <style scoped lang="scss">
@@ -43,7 +46,6 @@ defineProps<PlantCartProps>()
     cursor: pointer;
     transform: scale(1.05);
   }
-
 
   .wrapper-plant-cart-image {
     border-radius: 6px;
@@ -70,7 +72,7 @@ defineProps<PlantCartProps>()
 }
 
 @media (min-width: 260px) and (max-width: 700px) {
-  .wrapper-plant-cart{
+  .wrapper-plant-cart {
     width: 135px;
     height: 120px;
 
@@ -80,7 +82,4 @@ defineProps<PlantCartProps>()
     }
   }
 }
-
-
-
 </style>

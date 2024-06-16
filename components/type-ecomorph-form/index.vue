@@ -7,10 +7,14 @@
         группы растений
       </div>
       <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ modelValue.id.resourceId }}</UBadge>
-      <b-input title="Название" v-model:model-value="modelValue.title" placeholder="Введите название"></b-input>
-      <b-input title="Описание" v-model:model-value="modelValue.description" placeholder="Введите описание"></b-input>
-      <b-input title="Отображение в таблице" v-model:model-value="modelValue.displayTable" placeholder="Введите обазначение"></b-input>
-      <b-input title="Баллы" v-model:model-value="modelValue.score" placeholder="Введите баллы"></b-input>
+      <b-input v-model:model-value="modelValue.title" title="Название" placeholder="Введите название"></b-input>
+      <b-input v-model:model-value="modelValue.description" title="Описание" placeholder="Введите описание"></b-input>
+      <b-input
+        v-model:model-value="modelValue.displayTable"
+        title="Отображение в таблице"
+        placeholder="Введите обазначение"
+      ></b-input>
+      <b-input v-model:model-value="modelValue.score" title="Баллы" placeholder="Введите баллы"></b-input>
       <USelectMenu v-model:model-value="modelValue.ecomorphs" :options="ecomorhStores.getEcomorphs">
         <template #label>
           <span class="truncate">{{ modelValue.ecomorphs.title }}</span>
@@ -19,49 +23,42 @@
           <span class="truncate">{{ option.title }}</span>
         </template>
       </USelectMenu>
-      <UButton v-if="type === 'create'" @click="$emit('onCreate', modelValue )">Создать</UButton>
-      <UButton v-else @click="$emit('onUpdated', modelValue )">Обновить</UButton>
+      <UButton v-if="type === 'create'" @click="$emit('onCreate', modelValue)">Создать</UButton>
+      <UButton v-else @click="$emit('onUpdated', modelValue)">Обновить</UButton>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-
-import {useEcomorph} from "~/stores/ecomorph/ecomorph";
-import type {TypeEcomorph} from "~/stores/type-ecomorphs/types";
-import type {TypeForm} from "~/stores/types";
+import { useEcomorph } from "~/stores/ecomorph/ecomorph";
+import type { TypeEcomorph } from "~/stores/type-ecomorphs/types";
+import type { TypeForm } from "~/stores/types";
 
 interface EcomorphFormEmit {
-  (event: 'onCreate', value: TypeEcomorph | undefined): void
+  (event: "onCreate", value: TypeEcomorph | undefined): void;
 
-  (event: 'onUpdated', value: TypeEcomorph | undefined): void
+  (event: "onUpdated", value: TypeEcomorph | undefined): void;
 }
 
-const ecomorhStores = useEcomorph()
+const ecomorhStores = useEcomorph();
 
 interface TypeEcomorphFormProps {
-  type: TypeForm
+  type: TypeForm;
 }
 
-defineProps<TypeEcomorphFormProps>()
-defineEmits<EcomorphFormEmit>()
+defineProps<TypeEcomorphFormProps>();
+defineEmits<EcomorphFormEmit>();
 
 const modelValue = defineModel<TypeEcomorph>("modelValue", {
-  default:
-      {
-        id: {resourceId: ""},
-        title: '',
-        description: '',
-        score: 0,
-        displayTable: "",
-        ecomorphs: {}
-      }
-})
-
-
+  default: {
+    id: { resourceId: "" },
+    title: "",
+    description: "",
+    score: 0,
+    displayTable: "",
+    ecomorphs: {},
+  },
+});
 </script>
 
-
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

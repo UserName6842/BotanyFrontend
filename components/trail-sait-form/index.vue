@@ -1,9 +1,9 @@
 <template>
-  <UForm :state="modelValue" :validate="validateTransect" @submit="$emit('onCreate', modelValue )">
+  <UForm :state="modelValue" :validate="validateTransect" @submit="$emit('onCreate', modelValue)">
     <div class="wrapper-trail-site-form">
       <div class="title-s">Создание пробной площадки</div>
       <UFormGroup label="Название" name="title">
-        <UInput v-model="modelValue.title" class="w-[205px]" placeholder="Введите название"/>
+        <UInput v-model="modelValue.title" class="w-[205px]" placeholder="Введите название" />
       </UFormGroup>
       <UFormGroup label="Покрытость" name="covered">
         <UInput v-model="modelValue.covered" class="w-[205px]" placeholder="Введите покрытость" type="number">
@@ -18,29 +18,23 @@
 </template>
 
 <script lang="ts" setup>
-import type {TypeForm} from "~/stores/types";
-import type {TrialSite} from "~/stores/trial-site/types";
-import {validateTransect} from "~/components/transect-form/helpers";
-
-interface TrialSiteFormProps {
-  type: TypeForm
-  modelValue: TrialSite
-}
+import type { TypeForm } from "~/stores/types";
+import type { TrialSite } from "~/stores/trial-site/types";
+import { validateTransect } from "~/components/transect-form/helpers";
 
 interface TrialSiteFormEmit {
-  (event: 'onCreate', value: TrialSite | undefined): void
+  (event: "onCreate", value: TrialSite | undefined): void;
 }
 
-defineEmits<TrialSiteFormEmit>()
+defineEmits<TrialSiteFormEmit>();
 
 const modelValue: TrialSite = reactive({
   id: {
-    resourceId: ""
+    resourceId: "",
   },
   title: "",
-  plant: []
-})
-
+  plant: [],
+});
 </script>
 
 <style lang="scss" scoped>

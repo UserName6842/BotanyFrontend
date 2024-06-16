@@ -2,24 +2,24 @@
   <div class="input-wrapper">
     <span class="text-sm">{{ title }}</span>
     <div class="input-container">
-      <UInput v-model:model-value="modelValue" :placeholder="placeholder" @change="$emit('onChange', modelValue)"/>
+      <UInput v-model:model-value="modelValue" :placeholder="placeholder" @change="$emit('onChange', modelValue)" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 interface InputProps {
-  title?: string
-  placeholder: string
+  title?: string;
+  placeholder: string;
 }
 
 interface InputEmits {
-  (event: 'onChange', value?: string | number): void
+  (event: "onChange", value?: string | number): void;
 }
 
-defineProps<InputProps>()
-defineEmits<InputEmits>()
-const modelValue = defineModel("modelValue")
+defineProps<InputProps>();
+defineEmits<InputEmits>();
+const modelValue = defineModel("modelValue");
 </script>
 
 <style lang="scss" scoped>

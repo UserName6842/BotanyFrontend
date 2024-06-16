@@ -5,20 +5,31 @@
       <span v-else>Обновление</span>
       типа растения
     </div>
-    <defaults-loader v-if="loadingForm"/>
+    <defaults-loader v-if="loadingForm" />
     <div v-else class="wrapper-type-plant-form">
       <UBadge v-if="type === 'update'" color="white" variant="solid">ID: {{ modelValue.id.resourceId }}</UBadge>
       <div class="type-plant-form-wrapper-title">
-        <b-input v-model:model-value="modelValue.title" placeholder="Вид" title="Вид"/>
-        <b-input v-model:model-value="modelValue.subtitle" placeholder="Название на латыни" title="Название на латыни"/>
+        <b-input v-model:model-value="modelValue.title" placeholder="Вид" title="Вид" />
+        <b-input
+          v-model:model-value="modelValue.subtitle"
+          placeholder="Название на латыни"
+          title="Название на латыни"
+        />
       </div>
 
       <div class="wrapper-type-plant-form-select">
-        <div v-for="(item, index) of ecomorhStores.getEcomorphs" :key="item.id.resourceId"
-             class="type-plant-form-select">
+        <div
+          v-for="(item, index) of ecomorhStores.getEcomorphs"
+          :key="item.id.resourceId"
+          class="type-plant-form-select"
+        >
           <span class="type-plant-form-select-title">{{ item.title }} </span>
-          <USelectMenu :key="item.id.resourceId" v-model:model-value="typeEcomorh[index]"
-                       :options="getEcomorphByEcomorphGroup(item)" class="w-36">
+          <USelectMenu
+            :key="item.id.resourceId"
+            v-model:model-value="typeEcomorh[index]"
+            :options="getEcomorphByEcomorphGroup(item)"
+            class="w-36"
+          >
             <template #label>
               <span v-if="typeEcomorh[index]" class="truncate">{{ typeEcomorh[index].title }}</span>
               <span v-else class="truncate">Не выбрано</span>
@@ -30,7 +41,7 @@
         </div>
       </div>
       <ClientOnly>
-        <file-input v-model:file="file" v-model:is-edit="isEdit"/>
+        <file-input v-model:file="file" v-model:is-edit="isEdit" />
       </ClientOnly>
       <UButton v-if="type === 'create'" :loading="loading" @click="onCreate">Сохранить</UButton>
       <div v-else class="wrapper-plant-form-button">
@@ -42,14 +53,14 @@
 </template>
 
 <script lang="ts" setup>
-import type {TypePlant} from "~/stores/type-plant/types";
-import {useEcomorph} from "~/stores/ecomorph/ecomorph";
-import type {Ecomorph} from "~/stores/ecomorph/types";
-import {useTypeEcomorph} from "~/stores/type-ecomorphs/ecomorph";
-import type {TypeEcomorph} from "~/stores/type-ecomorphs/types";
+import type { TypePlant } from "~/stores/type-plant/types";
+import { useEcomorph } from "~/stores/ecomorph/ecomorph";
+import type { Ecomorph } from "~/stores/ecomorph/types";
+import { useTypeEcomorph } from "~/stores/type-ecomorphs/ecomorph";
+import type { TypeEcomorph } from "~/stores/type-ecomorphs/types";
 import axios from "axios";
-import {useTypePlant} from "~/stores/type-plant/type-plant";
-import type {Img} from "~/stores/types";
+import { useTypePlant } from "~/stores/type-plant/type-plant";
+import type { Img } from "~/stores/types";
 
 const modelValue = defineModel<TypePlant>("modelValue", {
   default: {
@@ -58,150 +69,150 @@ const modelValue = defineModel<TypePlant>("modelValue", {
     ecomorphsEntity: [],
     img: {
       id: {
-        resourceId: ""
-      }
-    }
-  }
-})
+        resourceId: "",
+      },
+    },
+  },
+});
 
-const ecomorhStores = useEcomorph()
-const typeEcomorhStores = useTypeEcomorph()
-const typePlantStores = useTypePlant()
-const file = ref<File>()
-const isEdit = ref<boolean>(false)
-const typeEcomorh = ref<Record<string, TypeEcomorph>>({})
+const ecomorhStores = useEcomorph();
+const typeEcomorhStores = useTypeEcomorph();
+const typePlantStores = useTypePlant();
+const file = ref<File>();
+const isEdit = ref<boolean>(false);
+const typeEcomorh = ref<Record<string, TypeEcomorph>>({});
 
-const loading = ref(false)
+const loading = ref(false);
 
 const selectValue = () => {
   ecomorhStores.getEcomorphs.forEach((ecomorph, index) => {
     const ecomorphsEntity = modelValue.value.ecomorphsEntity.find((item) => {
-      return item.ecomorphs?.id?.resourceId === ecomorph.id?.resourceId
-    })
+      return item.ecomorphs?.id?.resourceId === ecomorph.id?.resourceId;
+    });
 
     if (ecomorphsEntity) {
-      typeEcomorh.value[index] = ecomorphsEntity
+      typeEcomorh.value[index] = ecomorphsEntity;
     }
-  })
-}
+  });
+};
 
 const selectFile = async () => {
   if (modelValue.value.img) {
-    const blob = await downloadImageAsBlob(useRuntimeConfig().public.apiURL + ":8080" + modelValue.value.img.path)
+    const blob = await downloadImageAsBlob(useRuntimeConfig().public.apiURL + ":8080" + modelValue.value.img.path);
     if (blob) {
-      file.value = new File([blob], modelValue.value.img.name)
+      file.value = new File([blob], modelValue.value.img.name);
     }
-
   }
-}
+};
 
 async function downloadImageAsBlob(url: string) {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error('Failed to download image');
+      throw new Error("Failed to download image");
     }
     const blob = await response.blob();
     return blob;
   } catch (error) {
-    console.error('Error downloading image:', error.message);
+    console.error("Error downloading image:", error.message);
     return null;
   }
 }
 
-let loadingForm = ref(false)
+const loadingForm = ref(false);
 
 interface PlantCartProps {
-  type: "create" | "update"
+  type: "create" | "update";
 }
 
-const props = defineProps<PlantCartProps>()
+const props = defineProps<PlantCartProps>();
 
 const initForm = async () => {
   try {
-    loadingForm.value = true
-    selectValue()
+    loadingForm.value = true;
+    selectValue();
     if (props.type === "update") {
-      await selectFile()
+      await selectFile();
     }
   } catch (e) {
-    console.log(e)
+    console.log(e);
   } finally {
-    loadingForm.value = false
+    loadingForm.value = false;
   }
-}
+};
 
-await initForm()
+await initForm();
 
 const getEcomorphByEcomorphGroup = (ecomorph: Ecomorph) => {
-  return typeEcomorhStores.getTypeEcomorphs.filter((item: TypeEcomorph) => item.ecomorphs?.id?.resourceId === ecomorph.id?.resourceId)
-}
+  return typeEcomorhStores.getTypeEcomorphs.filter(
+    (item: TypeEcomorph) => item.ecomorphs?.id?.resourceId === ecomorph.id?.resourceId,
+  );
+};
 
 const formingModal = async (value: TypePlant) => {
-  value.ecomorphsEntity = []
+  value.ecomorphsEntity = [];
   for (const key in typeEcomorh.value) {
-    value.ecomorphsEntity.push(typeEcomorh.value[key])
+    value.ecomorphsEntity.push(typeEcomorh.value[key]);
   }
   if (isEdit.value) {
-    const img = await onCreateImg()
+    const img = await onCreateImg();
     const valueImg: Img = {
-      id: {resourceId: img.id.resourceId}
-    }
-    value.img = valueImg
+      id: { resourceId: img.id.resourceId },
+    };
+    value.img = valueImg;
   }
-}
+};
 
 const onCreate = async () => {
   try {
-    loading.value = true
+    loading.value = true;
 
-    await formingModal(modelValue.value)
+    await formingModal(modelValue.value);
 
-    await typePlantStores.CrateTypePlant(modelValue.value)
+    await typePlantStores.CrateTypePlant(modelValue.value);
 
-    navigateTo("/type-plant")
+    navigateTo("/type-plant");
   } catch (e) {
     console.error("Error:", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const onUpdateType = async () => {
   try {
-    loading.value = true
+    loading.value = true;
 
-    const modal: TypePlant = modelValue.value
+    const modal: TypePlant = modelValue.value;
 
-    await formingModal(modal)
+    await formingModal(modal);
 
-    await typePlantStores.UpdateTypePlant(modal)
+    await typePlantStores.UpdateTypePlant(modal);
   } catch (e) {
     console.error("Error:", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const onDelete = async () => {
   try {
-    loading.value = true
+    loading.value = true;
 
-    await typePlantStores.DeleteTypePlant(modelValue.value.id!)
+    await typePlantStores.DeleteTypePlant(modelValue.value.id!);
 
-    navigateTo("/type-plant")
-
+    navigateTo("/type-plant");
   } catch (e) {
     console.error("Error:", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const onCreateImg = async () => {
   if (file.value) {
     try {
-      const {getToken} = useApollo();
+      const { getToken } = useApollo();
       const token = await getToken();
       const blob = new Blob([file.value!]);
       const formData = new FormData();
@@ -209,19 +220,17 @@ const onCreateImg = async () => {
 
       const response = await axios.post(useRuntimeConfig().public.apiURL + ":8080/save", formData, {
         headers: {
-          "Authorization": "Bearer " + token,
+          Authorization: "Bearer " + token,
           "Content-Type": "multipart/form-data",
         },
       });
 
       return response.data;
-
     } catch (error) {
       console.error("Error:", error);
     }
   }
-}
-
+};
 </script>
 
 <style lang="scss" scoped>
@@ -272,7 +281,6 @@ const onCreateImg = async () => {
       font-size: 14px;
     }
   }
-
 }
 
 @media (min-width: 260px) and (max-width: 700px) {

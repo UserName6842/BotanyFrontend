@@ -1,18 +1,14 @@
 <template>
-  <defaults-loader v-if="transectaStore.loading" > </defaults-loader>
-  <transect-form  :type="'create'" />
+  <defaults-loader v-if="transectaStore.loading"></defaults-loader>
+  <transect-form :type="'create'" />
 </template>
 
 <script lang="ts" setup>
-import {useTransecta} from "~/stores/transecta/transecta";
-import type {Transecta} from "~/stores/transecta/types";
+import { useTransecta } from "~/stores/transecta/transecta";
 
-const transectaStore = useTransecta()
+const transectaStore = useTransecta();
 
-transectaStore.$reset()
-
+transectaStore.$reset();
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

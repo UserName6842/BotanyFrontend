@@ -20,34 +20,32 @@
           />
         </template>
       </UInput>
-      <UButton label="Поиск" @click="$emit('onSearch', modelValue)"/>
+      <UButton label="Поиск" @click="$emit('onSearch', modelValue)" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-
-
 interface InputProps {
-  title: string
-  placeholder: string
+  title: string;
+  placeholder: string;
 }
 
 interface InputEmits {
-  (event: 'onChange', value?: string | number ): void
-  (event: 'onSearch', value?: string | number ): void
-  (event: 'onClean', value?: string | number ): void
+  (event: "onChange", value?: string | number): void;
+  (event: "onSearch", value?: string | number): void;
+  (event: "onClean", value?: string | number): void;
 }
 
-defineProps<InputProps>()
-const emit = defineEmits<InputEmits>()
+defineProps<InputProps>();
+const emit = defineEmits<InputEmits>();
 
-const modelValue = defineModel("modelValue")
+const modelValue = defineModel("modelValue");
 
 const heandlerClean = (value?: string | number) => {
-  modelValue.value = ""
-  emit("onClean", value)
-}
+  modelValue.value = "";
+  emit("onClean", value);
+};
 </script>
 
 <style lang="scss" scoped>

@@ -2,38 +2,31 @@
   <div class="wrapper-header">
     <div>
       <NuxtLink to="/">
-        <logo class="h-16"/>
+        <logo class="h-16" />
       </NuxtLink>
     </div>
     <div v-if="!auth.getIsLogin" class="wrapper-header-auth">
       <NuxtLink to="/login">
-        <UButton>
-          Авторизация
-        </UButton>
+        <UButton> Авторизация</UButton>
       </NuxtLink>
       <NuxtLink to="/logup">
-        <UButton>
-          Регистрация
-        </UButton>
+        <UButton> Регистрация</UButton>
       </NuxtLink>
     </div>
 
     <div v-else>
-      <defaults-menu/>
+      <defaults-menu />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import logo from "assets/icons/logo.svg"
-import {useAuth} from "~/stores/auth";
+import logo from "assets/icons/logo.svg";
+import { useAuth } from "~/stores/auth";
 
-const {getToken, onLogout} = useApollo()
+const auth = useAuth();
 
-const auth = useAuth()
-
-await auth.checkLogin()
-
+await auth.checkLogin();
 </script>
 
 <style lang="scss" scoped>
@@ -49,7 +42,6 @@ await auth.checkLogin()
     gap: 5px;
     justify-content: space-between;
   }
-
 }
 
 @media (max-width: 768px) {

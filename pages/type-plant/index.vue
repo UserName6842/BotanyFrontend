@@ -1,12 +1,12 @@
 <template>
-  <defaults-loader v-if="typePlantStores.loading"/>
+  <defaults-loader v-if="typePlantStores.loading" />
   <div v-else class="wrapper-plant-list">
     <div class="wrapper-title">
       <div class="title-m">Список типов растений</div>
       <div class="plant-list-option">
         <div>Всего растений {{ total }}</div>
         <div>
-          <UButton label="Добавить новое растение" @click="navigateTo('type-plant/create')"/>
+          <UButton label="Добавить новое растение" @click="navigateTo('type-plant/create')" />
         </div>
       </div>
       <div class="wrapper-search">
@@ -15,57 +15,54 @@
           placeholder="Введите название"
           title="Поиск по названию"
           @on-clean="onCleanSearch"
-          @on-search="onSearch"/>
+          @on-search="onSearch"
+        />
       </div>
-
     </div>
     <div class="mt-8">
-      <plant-cart-list :option="typePlantStores.getTypePlants" @on-click="onClickCart"/>
-
+      <plant-cart-list :option="typePlantStores.getTypePlants" @on-click="onClickCart" />
     </div>
     <div class="wrapper-pagination">
       <UPagination
-      v-model="page"
-      :total="total"
-      @update:modelValue="(value) => typePlantStores.fetchTypePlant({page: {page: value, limit: 10}})"/>
+        v-model="page"
+        :total="total"
+        @update:model-value="(value) => typePlantStores.fetchTypePlant({ page: { page: value, limit: 10 } })"
+      />
     </div>
-
   </div>
 </template>
 
 <script lang="ts" setup>
-import type {TypePlant} from "~/stores/type-plant/types";
-import {useTypePlant} from "~/stores/type-plant/type-plant";
+import type { TypePlant } from "~/stores/type-plant/types";
+import { useTypePlant } from "~/stores/type-plant/type-plant";
 
-const typePlantStores = useTypePlant()
+const typePlantStores = useTypePlant();
 
-const searchValue = ref("")
+const searchValue = ref("");
 
-const option = ref<TypePlant[]>([])
-
-const page = ref(1)
+const page = ref(1);
 await useAsyncData(async () => {
-  await typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}})
-})
+  await typePlantStores.fetchTypePlant({ page: { page: page.value, limit: 10 } });
+});
 
-const total: number = typePlantStores.getTotalCountTypePlants
+const total: number = typePlantStores.getTotalCountTypePlants;
 
 const onClickCart = (value: TypePlant) => {
-  navigateTo("/type-plant/" + btoa(value.id?.resourceId!))
-}
+  if (value.id && value.id?.resourceId) {
+    navigateTo("/type-plant/" + btoa(value.id.resourceId));
+  }
+};
 
 const onSearch = () => {
-  typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}, filter: {searchTitle: searchValue.value}})
-}
+  typePlantStores.fetchTypePlant({ page: { page: page.value, limit: 10 }, filter: { searchTitle: searchValue.value } });
+};
 const onCleanSearch = () => {
-  searchValue.value = ""
-  typePlantStores.fetchTypePlant({page: {page: page.value, limit: 10}, filter: {searchTitle: searchValue.value}})
-}
-
+  searchValue.value = "";
+  typePlantStores.fetchTypePlant({ page: { page: page.value, limit: 10 }, filter: { searchTitle: searchValue.value } });
+};
 </script>
 
 <style lang="scss" scoped>
-
 .wrapper-search {
   display: flex;
   flex-direction: column;
@@ -89,7 +86,7 @@ const onCleanSearch = () => {
   width: 80%;
 }
 
-.plant-list-option{
+.plant-list-option {
   display: flex;
   gap: 56px;
   align-items: center;
@@ -98,7 +95,7 @@ const onCleanSearch = () => {
   justify-content: center;
 }
 @media (min-width: 260px) and (max-width: 700px) {
-  .plant-list-option{
+  .plant-list-option {
     gap: 0px;
   }
 }
