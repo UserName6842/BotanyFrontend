@@ -36,7 +36,9 @@ const login = async (value: ModelAuth) => {
       refreshToken.value = data.data.auth.signInUser.refresh_token;
       const { onLogin } = useApollo();
       await onLogin(data.data.auth.signInUser.access_token);
-      console.log("Авторизация:",data.data.auth.signInUser.access_token)
+      console.log("Авторизация:",useCookie('apollo:default.token'))
+      const auth = useAuth();
+      auth.setIsLogin(true);
       navigateTo("/home");
     });
 

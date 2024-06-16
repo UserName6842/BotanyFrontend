@@ -2,7 +2,7 @@
   <div class="wrapper-header">
     <div>
       <NuxtLink to="/">
-        <logo class="h-16" />
+        <logo class="h-16"/>
       </NuxtLink>
     </div>
     <div v-if="!auth.getIsLogin" class="wrapper-header-auth">
@@ -15,14 +15,14 @@
     </div>
 
     <div v-else>
-      <defaults-menu />
+      <defaults-menu/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import logo from "assets/icons/logo.svg";
-import { useAuth } from "~/stores/auth";
+import {useAuth} from "~/stores/auth";
 
 const auth = useAuth();
 

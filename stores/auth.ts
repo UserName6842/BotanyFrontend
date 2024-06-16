@@ -15,8 +15,7 @@ export const useAuth = defineStore("Auth", {
     },
 
     async checkLogin() {
-      const { getToken } = useApollo();
-      const token = await getToken();
+      const token= useCookie('apollo:default.token');
       this.isLogin = !!token;
     },
 
