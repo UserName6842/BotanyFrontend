@@ -16,7 +16,7 @@ export type TrialSite = {
   rating?: number;
   dominant?: TypePlant;
   subDominant?: TypePlant;
-  plant?: Plant[];
+  plant: Plant[];
   img?: Img;
 };
 

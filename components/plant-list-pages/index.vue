@@ -3,7 +3,6 @@
     <div class="wrapper-title">
       <div class="title-m">Список типов растений</div>
       <div class="plant-list-option">
-        <div>Всего растений {{ total }}</div>
         <div>
           <UButton label="Добавить новое растение" @click="navigateTo('type-plant/create')" />
         </div>

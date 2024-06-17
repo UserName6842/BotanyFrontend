@@ -101,12 +101,12 @@ await useAsyncData(async () => {
 
 typePlantStore.fetchTypePlant();
 
-let model = toRef(trialSiteStore.getTrialSite);
+let model = reactive({ ...trialSiteStore.getTrialSite });
 
 const handlerOnUpdate = async () => {
   try {
     loading.value = true;
-    await trialSiteStore.UpdateTrialSite(model.value);
+    await trialSiteStore.UpdateTrialSite(model);
   } catch (e) {
     console.error(e);
   } finally {
@@ -118,12 +118,14 @@ const CratePlant = async (value: Plant) => {
   try {
     loading.value = true;
     await trialSiteStore.CratePlant(value);
-    if (!model.value.plant) {
-      model.value.plant = [];
+    let newPlants: Plant[] = [];
+    if (model.plant) {
+      newPlants = [...model.plant];
     }
-    model.value.plant.push(trialSiteStore.getPlant);
-    await trialSiteStore.UpdateTrialSite(model.value);
-    model.value = reactive({ ...trialSiteStore.getTrialSite });
+    newPlants.push(trialSiteStore.getPlant);
+    model.plant = newPlants;
+    await trialSiteStore.UpdateTrialSite(model);
+    model = reactive({ ...trialSiteStore.getTrialSite });
   } catch (e) {
     console.error(e);
   } finally {
@@ -132,12 +134,18 @@ const CratePlant = async (value: Plant) => {
   }
 };
 
+const findPlantIndex = (id: string) => {
+  return model.plant.findIndex((item) => item.id!.resourceId === id);
+};
+
 const UpdatePlant = async (value: Plant) => {
   try {
     loading.value = true;
     await trialSiteStore.UpdatePlant(value);
-    const index = model.value.plant.findIndex((item) => item.id!.resourceId === value.id!.resourceId);
-    model.value.plant[index] = value;
+    const index = findPlantIndex(value.id!.resourceId);
+    if (index !== -1) {
+      model.plant[index] = value;
+    }
   } catch (e) {
     console.log(e);
   } finally {
@@ -156,8 +164,12 @@ const handlerOnDeletePlant = async (input: Plant) => {
   try {
     loading.value = true;
     await trialSiteStore.DeletePlant(input.id!);
-    const index = model.value.plant.findIndex((item) => item.id!.resourceId === input.id!.resourceId);
-    model.value.plant.splice(index, 1);
+    const index = findPlantIndex(input.id!.resourceId);
+    if (index !== -1) {
+      const newPlant = [...model.plant];
+      newPlant.splice(index, 1);
+      model.plant = newPlant;
+    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -233,17 +245,17 @@ const items = (row: Plant) => [
 ];
 
 const rows = computed(() => {
-  if (model.value && !model.value.plant) {
+  if (model && !model.plant) {
     return [];
   }
 
-  const plant = model.value.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
+  const plant = model.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
 
   if (plant.length > 0) {
     return plant;
   } else {
     page.value--;
-    return model.value.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
+    return model.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
   }
 });
 </script>
