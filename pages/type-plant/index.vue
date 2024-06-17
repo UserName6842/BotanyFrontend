@@ -20,14 +20,10 @@
       </div>
     </div>
     <div class="mt-8">
-      <plant-cart-list :option="typePlantStores.getTypePlants" @on-click="onClickCart" />
+      <plant-cart-list :option="rows" @on-click="onClickCart" />
     </div>
     <div class="wrapper-pagination">
-      <UPagination
-        v-model="page"
-        :total="total"
-        @update:model-value="(value) => typePlantStores.fetchTypePlant({ page: { page: value, limit: 10 } })"
-      />
+      <UPagination v-model="page" :total="total" :page-count="pageCount" />
     </div>
   </div>
 </template>
@@ -41,11 +37,14 @@ const typePlantStores = useTypePlant();
 const searchValue = ref("");
 
 const page = ref(1);
+const pageCount = 12;
 await useAsyncData(async () => {
-  await typePlantStores.fetchTypePlant({ page: { page: page.value, limit: 10 } });
+  await typePlantStores.fetchTypePlant();
 });
 
-const total: number = typePlantStores.getTotalCountTypePlants;
+const listPlants = ref(typePlantStores.getTypePlants);
+
+const total: number = listPlants.value.length;
 
 const onClickCart = (value: TypePlant) => {
   if (value.id && value.id?.resourceId) {
@@ -54,12 +53,29 @@ const onClickCart = (value: TypePlant) => {
 };
 
 const onSearch = () => {
-  typePlantStores.fetchTypePlant({ page: { page: page.value, limit: 10 }, filter: { searchTitle: searchValue.value } });
+  typePlantStores.fetchTypePlant({ filter: { searchTitle: searchValue.value } });
 };
 const onCleanSearch = () => {
   searchValue.value = "";
-  typePlantStores.fetchTypePlant({ page: { page: page.value, limit: 10 }, filter: { searchTitle: searchValue.value } });
+  typePlantStores.fetchTypePlant({ filter: { searchTitle: searchValue.value } });
 };
+
+const rows = computed(() => {
+  if (!listPlants.value) {
+    return [];
+  }
+
+  const start = (page.value - 1) * pageCount;
+  const end = page.value * pageCount;
+  let plants = listPlants.value.slice(start, end);
+
+  if (plants.length === 0 && page.value > 1) {
+    page.value--;
+    plants = listPlants.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
+
+  return plants;
+});
 </script>
 
 <style lang="scss" scoped>

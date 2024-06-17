@@ -1,6 +1,5 @@
 <template>
-  <defaults-loader v-if="ecomorhStores.loading || typeEcomorhStores.loading" />
-  <type-plant-form v-else v-model:model-value="typePlant" type="create" />
+  <type-plant-form v-model:model-value="typePlant" type="create" />
 </template>
 
 <script lang="ts" setup>
@@ -23,9 +22,10 @@ const typePlant = reactive<TypePlant>({
     path: "",
   },
 });
-
-ecomorhStores.fetchAsyncEcomorhs();
-typeEcomorhStores.fetchEcomorhs();
+await useAsyncData(async () => {
+  await ecomorhStores.fetchAsyncEcomorhs();
+  await typeEcomorhStores.fetchEcomorhs();
+});
 </script>
 
 <style lang="scss" scoped></style>
