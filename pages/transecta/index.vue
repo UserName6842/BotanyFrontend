@@ -50,7 +50,6 @@ await useAsyncData(async () => {
 
 const onDownload = async (input: Analysis) => {
   await transectaStore.CrateAnalysis(input);
-  debugger;
   const reader = new FileReader();
   reader.onload = function () {
     linkDownload.value.href = reader.result;

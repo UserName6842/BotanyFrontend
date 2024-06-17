@@ -50,7 +50,6 @@ const selected = ref<Ecomorph[]>([]);
 const selectOption = ecomorhStores.getEcomorphs;
 
 const handlerOnDownload = () => {
-  debugger;
   try {
     model.value.ecomorph = selected.value;
 
