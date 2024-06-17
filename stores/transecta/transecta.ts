@@ -17,7 +17,6 @@ export const useTransecta = defineStore("Transecta", {
       countTypes: 0,
       covered: 0,
       rating: 0,
-      trialSite: [],
     },
     loading: false,
   }),
@@ -28,7 +27,6 @@ export const useTransecta = defineStore("Transecta", {
     getIsLoading: (state) => state.loading,
   },
   actions: {
-
     async fetchTransecta(request?: TransectaListRequest) {
       this.loading = true;
       const query = gql`

@@ -22,6 +22,7 @@ const typePlant = reactive<TypePlant>({
     path: "",
   },
 });
+
 await useAsyncData(async () => {
   await ecomorhStores.fetchAsyncEcomorhs();
   await typeEcomorhStores.fetchEcomorhs();

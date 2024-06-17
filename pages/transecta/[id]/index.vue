@@ -118,7 +118,7 @@ await useAsyncData(async () => {
   await transectaStore.fetchTransectaById(id);
 });
 
-let modelValue = toRef(transectaStore.getTransect);
+let modelValue = storeToRefs(transectaStore).transect;
 
 const findTrialSiteIndex = (id: string) => {
   return modelValue.value.trialSite.findIndex((item: TrialSite) => item.id!.resourceId === id);

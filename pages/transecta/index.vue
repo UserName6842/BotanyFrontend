@@ -38,13 +38,14 @@ import type { Analysis, Transecta } from "~/stores/transecta/types";
 import { useEcomorph } from "~/stores/ecomorph/ecomorph";
 
 const transectaStore = useTransecta();
-await transectaStore.fetchTransecta();
 
 const isOpen = ref<boolean>(false);
 const transect = ref<Transecta>();
 const linkDownload = ref();
 const ecomorhStores = useEcomorph();
+
 await useAsyncData(async () => {
+  await transectaStore.fetchTransecta();
   await ecomorhStores.fetchAsyncEcomorhs();
 });
 
@@ -117,6 +118,7 @@ const items = (row: Transecta) => [
       click: () => {
         if (row.id && row.id.resourceId) {
           navigateTo("transecta/" + btoa(row.id.resourceId));
+          transect.r;
         }
       },
     },

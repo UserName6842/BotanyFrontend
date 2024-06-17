@@ -23,7 +23,7 @@
       <plant-cart-list :option="rows" @on-click="onClickCart" />
     </div>
     <div class="wrapper-pagination">
-      <UPagination v-model="page" :total="total" :page-count="pageCount" />
+      <UPagination v-model="page" :page-count="pageCount" :total="total" />
     </div>
   </div>
 </template>
@@ -38,14 +38,12 @@ const searchValue = ref("");
 
 const page = ref(1);
 const pageCount = 12;
+
 await useAsyncData(async () => {
   await typePlantStores.fetchTypePlant();
 });
 
-const listPlants = ref(typePlantStores.getTypePlants);
-
-const total: number = listPlants.value.length;
-
+const total = computed(() => typePlantStores.getTypePlants.length);
 const onClickCart = (value: TypePlant) => {
   if (value.id && value.id?.resourceId) {
     navigateTo("/type-plant/" + btoa(value.id.resourceId));
@@ -61,17 +59,17 @@ const onCleanSearch = () => {
 };
 
 const rows = computed(() => {
-  if (!listPlants.value) {
+  if (!typePlantStores.getTypePlants) {
     return [];
   }
 
   const start = (page.value - 1) * pageCount;
   const end = page.value * pageCount;
-  let plants = listPlants.value.slice(start, end);
+  let plants = typePlantStores.getTypePlants.slice(start, end);
 
   if (plants.length === 0 && page.value > 1) {
     page.value--;
-    plants = listPlants.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+    plants = typePlantStores.getTypePlants.slice((page.value - 1) * pageCount, page.value * pageCount);
   }
 
   return plants;
@@ -110,6 +108,7 @@ const rows = computed(() => {
   flex-wrap: wrap;
   justify-content: center;
 }
+
 @media (min-width: 260px) and (max-width: 700px) {
   .plant-list-option {
     gap: 0px;
