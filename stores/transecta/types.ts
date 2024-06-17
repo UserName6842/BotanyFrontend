@@ -34,7 +34,7 @@ export type Analysis = {
   transect?: Transecta;
   typeAnalysis?: TypeAnalysis;
   ecomorph?: Ecomorph[];
-  path: string;
+  path?: string;
 };
 
 export type TypeAnalysis = "TypeAnalysisPlant" | "TypeAnalysisTransect";

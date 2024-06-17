@@ -22,7 +22,12 @@ export default defineNuxtConfig({
     defaultImport: "component",
   },
 
-  css: ["./assets/styles/color.scss", "./assets/styles/fonts.scss", "./assets/styles/root.scss"],
+  css: [
+    "./assets/styles/color.scss",
+    "./assets/styles/fonts.scss",
+    "./assets/styles/root.scss",
+    "./assets/styles/tailwind.scss",
+  ],
 
   ui: {
     icons: ["ph"],

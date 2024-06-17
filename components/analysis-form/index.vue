@@ -1,20 +1,17 @@
 <template>
   <div class="wrapper-form">
-    <span>Выберете группы экоморфов</span>
+    <span class="title-s">Выберете группы экоморфов</span>
     <UInput v-model:model-value="model.title" placeholder="Название"></UInput>
     <USelectMenu v-model:model-value="selected" :options="selectOption" class="w-36" multiple placeholder="Не выбрано">
+      <template #label>
+        <span v-if="model.ecomorph?.length"></span>
+        <span v-for="item in model.ecomorph" class="truncate">{{ item.title }}</span>
+      </template>
       <template #option="{ option }">
         <span>
           {{ option.title }}
         </span>
       </template>
-      <template #label>
-        <span v-if="model.ecomorph" class="truncate">{{ model.ecomorph[0].title }}</span>
-      </template>
-
-      <!--    <template #option="{ option }">-->
-      <!--      <span class="truncate">{{ option }}</span>-->
-      <!--    </template>-->
     </USelectMenu>
     <URadioGroup v-model="model.typeAnalysis" :options="options" class="wrapper-form-radio" />
     <UButton @click="handlerOnDownload">Скачать</UButton>
@@ -44,17 +41,19 @@ const selected = ref<Ecomorph[]>([]);
 const selectOption = ecomorhStores.getEcomorphs;
 
 const handlerOnDownload = () => {
+  debugger;
   try {
-    model.ecomorph = selected.value;
+    model.value.ecomorph = selected.value;
 
-    emits("onDownload", model);
+    emits("onDownload", model.value);
   } catch (e) {
     console.error(e);
   }
 };
 
-const model = reactive<Analysis>({
+const model = ref<Analysis>({
   transect: props.transect,
+  ecomorph: [],
 });
 
 const options = [
@@ -71,9 +70,17 @@ const options = [
 
 <style lang="scss" scoped>
 .wrapper-form {
+  padding: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
+}
+
+.wrapper-form-radio {
+  padding: 7px;
+  border-radius: 10px;
+  border: 1px dashed var(--ling-root);
+  background-color: rgb(245, 245, 245);
 }
 </style>

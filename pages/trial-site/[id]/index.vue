@@ -108,7 +108,7 @@ const handlerOnUpdate = async () => {
     loading.value = true;
     await trialSiteStore.UpdateTrialSite(model.value);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   } finally {
     loading.value = false;
   }
@@ -120,17 +120,12 @@ const CratePlant = async (value: Plant) => {
     await trialSiteStore.CratePlant(value);
     if (!model.value.plant) {
       model.value.plant = [];
-      model.value.plant.push(trialSiteStore.getPlant);
-    } else {
-      const trialSite = model.value.plant;
-      const plant = trialSiteStore.getPlant;
-      trialSite.push(plant);
-      model.value.plant = trialSite;
     }
+    model.value.plant.push(trialSiteStore.getPlant);
     await trialSiteStore.UpdateTrialSite(model.value);
     model.value = reactive({ ...trialSiteStore.getTrialSite });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   } finally {
     isOpen.value = false;
     loading.value = false;

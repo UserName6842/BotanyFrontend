@@ -10,16 +10,20 @@
       <UInput v-model="value.name" class="w-[205px]" />
     </UFormGroup>
     <UFormGroup label="Пароль" name="password">
-      <UInput v-model="value.password" class="w-[205px]" :type="!showPassword ? 'password' : ''" />
+      <UInput v-model="value.password" :type="!showPassword ? 'password' : ''" class="w-[205px]" />
     </UFormGroup>
     <div class="form-wrapper-toggle">
-      <UToggle v-model:model-value="showPassword" />
+      <UCheckbox v-model:model-value="showPassword" title="Показать пароль" />
       <span class="form-toggle-title">Показать пароль</span>
     </div>
     <UButton type="submit">
       <span v-if="type === 'login'">Авторизоваться</span>
       <span v-if="type === 'logup'">Зарегистрироваться</span>
     </UButton>
+    <span v-if="type === 'logup'" class="text-xs px-2">
+      Продолжая регистрацию, я соглашаюсь с
+      <NuxtLink to="/user-agreement">Правилами пользования сайтом и оброботкой информации</NuxtLink></span
+    >
   </UForm>
 </template>
 
@@ -43,6 +47,12 @@ const showPassword = ref<boolean>(false);
 </script>
 
 <style lang="scss" scoped>
+a {
+  color: var(--dark-root);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .wrapper-form {
   border: 1px solid var(--ling-root);
   border-radius: 6px;
@@ -57,16 +67,17 @@ const showPassword = ref<boolean>(false);
     display: flex;
     flex-direction: column;
     gap: 8px;
+  }
+}
 
-    .form-wrapper-toggle {
-      display: flex;
-      flex-direction: row;
-      gap: 5px;
+.form-wrapper-toggle {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
 
-      .form-toggle-title {
-        font-size: 12px;
-      }
-    }
+  .form-toggle-title {
+    font-size: 12px;
   }
 }
 </style>

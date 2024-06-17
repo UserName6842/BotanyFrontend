@@ -43,14 +43,14 @@ const isOpen = ref<boolean>(false);
 const transect = ref<Transecta>();
 const linkDownload = ref();
 const ecomorhStores = useEcomorph();
-
+await ecomorhStores.fetchAsyncEcomorhs();
 await useAsyncData(async () => {
   await transectaStore.fetchTransecta();
-  await ecomorhStores.fetchAsyncEcomorhs();
 });
 
 const onDownload = async (input: Analysis) => {
   await transectaStore.CrateAnalysis(input);
+  debugger;
   const reader = new FileReader();
   reader.onload = function () {
     linkDownload.value.href = reader.result;

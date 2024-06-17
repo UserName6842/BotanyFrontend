@@ -248,6 +248,8 @@ export const useTransecta = defineStore("Transecta", {
           },
         };
 
+        debugger;
+
         const { mutate, onDone, onError } = useMutation(mutation);
 
         onDone((data) => {
