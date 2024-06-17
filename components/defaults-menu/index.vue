@@ -51,16 +51,25 @@ const links = computed(() => {
       label: "Главная",
       icon: "i-heroicons-home",
       to: "/home",
+      click: () => {
+        isOpen.value = false;
+      },
     },
     {
       label: "Геоботаническое описание",
       icon: "i-heroicons-document-text",
       to: "/transecta",
+      click: () => {
+        isOpen.value = false;
+      },
     },
     {
       label: "Видовой состав",
       icon: "i-ph-plant-light",
       to: "/type-plant",
+      click: () => {
+        isOpen.value = false;
+      },
     },
   ];
 
@@ -69,11 +78,17 @@ const links = computed(() => {
       label: "Группы Экоморфов",
       icon: "i-ph-plant-light",
       to: "/ecomorph",
+      click: () => {
+        isOpen.value = false;
+      },
     });
     config.push({
       label: "Экоморфы",
       icon: "i-ph-plant-light",
       to: "/type-ecomorphs",
+      click: () => {
+        isOpen.value = false;
+      },
     });
   }
 
