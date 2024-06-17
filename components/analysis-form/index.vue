@@ -2,10 +2,19 @@
   <div class="wrapper-form">
     <span class="title-s">Выберете группы экоморфов</span>
     <UInput v-model:model-value="model.title" placeholder="Название"></UInput>
-    <USelectMenu v-model:model-value="selected" :options="selectOption" class="w-36" multiple placeholder="Не выбрано">
+    <USelectMenu
+      v-model:model-value="selected"
+      :options="selectOption"
+      class="w-[179px]"
+      multiple
+      placeholder="Не выбрано"
+    >
       <template #label>
-        <span v-if="model.ecomorph?.length"></span>
-        <span v-for="item in model.ecomorph" class="truncate">{{ item.title }}</span>
+        <span v-if="selected.length < 1" class="truncate">Выберите группу</span>
+        <span v-if="selected.length === 1" class="truncate">{{ selected[0].title }}</span>
+        <span v-else-if="selected.length >= 1" class="truncate"
+          >{{ selected[0].title }} +{{ selected.length - 1 }}</span
+        >
       </template>
       <template #option="{ option }">
         <span>
