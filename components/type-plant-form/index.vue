@@ -40,9 +40,7 @@
           </USelectMenu>
         </div>
       </div>
-      <ClientOnly>
-        <file-input v-model:file="file" v-model:is-edit="isEdit" />
-      </ClientOnly>
+      <file-input v-model:file="file" v-model:is-edit="isEdit" />
       <UButton v-if="type === 'create'" :loading="loading" @click="onCreate">Сохранить</UButton>
       <div v-else class="wrapper-plant-form-button">
         <UButton :loading="loading" @click="onUpdateType">Обновить</UButton>
@@ -141,7 +139,9 @@ const initForm = async () => {
   }
 };
 
-await initForm();
+onMounted(async () => {
+  await initForm();
+});
 
 const getEcomorphByEcomorphGroup = (ecomorph: Ecomorph) => {
   return typeEcomorhStores.getTypeEcomorphs.filter(

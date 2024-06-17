@@ -13,10 +13,8 @@ const typePlantStores = useTypePlant();
 const route = useRoute();
 
 const id = atob(route.params.id.toString());
-
-ecomorhStores.fetchAsyncEcomorhs();
-typeEcomorhStores.fetchEcomorhs();
-
+await ecomorhStores.fetchAsyncEcomorhs();
+await typeEcomorhStores.fetchEcomorhs();
 await useAsyncData(async () => {
   await typePlantStores.fetchTypePlantById(id);
 });
