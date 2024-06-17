@@ -21,7 +21,7 @@ await useAsyncData(async () => {
   await typePlantStores.fetchTypePlantById(id);
 });
 
-const modelValue = reactive({ ...typePlantStores.getTypePlant });
+const modelValue = toRef(typePlantStores.getTypePlant);
 </script>
 
 <style scoped lang="scss"></style>

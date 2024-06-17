@@ -120,12 +120,18 @@ await useAsyncData(async () => {
 
 let modelValue = toRef(transectaStore.getTransect);
 
+const findTrialSiteIndex = (id: string) => {
+  return modelValue.value.trialSite.findIndex((item: TrialSite) => item.id!.resourceId === id);
+};
+
 const handlerOnDeleteTrailSite = async (input: TrialSite) => {
   try {
     loading.value = true;
     await trialSiteStore.DeleteTrialSite(input.id!);
-    const index = modelValue.value.trialSite.findIndex((item) => item.id!.resourceId === input.id!.resourceId);
-    modelValue.value.trialSite.splice(index, 1);
+    const index = findTrialSiteIndex(input.id!.resourceId);
+    if (index !== -1) {
+      modelValue.value.trialSite.splice(index, 1);
+    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -136,11 +142,13 @@ const handlerOnDeleteTrailSite = async (input: TrialSite) => {
 const CreateTrailSite = async (input: TrialSite) => {
   try {
     loading.value = true;
-    await trialSiteStore.CrateTrialSite(input);
+    await trialSiteStore.CreateTrialSite(input);
     const newTrialSite = trialSiteStore.getTrialSite;
+    if (!modelValue.value.trialSite) {
+      modelValue.value.trialSite = [];
+    }
     modelValue.value.trialSite.push(newTrialSite);
     await handlerOnUpdate();
-    modelValue.value = reactive({ ...transectaStore.getTransect });
   } catch (error) {
     console.error(error);
   } finally {
@@ -153,7 +161,7 @@ const handlerOnUpdate = async () => {
   try {
     loading.value = true;
     await transectaStore.UpdateTransecta(modelValue.value);
-    modelValue.value = reactive({ ...transectaStore.getTransect });
+    modelValue.value = transectaStore.getTransect;
   } catch (error) {
     console.error(error);
   } finally {
@@ -229,17 +237,20 @@ const items = (row: TrialSite) => [
 ];
 
 const rows = computed(() => {
-  if (modelValue.value && !modelValue.value.trialSite) {
+  if (!modelValue.value || !modelValue.value.trialSite) {
     return [];
   }
-  const trialSite = modelValue.value.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount);
 
-  if (trialSite.length > 0) {
-    return trialSite;
-  } else {
+  const start = (page.value - 1) * pageCount;
+  const end = page.value * pageCount;
+  let trialSite = modelValue.value.trialSite.slice(start, end);
+
+  if (trialSite.length === 0 && page.value > 1) {
     page.value--;
-    return modelValue.value.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount);
+    trialSite = modelValue.value.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount);
   }
+
+  return trialSite;
 });
 </script>
 

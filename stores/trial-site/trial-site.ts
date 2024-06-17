@@ -116,7 +116,7 @@ export const useTrialSite = defineStore("TrialSite", {
       }
     },
 
-    async CrateTrialSite(input: TrialSite) {
+    async CreateTrialSite(input: TrialSite) {
       try {
         this.loading = true;
         const mutation = gql`

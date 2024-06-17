@@ -14,7 +14,7 @@
           Содоминант: {{ model.subDominant?.title }}
         </UBadge>
       </div>
-      <UBadge v-if="model && model.rating" color="white" variant="solid"> Баллы: {{ model.rating }} </UBadge>
+      <UBadge v-if="model && model.rating" color="white" variant="solid"> Баллы: {{ model.rating }}</UBadge>
     </div>
     <UForm :state="model" :validate="validateTransect">
       <div class="wrapper-trial-site-input">
@@ -30,40 +30,37 @@
         </UFormGroup>
       </div>
     </UForm>
-    <ClientOnly>
-      <div class="wrapper-trial-site-table">
-        <div class="title-xs">Растения</div>
-
-        <UTable :columns="columns" :rows="rows" class="min-width overflow-x-auto">
-          <template #id-data="{ index }">
-            {{ index + 1 }}
-          </template>
-          <template #typePlant-data="{ row }">
-            <span v-if="row.typePlant && row.typePlant.title">{{ row.typePlant.title }}</span>
-          </template>
-          <template #actions-data="{ row }">
-            <UDropdown :items="items(row)">
-              <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost" />
-            </UDropdown>
-          </template>
-          <template #empty-state>
-            <div class="wrapper-empty-state">
-              <div>Создать новое растение</div>
-              <UButton @click="onCreatPlant">Создать</UButton>
-            </div>
-          </template>
-        </UTable>
-        <div v-if="model.plant && model.plant.length > 0" class="wrapper-transecta-footer-table">
-          <UButton @click="onCreatPlant">Создать</UButton>
-          <UPagination
-            v-if="model.plant && model.plant.length > pageCount"
-            v-model="page"
-            :page-count="pageCount"
-            :total="model.plant.length"
-          />
-        </div>
+    <div class="wrapper-trial-site-table">
+      <div class="title-xs">Растения</div>
+      <UTable :columns="columns" :rows="rows" class="min-width overflow-x-auto">
+        <template #id-data="{ index }">
+          {{ index + 1 }}
+        </template>
+        <template #typePlant-data="{ row }">
+          <span v-if="row.typePlant && row.typePlant.title">{{ row.typePlant.title }}</span>
+        </template>
+        <template #actions-data="{ row }">
+          <UDropdown :items="items(row)">
+            <UButton color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" variant="ghost" />
+          </UDropdown>
+        </template>
+        <template #empty-state>
+          <div class="wrapper-empty-state">
+            <div>Создать новое растение</div>
+            <UButton @click="onCreatPlant">Создать</UButton>
+          </div>
+        </template>
+      </UTable>
+      <div v-if="model.plant && model.plant.length > 0" class="wrapper-transecta-footer-table">
+        <UButton @click="onCreatPlant">Создать</UButton>
+        <UPagination
+          v-if="model.plant && model.plant.length > pageCount"
+          v-model="page"
+          :page-count="pageCount"
+          :total="model.plant.length"
+        />
       </div>
-    </ClientOnly>
+    </div>
     <UButton :loading="loading" @click="handlerOnUpdate">Обновить</UButton>
   </div>
   <UModal v-model="isOpen">
@@ -104,12 +101,12 @@ await useAsyncData(async () => {
 
 typePlantStore.fetchTypePlant();
 
-let model = reactive({ ...trialSiteStore.getTrialSite });
+let model = toRef(trialSiteStore.getTrialSite);
 
 const handlerOnUpdate = async () => {
   try {
     loading.value = true;
-    await trialSiteStore.UpdateTrialSite(model);
+    await trialSiteStore.UpdateTrialSite(model.value);
   } catch (e) {
     console.log(e);
   } finally {
@@ -121,17 +118,17 @@ const CratePlant = async (value: Plant) => {
   try {
     loading.value = true;
     await trialSiteStore.CratePlant(value);
-    if (!model.plant) {
-      model.plant = [];
-      model.plant.push(trialSiteStore.getPlant);
+    if (!model.value.plant) {
+      model.value.plant = [];
+      model.value.plant.push(trialSiteStore.getPlant);
     } else {
-      const trialSite = model.plant;
+      const trialSite = model.value.plant;
       const plant = trialSiteStore.getPlant;
       trialSite.push(plant);
-      model.plant = trialSite;
+      model.value.plant = trialSite;
     }
-    await trialSiteStore.UpdateTrialSite(model);
-    model = reactive({ ...trialSiteStore.getTrialSite });
+    await trialSiteStore.UpdateTrialSite(model.value);
+    model.value = reactive({ ...trialSiteStore.getTrialSite });
   } catch (e) {
     console.log(e);
   } finally {
@@ -144,8 +141,8 @@ const UpdatePlant = async (value: Plant) => {
   try {
     loading.value = true;
     await trialSiteStore.UpdatePlant(value);
-    const index = model.plant.findIndex((item) => item.id!.resourceId === value.id!.resourceId);
-    model.plant[index] = value;
+    const index = model.value.plant.findIndex((item) => item.id!.resourceId === value.id!.resourceId);
+    model.value.plant[index] = value;
   } catch (e) {
     console.log(e);
   } finally {
@@ -164,8 +161,8 @@ const handlerOnDeletePlant = async (input: Plant) => {
   try {
     loading.value = true;
     await trialSiteStore.DeletePlant(input.id!);
-    const index = model.plant.findIndex((item) => item.id!.resourceId === input.id!.resourceId);
-    model.plant.splice(index, 1);
+    const index = model.value.plant.findIndex((item) => item.id!.resourceId === input.id!.resourceId);
+    model.value.plant.splice(index, 1);
   } catch (error) {
     console.error(error);
   } finally {
@@ -241,8 +238,17 @@ const items = (row: Plant) => [
 ];
 
 const rows = computed(() => {
-  if (model.plant) {
-    return model.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
+  if (model.value && !model.value.plant) {
+    return [];
+  }
+
+  const plant = model.value.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
+
+  if (plant.length > 0) {
+    return plant;
+  } else {
+    page.value--;
+    return model.value.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
   }
 });
 </script>
