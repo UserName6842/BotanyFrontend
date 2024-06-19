@@ -118,10 +118,10 @@ await useAsyncData(async () => {
   await transectaStore.fetchTransectaById(id);
 });
 
-let modelValue = reactive({ ...transectaStore.getTransect });
+let modelValue = toRef({ ...transectaStore.getTransect });
 
 const findTrialSiteIndex = (id: string) => {
-  return modelValue.trialSite.findIndex((item: TrialSite) => item.id!.resourceId === id);
+  return modelValue.value.trialSite.findIndex((item: TrialSite) => item.id!.resourceId === id);
 };
 
 const handlerOnDeleteTrailSite = async (input: TrialSite) => {
@@ -130,9 +130,9 @@ const handlerOnDeleteTrailSite = async (input: TrialSite) => {
     await trialSiteStore.DeleteTrialSite(input.id!);
     const index = findTrialSiteIndex(input.id!.resourceId);
     if (index !== -1) {
-      let newTrialSiteLists = [...modelValue.trialSite];
+      let newTrialSiteLists = [...modelValue.value.trialSite];
       newTrialSiteLists.splice(index, 1);
-      modelValue.trialSite = newTrialSiteLists;
+      modelValue.value.trialSite = newTrialSiteLists;
     }
   } catch (error) {
     console.error(error);
@@ -147,11 +147,11 @@ const CreateTrailSite = async (input: TrialSite) => {
     await trialSiteStore.CreateTrialSite(input);
     const newTrialSite = trialSiteStore.getTrialSite;
     let newTrialSiteLists: TrialSite[] = [];
-    if (modelValue.trialSite) {
-      newTrialSiteLists = [...modelValue.trialSite];
+    if (modelValue.value.trialSite) {
+      newTrialSiteLists = [...modelValue.value.trialSite];
     }
     newTrialSiteLists.push(newTrialSite);
-    modelValue.trialSite = newTrialSiteLists;
+    modelValue.value.trialSite = newTrialSiteLists;
     await handlerOnUpdate();
   } catch (error) {
     console.error(error);
@@ -164,8 +164,8 @@ const CreateTrailSite = async (input: TrialSite) => {
 const handlerOnUpdate = async () => {
   try {
     loading.value = true;
-    await transectaStore.UpdateTransecta(modelValue);
-    modelValue = transectaStore.getTransect;
+    await transectaStore.UpdateTransecta(modelValue.value);
+    modelValue.value = transectaStore.getTransect;
   } catch (error) {
     console.error(error);
   } finally {
@@ -241,17 +241,17 @@ const items = (row: TrialSite) => [
 ];
 
 const rows = computed(() => {
-  if (!modelValue || !modelValue.trialSite) {
+  if (!modelValue.value || !modelValue.value.trialSite) {
     return [];
   }
 
   const start = (page.value - 1) * pageCount;
   const end = page.value * pageCount;
-  let trialSite = modelValue.trialSite.slice(start, end);
+  let trialSite = modelValue.value.trialSite.slice(start, end);
 
   if (trialSite.length === 0 && page.value > 1) {
     page.value--;
-    trialSite = modelValue.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount);
+    trialSite = modelValue.value.trialSite.slice((page.value - 1) * pageCount, page.value * pageCount);
   }
 
   return trialSite;

@@ -366,7 +366,7 @@ export const useTransecta = defineStore("Transecta", {
           }
         `;
 
-        const { id, trialSite, img, ...fiald } = input;
+        const { id, trialSite, countTypes, img, ...fiald } = input;
         let variables = {};
         if (trialSite) {
           variables = {

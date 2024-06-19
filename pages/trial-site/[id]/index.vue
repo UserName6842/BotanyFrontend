@@ -101,12 +101,12 @@ await useAsyncData(async () => {
 
 typePlantStore.fetchTypePlant();
 
-let model = reactive({ ...trialSiteStore.getTrialSite });
+let model = toRef({ ...trialSiteStore.getTrialSite });
 
 const handlerOnUpdate = async () => {
   try {
     loading.value = true;
-    await trialSiteStore.UpdateTrialSite(model);
+    await trialSiteStore.UpdateTrialSite(model.value);
   } catch (e) {
     console.error(e);
   } finally {
@@ -119,13 +119,13 @@ const CratePlant = async (value: Plant) => {
     loading.value = true;
     await trialSiteStore.CratePlant(value);
     let newPlants: Plant[] = [];
-    if (model.plant) {
-      newPlants = [...model.plant];
+    if (model.value.plant) {
+      newPlants = [...model.value.plant];
     }
     newPlants.push(trialSiteStore.getPlant);
-    model.plant = newPlants;
-    await trialSiteStore.UpdateTrialSite(model);
-    model = reactive({ ...trialSiteStore.getTrialSite });
+    model.value.plant = newPlants;
+    await trialSiteStore.UpdateTrialSite(model.value);
+    model.value = reactive({ ...trialSiteStore.getTrialSite });
   } catch (e) {
     console.error(e);
   } finally {
@@ -135,7 +135,7 @@ const CratePlant = async (value: Plant) => {
 };
 
 const findPlantIndex = (id: string) => {
-  return model.plant.findIndex((item) => item.id!.resourceId === id);
+  return model.value.plant.findIndex((item) => item.id!.resourceId === id);
 };
 
 const UpdatePlant = async (value: Plant) => {
@@ -144,7 +144,7 @@ const UpdatePlant = async (value: Plant) => {
     await trialSiteStore.UpdatePlant(value);
     const index = findPlantIndex(value.id!.resourceId);
     if (index !== -1) {
-      model.plant[index] = value;
+      model.value.plant[index] = value;
     }
   } catch (e) {
     console.log(e);
@@ -166,9 +166,9 @@ const handlerOnDeletePlant = async (input: Plant) => {
     await trialSiteStore.DeletePlant(input.id!);
     const index = findPlantIndex(input.id!.resourceId);
     if (index !== -1) {
-      const newPlant = [...model.plant];
+      const newPlant = [...model.value.plant];
       newPlant.splice(index, 1);
-      model.plant = newPlant;
+      model.value.plant = newPlant;
     }
   } catch (error) {
     console.error(error);
@@ -245,17 +245,17 @@ const items = (row: Plant) => [
 ];
 
 const rows = computed(() => {
-  if (model && !model.plant) {
+  if (model.value && !model.value.plant) {
     return [];
   }
 
-  const plant = model.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
+  const plant = model.value.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
 
   if (plant.length > 0) {
     return plant;
   } else {
     page.value--;
-    return model.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
+    return model.value.plant.slice((page.value - 1) * pageCount, page.value * pageCount);
   }
 });
 </script>
