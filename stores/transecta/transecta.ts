@@ -266,6 +266,7 @@ export const useTransecta = defineStore("Transecta", {
 
     async CrateTransecta(input: Transecta) {
       try {
+        // Определяем GraphQL мутацию для создания нового объекта Transect
         const mutation = gql`
           mutation createTransect($data: InputFormTransectRequest) {
             transect {
@@ -300,24 +301,31 @@ export const useTransecta = defineStore("Transecta", {
           }
         `;
 
+        // Деструктуризация входного объекта input для извлечения id и trialSite, оставшиеся свойства сохраняются в rest
         const { id, trialSite, ...rest } = input;
 
+        // Определяем переменные для мутации
         const variables = {
           data: {
             ...rest,
           },
         };
 
+        // Используем хуки useMutation для выполнения мутации
         const { mutate, onDone, onError } = useMutation(mutation);
 
+        // Обработчик успешного выполнения мутации
         onDone((data) => {
+          // Сохраняем результат мутации в this.transect
           this.transect = data.data.transect.createTransect;
         });
 
+        // Обработчик ошибки выполнения мутации
         onError((error) => {
           console.error("Ошибка создании:", error.message);
         });
 
+        // Выполняем мутацию с определенными переменными
         await mutate(variables);
       } catch (error) {
         console.error("Ошибка при выполнении запроса:", error);
