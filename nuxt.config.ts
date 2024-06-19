@@ -6,11 +6,6 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
-  security: {
-    headers: {
-      contentSecurityPolicy: "upgrade-insecure-requests",
-    },
-  },
   modules: [
     "@pinia/nuxt",
     "@nuxt/ui",
