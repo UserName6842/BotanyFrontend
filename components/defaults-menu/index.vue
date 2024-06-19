@@ -103,6 +103,10 @@ const logout = async () => {
   const { onLogout } = useApollo();
   auth.setIsLogin(false);
   await onLogout();
+  let token = useCookie("apollo:default.token");
+  if (token.value) {
+    token.value = null;
+  }
   navigateTo("/");
 };
 </script>
