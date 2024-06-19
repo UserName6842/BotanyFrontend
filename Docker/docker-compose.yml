@@ -6,7 +6,7 @@ services:
       dockerfile: Docker/Dockerfile
       context: ../
     ports:
-      - "3000:3000"
+      - "80:3000"
     environment:
       NODE_ENV: development
       GRAPHQL_API_URL: http://193.176.79.195/api
