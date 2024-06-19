@@ -34,9 +34,12 @@ const logup = async (value) => {
     onDone((data) => {
       const refreshToken = useCookie("refresh_token");
       refreshToken.value = data.data.auth.signUpUser.refresh_token;
-      const token = data.data.auth.signUpUser.access_token;
       const { onLogin } = useApollo();
-      onLogin(token);
+      onLogin(data.data.auth.signUpUser.access_token);
+      let token = useCookie("apollo:default.token");
+      if (!token.value) {
+        token.value = data.data.auth.signInUser.access_token;
+      }
       const auth = useAuth();
       auth.setIsLogin(true);
       navigateTo("/home");
